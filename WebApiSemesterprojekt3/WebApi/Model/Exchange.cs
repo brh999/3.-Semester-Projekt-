@@ -4,11 +4,13 @@
     {
         private double _value;
         private DateTime _date;
+        private List<Post> _posts;
 
-        public Exchange(double value)
+        public Exchange()
         {
             _date = DateTime.Now;
-            _value = value;
+
         }
+
     }
 }

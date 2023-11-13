@@ -12,7 +12,9 @@
         }
 
         public double Amount { get; set; }
-        public Currency Currency { get; }
-
+        public Currency GetCurrency
+        {
+            get { return _currency; }
+        }
     }
 }

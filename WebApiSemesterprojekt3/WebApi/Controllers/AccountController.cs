@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,9 +11,12 @@ namespace WebApi.Controllers
     {
         // GET: api/<AccountController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<Account>> Get()
         {
-            return new string[] { "value1", "value2" };
+            ActionResult<List<Account>> result = null;
+
+
+            return found;
         }
 
         // GET api/<AccountController>/5
