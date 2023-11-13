@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal class ValutaLine
+    internal class CurrencyLine
     {
         double amount { get; set; }
-        public ValutaLine() 
+        public CurrencyLine() 
         {
         
         }

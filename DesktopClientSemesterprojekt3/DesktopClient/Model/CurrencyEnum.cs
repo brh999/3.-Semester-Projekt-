@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal enum ValutaEnum
+    internal enum CurrencyEnum
     {
         // Insert valutas here:
-        Dollars,
-        Bitcoin,
-        Monero,
-        Dogecoin
+        USD,
+        BTC,
+        XRP
     }
 }
