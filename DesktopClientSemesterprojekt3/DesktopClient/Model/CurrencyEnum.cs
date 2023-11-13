@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal enum CurrencyEnum
+    public enum CurrencyEnum
     {
         // Insert valutas here:
         USD,

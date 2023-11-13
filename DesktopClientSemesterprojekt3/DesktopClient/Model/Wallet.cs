@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal class Wallet
+    public class Wallet
     {
 
         public Wallet()

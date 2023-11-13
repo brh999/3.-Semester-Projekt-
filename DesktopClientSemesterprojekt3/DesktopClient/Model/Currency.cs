@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace DesktopClient.Model
 {
     
-    internal class Valuta
+    public class Currency
     {
-        ValutaEnum type { get; set; }
+        CurrencyEnum type { get; set; }
     }
 }

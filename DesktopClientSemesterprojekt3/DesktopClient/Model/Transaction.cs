@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal class Transaction
+    public class Transaction
     {
         DateTime date { get; set; }
     }
