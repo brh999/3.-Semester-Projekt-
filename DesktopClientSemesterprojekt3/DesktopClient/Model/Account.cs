@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal class Account
+    public class Account
     {
         bool discount { get; set; }
         string email { get; set; }

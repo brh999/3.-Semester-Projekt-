@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal class Exchange
+    public class Exchange
     {
         double value { get; set; }
         DateTime date { get; set; }

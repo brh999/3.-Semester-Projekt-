@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    abstract class Post
+    public class Post
     {
         double amount { get; set; }
         double price { get; set; }

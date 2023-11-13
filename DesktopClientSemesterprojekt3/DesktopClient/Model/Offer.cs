@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal class Offer : Post
+    public class Offer : Post
     {
         public Offer() 
         {

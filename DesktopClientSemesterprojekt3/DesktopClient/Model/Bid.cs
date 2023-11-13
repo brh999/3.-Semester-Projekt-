@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Model
 {
-    internal class Bid : Post
+    public class Bid : Post
     {
         public Bid()
         {
