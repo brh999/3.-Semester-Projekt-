@@ -12,9 +12,14 @@
         }
 
         public double Amount { get; set; }
+<<<<<<< Updated upstream
         public Currency GetCurrency
         {
             get { return _currency; }
         }
+=======
+        public Currency getCurrency { get; }
+
+>>>>>>> Stashed changes
     }
 }
