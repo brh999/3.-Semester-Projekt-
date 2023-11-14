@@ -1,47 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using WebApi.BuissnessLogiclayer;
+using WebApi.Database;
 using WebApi.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IAccountControl _accountCtrl;
+
+
+        public AccountController(IAccountControl inControl)
+        {
+            _accountCtrl = inControl;
+        }
+
         // GET: api/<AccountController>
-        [HttpGet]
-        public ActionResult<List<Account>> Get()
+        [HttpGet, Route("account")]
+        public ActionResult<List<Account>> GetAllAccounts()
         {
-            ActionResult<List<Account>> result = null;
+            ActionResult<List<Account>>? foundReturn = null;
 
-
-            return found;
-        }
-
-        // GET api/<AccountController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<AccountController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<AccountController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AccountController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+            foundReturn = _accountCtrl.GetAllAccounts();
+            return foundReturn;
+            }
     }
+
 }
+    

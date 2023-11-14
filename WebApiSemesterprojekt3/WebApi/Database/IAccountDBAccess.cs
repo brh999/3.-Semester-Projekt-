@@ -4,7 +4,7 @@ namespace WebApi.Database
 {
     public interface IAccountDBAccess
     {
-        public IEnumerable<Account> GetAllAccounts();
+        public List<Account> GetAllAccounts();
 
         public Account GetAccountById(int id);
 
