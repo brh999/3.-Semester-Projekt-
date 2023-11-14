@@ -21,6 +21,5 @@ namespace WebAppSemesterProject3.Controllers
                 }
             }
         }
-
     }
 }
