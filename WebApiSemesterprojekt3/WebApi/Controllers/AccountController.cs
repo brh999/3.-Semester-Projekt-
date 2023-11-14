@@ -9,7 +9,7 @@ using WebApi.Model;
 
 namespace WebApi.Controllers
 {
-    [Route("api/")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -21,15 +21,15 @@ namespace WebApi.Controllers
             _accountCtrl = inControl;
         }
 
-        // GET: api/<AccountController>
-        [HttpGet, Route("account")]
+        // GET: api/account
+        [HttpGet, Route("/")]
         public ActionResult<List<Account>> GetAllAccounts()
         {
             ActionResult<List<Account>>? foundReturn = null;
 
             foundReturn = _accountCtrl.GetAllAccounts();
             return foundReturn;
-            }
+        }
     }
 
 }
