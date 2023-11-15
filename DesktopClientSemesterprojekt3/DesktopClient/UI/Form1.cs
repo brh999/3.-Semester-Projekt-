@@ -28,9 +28,12 @@ namespace DesktopClient
                 // TODO: inform user that something went wrong.
             }
 
-            
 
-            //_bidControl.CreateBid(amount, price);
+            CurrencyEnum chosenEnum = (CurrencyEnum)cmbCurrency.SelectedItem;
+            IEnumerable<Exchange> exchanges = new List<Exchange>();
+            Currency currency = new Currency(chosenEnum, exchanges);
+
+            _bidControl.CreateBid(amount, price,currency);
         }
 
         private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
