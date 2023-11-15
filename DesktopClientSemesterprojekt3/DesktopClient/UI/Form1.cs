@@ -35,7 +35,6 @@ namespace DesktopClient
 
             _bidControl.CreateBid(amount, price,currency);
 
-
         }
 
         private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
