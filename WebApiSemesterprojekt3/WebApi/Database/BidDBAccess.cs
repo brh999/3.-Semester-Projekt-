@@ -6,24 +6,33 @@ namespace WebApi.Database
     public class BidDBAccess : IBidDBAccess
     {
         private IConfiguration _configuration { get; set; }
-
+        private string? connectionString;
         public BidDBAccess(IConfiguration configuration)
         {
             _configuration = configuration;
+            connectionString = _configuration.GetConnectionString("hildur");
         }
         public IEnumerable<Bid> GetAllBids()
         {
             List<Bid> res = null;
-            string? connectionString = _configuration.GetConnectionString("hildur");
 
             //TODO lav "*" om til individuelle kollonner
-            string queryString = "select * from accounts";
+            string queryString = "select * from posts where type = 'bid'";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new(queryString, conn))
             {
                 conn.Open();
-                //TODO add error chekcing mayhaps?
 
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Post bid = new Bid();
+
+                    }
+
+                }
             }
             return res;
         }
