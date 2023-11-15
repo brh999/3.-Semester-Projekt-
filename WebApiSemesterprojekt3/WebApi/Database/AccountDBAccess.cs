@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using System.Data.SqlClient;
-using WebApi.Model;
+using Models;
 
 namespace WebApi.Database
 {

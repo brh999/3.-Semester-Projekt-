@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using WebApi.BuissnessLogiclayer;
 using WebApi.Database;
-using WebApi.Model;
+using Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
