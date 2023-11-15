@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -14,9 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Models">
-      <HintPath>..\..\Models\Models\obj\Debug\net6.0\ref\Models.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\Models\Models\Models.csproj" />
   </ItemGroup>
 
 </Project>
