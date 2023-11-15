@@ -8,16 +8,19 @@ namespace WebAppSemesterProject3.Controllers
     {
         public async Task<IActionResult> Index()
         {
+            List<Currency> currencies = new List<Currency>() { new Currency(CurrencyEnum.BTC) };
             using (Deserializer<Currency> ad = new())
             {
                 try
                 {
-                    IEnumerable<Currency> Currencies = await ad.GetList();
-                    return View(Currencies);
+                   // IEnumerable<Currency> Currencies = await ad.GetList();
+                    return View(currencies);
                 }
                 catch (Exception ex)
                 {
-                    return View();
+                    return View(currencies);
                 }
+            }
+        }
     }
 }

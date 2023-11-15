@@ -2,11 +2,13 @@
 {
     public class Wallet
     {
-        public List<CurrencyLine> _valutaLines;
+ 
+        public List<CurrencyLine<Currency>> _valutaLines;
 
         public Wallet()
         {
-            _valutaLines = new List<CurrencyLine>();
+            _valutaLines = new List<CurrencyLine<Currency>>();
+
         }
     }
 }

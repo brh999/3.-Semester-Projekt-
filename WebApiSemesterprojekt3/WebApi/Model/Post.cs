@@ -7,6 +7,8 @@
         private double _price;
 
         private bool _isComplete;
+        private Exchange _exchangeBid;
+        private Exchange _exchangeAsk;
 
         public double Amount
         {
