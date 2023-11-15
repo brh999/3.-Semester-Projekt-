@@ -7,18 +7,23 @@ namespace WebAppSemesterProject3.Controllers
 {
     public class AccountController : Controller
     {
+        
+
         public async Task<IActionResult> Index()
         {
+            Wallet wallet = new Wallet();
+            List<Account> accounts = new List<Account> { new Account("Rasmus", "emailExample", 0d, 1, wallet) }; 
+        
             using (Deserializer<Account> ad = new())
             {
                 try
                 {
-                    IEnumerable<Account> accounts = await ad.GetList();
+                    //IEnumerable<Account> accounts = await ad.GetList();
                     return View(accounts);
                 }
                 catch (Exception ex)
                 {
-                    return View();
+                    return View(accounts);
                 }
             }
         }

@@ -23,7 +23,7 @@ namespace WebApi.Database
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Account> GetAllAccounts()
+        public List<Account> GetAllAccounts()
         {
             List<Account> res = null;
             string? connectionString = _configuration.GetConnectionString("hildur");

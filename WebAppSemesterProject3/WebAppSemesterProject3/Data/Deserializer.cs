@@ -7,7 +7,7 @@ namespace WebAppSemesterProject3.DTO
 {
     public class Deserializer<T> : IDeserializer<T>, IDisposable
     {
-        private string apiUrl = "http://localhost:5042/api/account/";
+        private string apiUrl = "http://localhost:5042/api/currency";
 
         public async Task<T> GetObject(int id)
         {
