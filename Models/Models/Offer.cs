@@ -8,7 +8,7 @@ namespace Models
 {
     public class Offer : Post
     {
-        public Offer(int amount, double price, IEnumerable<TransactionLine> transactions) : base(amount, price, transactions)
+        public Offer(int amount, double price, Currency currency) : base(amount, price, currency)
         {
         }
         public Offer() 
