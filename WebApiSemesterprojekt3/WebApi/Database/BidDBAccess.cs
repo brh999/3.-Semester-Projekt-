@@ -1,5 +1,5 @@
-﻿using System.Data.SqlClient;
-using WebApi.Model;
+﻿using Models;
+using System.Data.SqlClient;
 
 namespace WebApi.Database
 {
@@ -13,7 +13,7 @@ namespace WebApi.Database
         }
         public IEnumerable<Bid> GetAllBids()
         {
-            List<Account> res = null;
+            List<Bid> res = null;
             string? connectionString = _configuration.GetConnectionString("hildur");
 
             //TODO lav "*" om til individuelle kollonner
@@ -23,7 +23,7 @@ namespace WebApi.Database
             {
                 conn.Open();
                 //TODO add error chekcing mayhaps?
-                res = conn.Query<Bid>(queryString).ToList();
+
             }
             return res;
         }
