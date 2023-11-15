@@ -13,6 +13,7 @@ namespace DesktopClient.BusinessLogic
         {
 
             Bid? newBid = null;
+
             if (amount > 0 && price > 0)
             {
                 newBid = new Bid(amount, price, currency);
@@ -21,6 +22,7 @@ namespace DesktopClient.BusinessLogic
             {
                 throw new ArgumentException();
             }
+
             return newBid;
         }
     }

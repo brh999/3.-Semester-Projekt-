@@ -34,6 +34,8 @@ namespace DesktopClient
             Currency currency = new Currency(chosenEnum, exchanges);
 
             _bidControl.CreateBid(amount, price,currency);
+
+
         }
 
         private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
