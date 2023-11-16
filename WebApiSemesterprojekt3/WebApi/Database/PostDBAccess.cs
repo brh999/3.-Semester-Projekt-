@@ -49,7 +49,7 @@ namespace WebApi.Database
         {
 
             List<Offer> foundOffers = new List<Offer>();
-            String queryString = "SELECT * FROM posts WHERE type ='offer' ";
+            String queryString = "SELECT * FROM posts WHERE type ='offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -71,6 +71,16 @@ namespace WebApi.Database
                 }
                 return foundOffers;
             }
+        }
+
+        public Bid InsertBid(Bid bid)
+        {
+            
+        }
+
+        public Offer InsertOffer(Offer offer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

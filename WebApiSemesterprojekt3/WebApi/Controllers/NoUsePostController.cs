@@ -7,7 +7,7 @@ namespace WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     
-    public class PostController : ControllerBase
+    public class NoUsePostController : ControllerBase
     {
        
 

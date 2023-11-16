@@ -7,5 +7,9 @@ namespace WebApi.Database
        
         IEnumerable<Offer> GetOfferPosts();
         IEnumerable<Bid> GetBidPosts();
+
+        Offer InsertOffer(Offer offer);
+
+        Bid InsertBid(Bid bid);
     }
 }
