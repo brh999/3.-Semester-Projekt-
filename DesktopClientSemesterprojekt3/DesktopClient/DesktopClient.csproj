@@ -9,11 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Models\Models\Models.csproj" />
+    <Compile Remove="DataAcces\**" />
+    <EmbeddedResource Remove="DataAcces\**" />
+    <None Remove="DataAcces\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataAcces\" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Models\Models\Models.csproj" />
   </ItemGroup>
 
 </Project>
