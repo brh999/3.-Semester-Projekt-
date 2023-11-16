@@ -20,6 +20,14 @@
             _wallet = wallet;
             _posts = posts;
         }
+        public Account(double discount, string username, string email)
+        {
+            _discount = discount;
+            _username = username;
+            _email = email;
+            _wallet = new List<CurrencyLine>();
+            _posts = new List<Post>();
+        }
         public double Discount { get { return _discount; } set {  _discount = value; } }
         public string Username { get { return _username; } set { _username = value; } }
         public string Email { get { return _email; } set { _email = value; } }

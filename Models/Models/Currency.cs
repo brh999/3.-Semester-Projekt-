@@ -38,6 +38,7 @@
         }
 
         public string Name { get { return _name; } }
+        public CurrencyEnum Type { get { return _type; } }
         public IEnumerable<Exchange> Exchanges { get { return _exchanges; } }
 
 
