@@ -20,8 +20,8 @@ namespace Models
             _transactions = transactions;
         }
 
-        public int Amount { get { return _amount; } }
-        public double Price { get { return _price; } }
+        public int Amount { get { return _amount; } init { _amount = value; } }
+        public double Price { get { return _price; } init { _price = value; } }
         public bool IsComplete { get { return _isComplete; } set { _isComplete = value; } }
         public IEnumerable<TransactionLine> Transactions { get { return _transactions; } }
     }

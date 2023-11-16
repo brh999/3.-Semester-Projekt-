@@ -10,6 +10,7 @@ namespace Models
     {
         public Offer(int amount, double price, IEnumerable<TransactionLine> transactions) : base(amount, price, transactions)
         {
+
         }
         public Offer() 
         {
