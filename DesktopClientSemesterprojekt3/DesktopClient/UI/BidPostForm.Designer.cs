@@ -46,7 +46,7 @@
             btnCreateBid.Size = new Size(135, 29);
             btnCreateBid.TabIndex = 0;
             btnCreateBid.TabStop = false;
-            btnCreateBid.Text = "Create buy order";
+            btnCreateBid.Text = "Create Post";
             btnCreateBid.UseVisualStyleBackColor = true;
             btnCreateBid.Click += btnCreateBid_Click;
             // 
@@ -123,7 +123,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(pnlCreateBuyorder);
             Name = "BidPostForm";
-            Text = "Form1";
+            Text = "Offer Post";
             pnlCreateBuyorder.ResumeLayout(false);
             pnlCreateBuyorder.PerformLayout();
             ResumeLayout(false);

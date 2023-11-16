@@ -1,24 +1,29 @@
-using DesktopClient.BusinessLogic;
+﻿using DesktopClient.BusinessLogic;
 using Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
-namespace DesktopClient
+namespace DesktopClient.UI
 {
-    public partial class BidPostForm : Form
+    public partial class OfferPostForm : Form
     {
-        private BidControl _bidControl;
+        private OfferControl _offerControl;
         private Form _parent;
-        public BidPostForm(Form parent)
+        public OfferPostForm(Form parent)
         {
             InitializeComponent();
-            this._parent = parent;
-           
-            _bidControl = new BidControl();
-            
+            _offerControl = new OfferControl();
+            _parent = parent;
             cmbCurrency.DataSource = Enum.GetValues(typeof(CurrencyEnum));
-            
         }
-
-        
 
         private async void btnCreateBid_Click(object sender, EventArgs e)
         {
@@ -34,23 +39,24 @@ namespace DesktopClient
             {
                 // TODO: inform user that something went wrong.
             }
-            CurrencyEnum chosenEnum = (CurrencyEnum)cmbCurrency.SelectedItem;
-            
-            IEnumerable<Exchange> exchanges = new List<Exchange>();
-            Currency currency = new Currency(chosenEnum, exchanges);
-            Bid? createBid = null;
-            Task createBidPost =  Task.Run(() =>
-            {
-                createBid = _bidControl.CreateBid(amount, price, currency);
-            });
-            btnCreateBid.Enabled = false;
-            await createBidPost;
+            CurrencyEnum currencyEnum = (CurrencyEnum)cmbCurrency.SelectedIndex;
 
-            if(createBid == null) {
+            IEnumerable<Exchange> exchanges = new List<Exchange>();
+            Currency currency = new Currency(currencyEnum, exchanges);
+            Offer? createOffer = null;
+            Task createdOffer = Task.Run(() =>
+            {
+                _offerControl.CreateOffer(amount, price, currency);
+            });
+            btnCreateOffer.Enabled = false;
+            await createdOffer;
+
+            if (createOffer == null)
+            {
                 MessageBox.Show("Input is not valid, only positive integers");
                 ClearBidInput();
             }
-        
+
         }
 
         private void ClearBidInput()
@@ -58,15 +64,13 @@ namespace DesktopClient
             cmbCurrency.SelectedIndex = 0;
             txtAmount.Text = string.Empty;
             txtPrice.Text = string.Empty;
-            btnCreateBid.Enabled = true;
+            btnCreateOffer.Enabled = true;
         }
 
         private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
         {
             CurrencyEnum selectedValue = (CurrencyEnum)cmbCurrency.SelectedItem;
         }
-
-
 
         /// <summary>
         /// We override the OnCloseEvent, to make sure that the parent form is displayed.
@@ -77,7 +81,5 @@ namespace DesktopClient
             base.OnFormClosing(e);
             _parent.Show();
         }
-
-
     }
 }

@@ -30,10 +30,13 @@
         {
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             panel1 = new Panel();
+            lblOffer = new Label();
+            lblBids = new Label();
+            lstBoxOffer = new ListBox();
             lstBoxBid = new ListBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             btnBidPost = new Button();
-            button2 = new Button();
+            btnOfferPost = new Button();
             label1 = new Label();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -41,6 +44,9 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(lblOffer);
+            panel1.Controls.Add(lblBids);
+            panel1.Controls.Add(lstBoxOffer);
             panel1.Controls.Add(lstBoxBid);
             panel1.Controls.Add(tableLayoutPanel1);
             panel1.Controls.Add(label1);
@@ -50,13 +56,40 @@
             panel1.Size = new Size(800, 450);
             panel1.TabIndex = 0;
             // 
+            // lblOffer
+            // 
+            lblOffer.AutoSize = true;
+            lblOffer.Location = new Point(546, 66);
+            lblOffer.Name = "lblOffer";
+            lblOffer.Size = new Size(94, 20);
+            lblOffer.TabIndex = 5;
+            lblOffer.Text = "Active Offers";
+            // 
+            // lblBids
+            // 
+            lblBids.AutoSize = true;
+            lblBids.Location = new Point(225, 66);
+            lblBids.Name = "lblBids";
+            lblBids.Size = new Size(82, 20);
+            lblBids.TabIndex = 4;
+            lblBids.Text = "Active Bids";
+            // 
+            // lstBoxOffer
+            // 
+            lstBoxOffer.FormattingEnabled = true;
+            lstBoxOffer.ItemHeight = 20;
+            lstBoxOffer.Location = new Point(546, 89);
+            lstBoxOffer.Name = "lstBoxOffer";
+            lstBoxOffer.Size = new Size(177, 304);
+            lstBoxOffer.TabIndex = 3;
+            // 
             // lstBoxBid
             // 
             lstBoxBid.FormattingEnabled = true;
             lstBoxBid.ItemHeight = 20;
-            lstBoxBid.Location = new Point(225, 69);
+            lstBoxBid.Location = new Point(225, 89);
             lstBoxBid.Name = "lstBoxBid";
-            lstBoxBid.Size = new Size(177, 324);
+            lstBoxBid.Size = new Size(177, 304);
             lstBoxBid.TabIndex = 2;
             // 
             // tableLayoutPanel1
@@ -65,7 +98,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Controls.Add(btnBidPost, 0, 0);
-            tableLayoutPanel1.Controls.Add(button2, 0, 1);
+            tableLayoutPanel1.Controls.Add(btnOfferPost, 0, 1);
             tableLayoutPanel1.Location = new Point(12, 109);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 8;
@@ -90,14 +123,14 @@
             btnBidPost.UseVisualStyleBackColor = true;
             btnBidPost.Click += btnBidPost_Click;
             // 
-            // button2
+            // btnOfferPost
             // 
-            button2.Location = new Point(3, 38);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 29);
-            button2.TabIndex = 1;
-            button2.Text = "button2";
-            button2.UseVisualStyleBackColor = true;
+            btnOfferPost.Location = new Point(3, 38);
+            btnOfferPost.Name = "btnOfferPost";
+            btnOfferPost.Size = new Size(75, 29);
+            btnOfferPost.TabIndex = 1;
+            btnOfferPost.Text = "Offer";
+            btnOfferPost.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -131,7 +164,10 @@
         private Label label1;
         private TableLayoutPanel tableLayoutPanel1;
         private Button btnBidPost;
-        private Button button2;
+        private Button btnOfferPost;
         private ListBox lstBoxBid;
+        private Label lblOffer;
+        private Label lblBids;
+        private ListBox lstBoxOffer;
     }
 }

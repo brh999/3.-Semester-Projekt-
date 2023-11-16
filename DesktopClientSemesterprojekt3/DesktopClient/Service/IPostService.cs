@@ -11,5 +11,8 @@ namespace DesktopClient.Service
     {
         Task<bool> SavePost(Post item);
         Task<List<Bid>> GetAllBids();
+        Task<bool> SaveOffer(Offer item);
+
+        Task<List<Offer>> GetAllOffers();
     }
 }

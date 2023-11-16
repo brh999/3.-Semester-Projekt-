@@ -19,7 +19,7 @@ namespace Models
 
         public override string? ToString()
         {
-            string res = $" {Amount} for {Price}  ";
+            string res = $" {Amount}for {Price} USD ";
             return res;
         }
     }

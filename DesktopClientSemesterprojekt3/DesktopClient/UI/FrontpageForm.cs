@@ -19,7 +19,7 @@ namespace DesktopClient.UI
         {
             InitializeComponent();
             _postService = new PostService();
-            UpdateBids();
+            UpdatePosts();
 
 
         }
@@ -30,16 +30,33 @@ namespace DesktopClient.UI
             new BidPostForm(this).ShowDialog();
 
         }
+        private async void UpdatePosts()
+        {
+            UpdateBids();
+            UpateOffers();
+        }
+
+        private async void UpateOffers()
+        {
+            List<Offer> data = await _postService.GetAllOffers();
+            lstBoxOffer.Items.Clear();
+            lstBoxOffer.DataSource = data;
+        }
 
         private async void UpdateBids()
         {
-            
+
             List<Bid> data = await _postService.GetAllBids();
             lstBoxBid.Items.Clear();
             lstBoxBid.DataSource = data;
-            
-            
+
+
         }
-        
+
+        private void btnOfferPost_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            new OfferPostForm(this).ShowDialog();
+        }
     }
 }
