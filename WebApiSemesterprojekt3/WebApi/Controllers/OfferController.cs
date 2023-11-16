@@ -46,9 +46,11 @@ namespace WebApi.Controllers
         }
 
         // POST api/<ValuesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost,Route("post")]
+        public IActionResult PostNewOffer([FromBody] Post<Offer> inPost
         {
+            IActionResult foundReturn;
+            Post insertedOffer = _offerLogic.InsertOffer(inPost)
         }
 
         // PUT api/<ValuesController>/5
