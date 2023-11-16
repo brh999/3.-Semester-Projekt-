@@ -9,10 +9,50 @@ namespace WebAppSemesterProject3.Controllers
         // - does not refer HTML post action, but Post of bid & offers in our system.
         public IActionResult Index()
         {
-            Currency btc = new Currency(CurrencyEnum.BTC, new List<Exchange>());
-            List<Post> posts = new List<Post>() { new Bid(1, 6.99, btc), 
-            new Offer(2, 8, btc)};
-            return View(posts);
+            IEnumerable<Post> bids = null;
+            IEnumerable<Post> offers = null;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:5042/api/");
+                // Get bids:
+                var responseTask = client.GetAsync("bid");
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<Bid>>();
+                    readTask.Wait();
+
+                    bids = readTask.Result;
+                }
+                else
+                {
+                    bids = Enumerable.Empty<Post>();
+                    ModelState.AddModelError(string.Empty, "Server error - No bids found");
+                }
+                // Get offers:
+                responseTask = client.GetAsync("offer");
+                responseTask.Wait();
+
+                result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<Offer>>();
+                    readTask.Wait();
+
+                    offers = readTask.Result;
+                }
+                else
+                {
+                    offers = Enumerable.Empty<Offer>();
+                    ModelState.AddModelError(string.Empty, "Server error - No offers found");
+                }
+
+            }
+            ViewData["bids"] = bids;
+            ViewData["offers"] = offers;
+            return View();
         }
     }
 }
