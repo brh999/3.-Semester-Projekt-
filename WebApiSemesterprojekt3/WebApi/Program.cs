@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IAccountControl, AccountControl>();
+builder.Services.AddSingleton<IAccountLogic, AccountLogic>();
 builder.Services.AddSingleton<IAccountDBAccess, AccountDBAccess>();
 
 var app = builder.Build();

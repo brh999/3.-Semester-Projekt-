@@ -3,10 +3,10 @@ using Models;
 
 namespace WebApi.BuissnessLogiclayer
 {
-    public class AccountControl : IAccountControl
+    public class AccountLogic : IAccount
     {
         private readonly IAccountDBAccess _dataAccess;
-        public AccountControl(IAccountDBAccess inDataAccess)
+        public AccountLogic(IAccountDBAccess inDataAccess)
         {
             _dataAccess = inDataAccess;
         }
