@@ -4,6 +4,8 @@ namespace WebApi.BuissnessLogiclayer
 {
     public interface IPostLogic
     {
-        IEnumerable<Bid> GetAllBids();
+        List<Bid> GetAllBids();
+
+        List<Offer> GetAllOffers();
     }
 }

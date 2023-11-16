@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Models;
 using System.Data.SqlClient;
 
@@ -15,22 +16,40 @@ namespace WebApi.Database
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("hildur");
         }
-        private IEnumerable<Post> GetAllPosts(string inType)
+        
+
+        public IEnumerable<Bid> GetBidPosts()
         {
+            List<Bid> foundBids = new List<Bid>();
+            String queryString = "SELECT * FROM posts WHERE type ='bid' ";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+
+                using (SqlDataReader reader = readCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Post bids = new Bid
+                        {
+                            Amount = (double)reader["amount"],
+                            Price = (double)reader["price"]
+
+                        };
+                        foundBids.Add((Bid)bids);
+                    }
+                }
+                return foundBids;
+            }
+        }
+
+        public IEnumerable<Offer> GetOfferPosts()
+        {
+
             List<Offer> foundOffers = new List<Offer>();
-            //TODO find a better way to dertermine bid or offer.
-            string queryString = "";
-            if (inType.Equals("bid"))
-            {
-                string queryStringBid = "SELECT * FROM posts WHERE type ='bid' ";
-            }
-            else if (inType.Equals("offer"))
-            {
-                string queryStringBid = "SELECT * FROM posts WHERE type ='offer' ";
-            } else
-            {
-                throw new ArgumentException();
-            }
+            String queryString = "SELECT * FROM posts WHERE type ='offer' ";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -43,7 +62,7 @@ namespace WebApi.Database
                     {
                         Post offer = new Offer
                         {
-                            Amount = (int)reader["amount"],
+                            Amount = (double)reader["amount"],
                             Price = (double)reader["price"]
 
                         };
@@ -52,17 +71,6 @@ namespace WebApi.Database
                 }
                 return foundOffers;
             }
-
-        }
-
-        public IEnumerable<Bid> GetBidPosts()
-        {
-           return (IEnumerable<Bid>)GetAllPosts("bid");
-        }
-
-        public IEnumerable<Offer> GetOfferPosts()
-        {
-            return (IEnumerable<Offer>)GetAllPosts("offer");
         }
     }
 }

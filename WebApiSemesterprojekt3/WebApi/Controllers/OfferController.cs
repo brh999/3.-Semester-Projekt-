@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Models;
+using WebApi.BuissnessLogiclayer;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,11 +10,32 @@ namespace WebApi.Controllers
     [ApiController]
     public class OfferController : ControllerBase
     {
+
+        private readonly IPostLogic _offerLogic;
+
+        public OfferController(IPostLogic inControl)
+        {
+            _offerLogic = inControl;
+        }
+
+
         // GET: api/<ValuesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<Offer>> GetAll()
         {
-            return new string[] { "value5", "value6" };
+            ActionResult<IEnumerable<Offer>>? foundOffers = null;
+            List<Offer> res = null;
+            res = _offerLogic.GetAllOffers();
+
+            if (res != null)
+            {
+                foundOffers = Ok(res);
+            }
+            else
+            {
+                foundOffers = NotFound();
+            }
+            return foundOffers;
         }
 
         // GET api/<ValuesController>/5
