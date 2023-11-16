@@ -9,7 +9,7 @@ namespace DesktopClient.BusinessLogic
 {
     public class BidControl : IBidControl
     {
-        public Bid? CreateBid(int amount, double price, Currency currency)
+        public Bid? CreateBid(double amount, double price, Currency currency)
         {
 
             Bid? newBid = null;

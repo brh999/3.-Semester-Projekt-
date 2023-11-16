@@ -22,10 +22,10 @@ namespace DesktopClient
 
         private async void btnCreateBid_Click(object sender, EventArgs e)
         {
-            int amount;
+            double amount;
             double price;
 
-            if (!int.TryParse(txtAmount.Text, out amount))
+            if (!double.TryParse(txtAmount.Text, out amount))
             {
                 // TODO: inform user that something went wrong.
             }
