@@ -19,6 +19,7 @@ namespace DesktopClient.UI
         {
             InitializeComponent();
             _postService = new PostService();
+            UpdateBids();
 
 
         }
@@ -35,8 +36,10 @@ namespace DesktopClient.UI
             
             List<Bid> data = await _postService.GetAllBids();
             lstBoxBid.Items.Clear();
-
-            lstBoxBid.Items.Add(data);
+            lstBoxBid.DataSource = data;
+            
+            
         }
+        
     }
 }

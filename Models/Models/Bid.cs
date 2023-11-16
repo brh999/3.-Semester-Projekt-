@@ -16,5 +16,12 @@ namespace Models
         public Bid(int amount, double price, Currency currency) : base(amount, price, currency)
         {
         }
+
+        public override string? ToString()
+        {
+            string res = $" {Amount} for {Price}  ";
+            return res;
+        }
     }
+
 }

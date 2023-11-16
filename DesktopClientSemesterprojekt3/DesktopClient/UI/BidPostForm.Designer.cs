@@ -45,6 +45,7 @@
             btnCreateBid.Name = "btnCreateBid";
             btnCreateBid.Size = new Size(135, 29);
             btnCreateBid.TabIndex = 0;
+            btnCreateBid.TabStop = false;
             btnCreateBid.Text = "Create buy order";
             btnCreateBid.UseVisualStyleBackColor = true;
             btnCreateBid.Click += btnCreateBid_Click;
@@ -53,14 +54,14 @@
             // 
             txtAmount.Location = new Point(20, 175);
             txtAmount.Name = "txtAmount";
-            txtAmount.Size = new Size(125, 27);
+            txtAmount.Size = new Size(84, 27);
             txtAmount.TabIndex = 1;
             // 
             // txtPrice
             // 
             txtPrice.Location = new Point(20, 100);
             txtPrice.Name = "txtPrice";
-            txtPrice.Size = new Size(125, 27);
+            txtPrice.Size = new Size(84, 27);
             txtPrice.TabIndex = 2;
             // 
             // label1
@@ -68,18 +69,18 @@
             label1.AutoSize = true;
             label1.Location = new Point(19, 149);
             label1.Name = "label1";
-            label1.Size = new Size(60, 20);
+            label1.Size = new Size(62, 20);
             label1.TabIndex = 3;
-            label1.Text = "amount";
+            label1.Text = "Amount";
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Location = new Point(19, 77);
             label2.Name = "label2";
-            label2.Size = new Size(42, 20);
+            label2.Size = new Size(41, 20);
             label2.TabIndex = 4;
-            label2.Text = "price";
+            label2.Text = "Price";
             // 
             // label3
             // 
@@ -92,11 +93,13 @@
             // 
             // cmbCurrency
             // 
+            cmbCurrency.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbCurrency.FormattingEnabled = true;
             cmbCurrency.Location = new Point(19, 46);
             cmbCurrency.Name = "cmbCurrency";
-            cmbCurrency.Size = new Size(151, 28);
+            cmbCurrency.Size = new Size(60, 28);
             cmbCurrency.TabIndex = 6;
+            cmbCurrency.TabStop = false;
             cmbCurrency.SelectedIndexChanged += cmbCurrency_SelectedIndexChanged;
             // 
             // pnlCreateBuyorder
@@ -110,16 +113,16 @@
             pnlCreateBuyorder.Controls.Add(label1);
             pnlCreateBuyorder.Location = new Point(283, 64);
             pnlCreateBuyorder.Name = "pnlCreateBuyorder";
-            pnlCreateBuyorder.Size = new Size(250, 274);
+            pnlCreateBuyorder.Size = new Size(180, 274);
             pnlCreateBuyorder.TabIndex = 7;
             // 
-            // Form1
+            // BidPostForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(pnlCreateBuyorder);
-            Name = "Form1";
+            Name = "BidPostForm";
             Text = "Form1";
             pnlCreateBuyorder.ResumeLayout(false);
             pnlCreateBuyorder.PerformLayout();
