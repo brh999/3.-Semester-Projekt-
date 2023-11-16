@@ -42,6 +42,8 @@
         public IEnumerable<Exchange> Exchanges { get { return _exchanges; } }
 
 
+
+
     }
     public enum CurrencyEnum
     {
