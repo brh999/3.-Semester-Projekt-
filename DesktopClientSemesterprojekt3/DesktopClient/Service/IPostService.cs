@@ -10,5 +10,6 @@ namespace DesktopClient.Service
     public interface IPostService
     {
         Task<bool> SavePost(Post item);
+        Task<IEnumerable<Bid>> GetAllBids();
     }
 }

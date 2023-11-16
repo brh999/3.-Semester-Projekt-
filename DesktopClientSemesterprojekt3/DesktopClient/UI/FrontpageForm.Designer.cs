@@ -30,6 +30,7 @@
         {
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             panel1 = new Panel();
+            lstBoxBid = new ListBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             btnBidPost = new Button();
             button2 = new Button();
@@ -40,6 +41,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(lstBoxBid);
             panel1.Controls.Add(tableLayoutPanel1);
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
@@ -47,6 +49,15 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(800, 450);
             panel1.TabIndex = 0;
+            // 
+            // lstBoxBid
+            // 
+            lstBoxBid.FormattingEnabled = true;
+            lstBoxBid.ItemHeight = 20;
+            lstBoxBid.Location = new Point(225, 69);
+            lstBoxBid.Name = "lstBoxBid";
+            lstBoxBid.Size = new Size(177, 324);
+            lstBoxBid.TabIndex = 2;
             // 
             // tableLayoutPanel1
             // 
@@ -121,5 +132,6 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Button btnBidPost;
         private Button button2;
+        private ListBox lstBoxBid;
     }
 }
