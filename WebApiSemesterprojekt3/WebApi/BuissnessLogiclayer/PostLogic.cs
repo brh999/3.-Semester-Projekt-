@@ -11,9 +11,22 @@ namespace WebApi.BuissnessLogiclayer
             _dataAccess = inDataAccess;
         }
 
-        public IEnumerable<Bid> GetAllBids()
+        public List<Bid> GetAllBids()
         {
-            throw new NotImplementedException();
+            IEnumerable<Bid> bids = new List<Bid>();
+
+            bids = _dataAccess.GetBidPosts();
+
+            return (List<Bid>)bids;
+        }
+
+        public List<Offer> GetAllOffers()
+        {
+            IEnumerable<Offer> offers = new List<Offer>();
+
+            offers = _dataAccess.GetOfferPosts();
+
+            return (List<Offer>)offers;
         }
 
 

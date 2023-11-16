@@ -14,7 +14,9 @@ namespace Models
         public Post()
         {
         }
+
         public Post(double amount, double price, Currency currency)
+
         {
             _amount = amount;
             _price = price;
@@ -22,7 +24,6 @@ namespace Models
             _transactions = new List<TransactionLine>();
             _currency = currency;
         }
-
 
 
         public double Amount { get { return _amount; } init { _amount = value; } }
