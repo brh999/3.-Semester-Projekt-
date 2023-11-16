@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Models;
+﻿using Models;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -16,12 +14,12 @@ namespace WebApi.Database
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("hildur");
         }
-        
+
 
         public IEnumerable<Bid> GetBidPosts()
         {
             List<Bid> foundBids = new List<Bid>();
-            String queryString = "SELECT * FROM posts WHERE type ='bid' ";
+            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currency_id_fk = currencies.exchange_id_fk WHERE posts.type = 'bid'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -32,11 +30,12 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
+                        Currency generatedCurrency = CreateCurrency((string)reader["type"]);
                         Post bids = new Bid
                         {
                             Amount = (double)reader["amount"],
-                            Price = (double)reader["price"]
-
+                            Price = (double)reader["price"],
+                            Currency = generatedCurrency,
                         };
                         foundBids.Add((Bid)bids);
                     }
@@ -49,7 +48,7 @@ namespace WebApi.Database
         {
 
             List<Offer> foundOffers = new List<Offer>();
-            String queryString = "SELECT * FROM posts WHERE type ='offer'";
+            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currency_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -60,11 +59,12 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
+                        Currency generatedCurrency = CreateCurrency((string)reader["type"]);
                         Post offer = new Offer
                         {
                             Amount = (double)reader["amount"],
-                            Price = (double)reader["price"]
-
+                            Price = (double)reader["price"],
+                            Currency = generatedCurrency,
                         };
                         foundOffers.Add((Offer)offer);
                     }
@@ -73,9 +73,36 @@ namespace WebApi.Database
             }
         }
 
+        private Currency CreateCurrency(string inType)
+        {
+            Currency res = null;
+
+            CurrencyEnum currency;
+            if (Enum.TryParse<CurrencyEnum>(inType, out currency))
+            {
+                res = new Currency(currency, new List<Exchange>());
+            }
+            else
+            {
+                throw new ArgumentException("Currency does not exist");
+            }
+            return res;
+        }
+
+        //TODO contiue implementing this!!
         public Bid InsertBid(Bid bid)
         {
-            
+            string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
+                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @, 1);";
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            using SqlCommand insertCommand = new SqlCommand(queryString, conn);
+            {
+                conn.Open();
+
+            }
+            throw new NotImplementedException();
+
         }
 
         public Offer InsertOffer(Offer offer)
