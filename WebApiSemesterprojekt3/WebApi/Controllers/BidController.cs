@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Models;
+using WebApi.BuissnessLogiclayer;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,11 +10,33 @@ namespace WebApi.Controllers
     [ApiController]
     public class BidController : ControllerBase
     {
+        private readonly IPostLogic _bidLogic;
+
+        public BidController(IPostLogic inControl)
+        {
+            _bidLogic = inControl;
+        }
+
+
+
         // GET: api/<ValuesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<Bid>> GetAll()
         {
-            return new string[] { "value3", "value4" };
+            ActionResult<IEnumerable<Bid>>? foundBids = null;
+            List<Bid> res = null;
+            res = _bidLogic.GetAllBids();
+
+            if (res != null)
+            {
+                foundBids = Ok(res);
+            }
+            else
+            {
+                foundBids = NotFound();
+            }
+            return foundBids;
+
         }
 
         // GET api/<ValuesController>/5

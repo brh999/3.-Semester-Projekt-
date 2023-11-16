@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
+using WebApi.BuissnessLogiclayer;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class PostController : ControllerBase
     {
+       
+
         // GET: api/<PostController>
         [HttpGet]
         public ActionResult<List<Post>> Get()

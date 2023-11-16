@@ -2,7 +2,7 @@
 
 namespace WebApi.BuissnessLogiclayer
 {
-    public interface IAccountControl
+    public interface IAccountLogic
     {
         List<Account> GetAllAccounts();
     }

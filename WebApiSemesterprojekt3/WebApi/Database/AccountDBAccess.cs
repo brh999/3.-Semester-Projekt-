@@ -35,7 +35,8 @@ namespace WebApi.Database
             {
                 conn.Open();
                 //TODO add error chekcing mayhaps?
-                res = conn.Query<Account>(queryString).ToList();
+                //res = conn.Query<Account,Post,Account>(queryString, (account, post)=> {account.post = post return account }).ToList();
+
             }
             return res;
         }

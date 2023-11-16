@@ -10,6 +10,7 @@ namespace Models
     {
         public Offer(int amount, double price, Currency currency) : base(amount, price, currency)
         {
+
         }
         public Offer() 
         {

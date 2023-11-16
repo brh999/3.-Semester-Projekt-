@@ -13,10 +13,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountControl _accountCtrl;
+        private readonly IAccountLogic _accountCtrl;
 
 
-        public AccountController(IAccountControl inControl)
+        public AccountController(IAccountLogic inControl)
         {
             _accountCtrl = inControl;
         }
