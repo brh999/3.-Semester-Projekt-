@@ -1,9 +1,13 @@
 ﻿@model IEnumerable<Models.Post>
+@using System.Security.Claims
 @using Models
 
 @{
     ViewData["Title"] = "Index";
 }
+<script>
+   user = ViewData["user"]
+</script>
 
 <style>
     label{
@@ -12,7 +16,7 @@
     }
 </style>
 
-<h1>Index</h1>
+<h1>Welcome: @User.Identity.Name</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
