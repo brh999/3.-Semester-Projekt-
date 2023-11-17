@@ -30,7 +30,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["type"]);
+                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
                         Post bids = new Bid
                         {
                             Amount = (double)reader["amount"],
@@ -59,7 +59,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["type"]);
+                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
                         Post offer = new Offer
                         {
                             Amount = (double)reader["amount"],
