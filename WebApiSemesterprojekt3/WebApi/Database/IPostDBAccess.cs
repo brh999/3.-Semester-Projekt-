@@ -10,6 +10,6 @@ namespace WebApi.Database
 
         Offer InsertOffer(Offer offer);
 
-        Bid InsertBid(Bid bid);
+        void InsertBid(Bid bid);
     }
 }

@@ -48,8 +48,16 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Bid bid)
         {
+            try
+            {
+                _bidLogic.InsertBid(bid);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         // PUT api/<ValuesController>/5
