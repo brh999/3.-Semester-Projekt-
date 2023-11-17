@@ -53,10 +53,12 @@ namespace DesktopClient.UI
 
         }
 
-        private void btnOfferPost_Click(object sender, EventArgs e)
+
+        private void btnOfferPost_Click_1(object sender, EventArgs e)
         {
             this.Hide();
             new OfferPostForm(this).ShowDialog();
+
         }
     }
 }

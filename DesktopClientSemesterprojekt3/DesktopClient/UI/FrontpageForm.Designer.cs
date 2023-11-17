@@ -131,6 +131,7 @@
             btnOfferPost.TabIndex = 1;
             btnOfferPost.Text = "Offer";
             btnOfferPost.UseVisualStyleBackColor = true;
+            btnOfferPost.Click += btnOfferPost_Click_1;
             // 
             // label1
             // 
