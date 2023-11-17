@@ -31,6 +31,12 @@
                 case CurrencyEnum.AUR:
                     _name = "Auroracoin";
                     break;
+                case CurrencyEnum.EUR:
+                    _name = "Euro";
+                    break;
+                case CurrencyEnum.XMR:
+                    _name = "Monero";
+                    break;
                 default:
                     _name = "Dollar";
                     break;
@@ -47,6 +53,6 @@
     }
     public enum CurrencyEnum
     {
-        USD, BTC, XRP, ETH, DOGE, AUR
+        USD, BTC, XRP, ETH, DOGE, AUR, EUR, XMR,
     }
 }
