@@ -7,23 +7,22 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.BusinessLogic
 {
-    public class BidControl : IBidControl
+    internal class OfferControl : IOfferControl
     {
-        public Bid? CreateBid(double amount, double price, Currency currency)
+        public Offer? CreateOffer(double amount, double price, Currency currency)
         {
-
-            Bid? newBid = null;
+            Offer? newOffer = null;
 
             if (amount > 0 && price > 0)
             {
-                newBid = new Bid(amount, price, currency);
+                newOffer = new Offer(amount, price, currency);
             }
             else
             {
                 throw new ArgumentException();
             }
 
-            return newBid;
+            return newOffer;
         }
     }
 }

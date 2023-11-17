@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace DesktopClient.BusinessLogic
 {
-    public interface IBidControl
+    internal interface IOfferControl
     {
-        Bid? CreateBid(double amount, double price, Currency currency);
+        Offer? CreateOffer( double amount, double price, Currency currency);
     }
 }
