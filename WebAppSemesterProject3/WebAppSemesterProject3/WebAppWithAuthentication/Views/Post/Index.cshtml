@@ -42,7 +42,7 @@
 @foreach (var item in ViewData["bids"] as List<Bid>) {
         <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Currency.Name)
+                    @Html.DisplayFor(modelItem => item.Currency.Type)
                 </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
@@ -79,7 +79,7 @@
 {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Currency.Name)
+            @Html.DisplayFor(modelItem => item.Currency.Type)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Amount)

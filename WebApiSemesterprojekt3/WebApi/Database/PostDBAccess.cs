@@ -12,7 +12,7 @@ namespace WebApi.Database
         public PostDBAccess(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("hildur");
+            _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
 

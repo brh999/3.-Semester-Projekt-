@@ -26,7 +26,7 @@ namespace WebApi.Database
         public List<Account> GetAllAccounts()
         {
             List<Account> res = null;
-            string? connectionString = _configuration.GetConnectionString("hildur");
+            string? connectionString = _configuration.GetConnectionString("hildur_prod");
 
             //TODO lav "*" om til individuelle kollonner
             string queryString = "select * from accounts";
