@@ -29,6 +29,14 @@ namespace WebApi.BuissnessLogiclayer
             return (List<Offer>)offers;
         }
 
+        public Bid InsertBid(Bid bid)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Offer InsertOffer(Offer offer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

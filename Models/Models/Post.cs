@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Transactions;
-
-namespace Models
+﻿namespace Models
 {
     public abstract class Post
     {
@@ -29,6 +26,6 @@ namespace Models
         public double Price { get { return _price; } init { _price = value; } }
         public bool IsComplete { get { return _isComplete; } set { _isComplete = value; } }
         public IEnumerable<TransactionLine> Transactions { get { return _transactions; } }
-        public Currency Currency { get { return _currency;} }
+        public Currency Currency { get { return _currency; } init { _currency = value; } }
     }
 }

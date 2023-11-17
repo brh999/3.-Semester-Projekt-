@@ -1,6 +1,6 @@
 ﻿namespace DesktopClient
 {
-    partial class Form1
+    partial class BidPostForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -35,84 +35,98 @@
             label2 = new Label();
             label3 = new Label();
             cmbCurrency = new ComboBox();
+            pnlCreateBuyorder = new Panel();
+            pnlCreateBuyorder.SuspendLayout();
             SuspendLayout();
             // 
             // btnCreateBid
             // 
-            btnCreateBid.Location = new Point(537, 374);
+            btnCreateBid.Location = new Point(20, 217);
             btnCreateBid.Name = "btnCreateBid";
             btnCreateBid.Size = new Size(135, 29);
             btnCreateBid.TabIndex = 0;
-            btnCreateBid.Text = "Create buy order";
+            btnCreateBid.TabStop = false;
+            btnCreateBid.Text = "Create Post";
             btnCreateBid.UseVisualStyleBackColor = true;
             btnCreateBid.Click += btnCreateBid_Click;
             // 
             // txtAmount
             // 
-            txtAmount.Location = new Point(537, 332);
+            txtAmount.Location = new Point(20, 175);
             txtAmount.Name = "txtAmount";
-            txtAmount.Size = new Size(125, 27);
+            txtAmount.Size = new Size(84, 27);
             txtAmount.TabIndex = 1;
             // 
             // txtPrice
             // 
-            txtPrice.Location = new Point(537, 257);
+            txtPrice.Location = new Point(20, 100);
             txtPrice.Name = "txtPrice";
-            txtPrice.Size = new Size(125, 27);
+            txtPrice.Size = new Size(84, 27);
             txtPrice.TabIndex = 2;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(536, 306);
+            label1.Location = new Point(19, 149);
             label1.Name = "label1";
-            label1.Size = new Size(60, 20);
+            label1.Size = new Size(62, 20);
             label1.TabIndex = 3;
-            label1.Text = "amount";
+            label1.Text = "Amount";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(536, 234);
+            label2.Location = new Point(19, 77);
             label2.Name = "label2";
-            label2.Size = new Size(42, 20);
+            label2.Size = new Size(41, 20);
             label2.TabIndex = 4;
-            label2.Text = "price";
+            label2.Text = "Price";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(537, 166);
+            label3.Location = new Point(20, 9);
             label3.Name = "label3";
-            label3.Size = new Size(42, 20);
+            label3.Size = new Size(66, 20);
             label3.TabIndex = 5;
-            label3.Text = "price";
+            label3.Text = "Currency";
             // 
             // cmbCurrency
             // 
+            cmbCurrency.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbCurrency.FormattingEnabled = true;
-            cmbCurrency.Location = new Point(536, 203);
+            cmbCurrency.Location = new Point(19, 46);
             cmbCurrency.Name = "cmbCurrency";
-            cmbCurrency.Size = new Size(151, 28);
+            cmbCurrency.Size = new Size(60, 28);
             cmbCurrency.TabIndex = 6;
+            cmbCurrency.TabStop = false;
             cmbCurrency.SelectedIndexChanged += cmbCurrency_SelectedIndexChanged;
             // 
-            // Form1
+            // pnlCreateBuyorder
+            // 
+            pnlCreateBuyorder.Controls.Add(label3);
+            pnlCreateBuyorder.Controls.Add(cmbCurrency);
+            pnlCreateBuyorder.Controls.Add(btnCreateBid);
+            pnlCreateBuyorder.Controls.Add(txtAmount);
+            pnlCreateBuyorder.Controls.Add(label2);
+            pnlCreateBuyorder.Controls.Add(txtPrice);
+            pnlCreateBuyorder.Controls.Add(label1);
+            pnlCreateBuyorder.Location = new Point(283, 64);
+            pnlCreateBuyorder.Name = "pnlCreateBuyorder";
+            pnlCreateBuyorder.Size = new Size(180, 274);
+            pnlCreateBuyorder.TabIndex = 7;
+            // 
+            // BidPostForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(cmbCurrency);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(txtPrice);
-            Controls.Add(txtAmount);
-            Controls.Add(btnCreateBid);
-            Name = "Form1";
-            Text = "Form1";
+            Controls.Add(pnlCreateBuyorder);
+            Name = "BidPostForm";
+            Text = "Offer Post";
+            pnlCreateBuyorder.ResumeLayout(false);
+            pnlCreateBuyorder.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -124,5 +138,6 @@
         private Label label2;
         private Label label3;
         private ComboBox cmbCurrency;
+        private Panel pnlCreateBuyorder;
     }
 }
