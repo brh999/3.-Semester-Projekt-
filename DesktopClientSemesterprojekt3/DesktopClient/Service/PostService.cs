@@ -19,22 +19,22 @@ namespace DesktopClient.Service
             _connection = new ServiceConnection(baseUrl);
         }
 
-        public async Task<bool> SavePost(Post item)
+        public async Task<bool> SaveBid(Bid item)
         {
             bool savedOk = false;
             try
             {
                 if (_connection != null)
                 {
-                    _connection.UseUrl = _connection.BaseUrl + "bid/";
+                    _connection.UseUrl = _connection.BaseUrl + "bid/insert";
                     var json = JsonConvert.SerializeObject(item);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-
                     var serviceResponse = await _connection.CallServicePost(content);
                     if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
                     {
                         savedOk = true;
                     }
+                    
 
                 }
             }
@@ -42,6 +42,7 @@ namespace DesktopClient.Service
             {
                 savedOk = false;
             }
+            
             return savedOk;
         }
 

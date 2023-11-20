@@ -31,7 +31,15 @@ namespace WebApi.BuissnessLogiclayer
 
         public Bid InsertBid(Bid bid)
         {
-            throw new NotImplementedException();
+            Bid res = bid;
+            try
+            {
+                _dataAccess.InsertBid(bid);
+            } catch (Exception ex)
+            {
+                res = null;
+            }
+            return res;
         }
 
         public Offer InsertOffer(Offer offer)

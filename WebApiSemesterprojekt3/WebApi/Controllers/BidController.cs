@@ -47,9 +47,17 @@ namespace WebApi.Controllers
         }
 
         // POST api/<ValuesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost, Route("insert")]
+        public void InsertBid(Bid bid)
         {
+            try
+            {
+                _bidLogic.InsertBid(bid);
+            }
+            catch
+            {
+
+            }
         }
 
         // PUT api/<ValuesController>/5
