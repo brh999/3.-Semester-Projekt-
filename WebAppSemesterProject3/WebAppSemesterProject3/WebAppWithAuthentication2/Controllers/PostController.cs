@@ -8,7 +8,7 @@ namespace WebAppWithAuthentication.Controllers
     {
         // It's important to note, that 'Post' in this controller
         // - does not refer HTML post action, but Post of bid & offers in our system.
-        [Authorize, Route("{controller}/getallposts")]
+         [Route("{controller}/getallposts")]
         public IActionResult GetAllPosts()
         {
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;

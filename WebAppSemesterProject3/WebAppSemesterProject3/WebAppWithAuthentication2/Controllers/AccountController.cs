@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using WebAppWithAuthentication.DTO;
+using WebAppWithAuthentication2;
 using Models;
 
 namespace WebAppWithAuthentication.Controllers
@@ -11,19 +11,15 @@ namespace WebAppWithAuthentication.Controllers
 
         public async Task<IActionResult> Index()
         {
-        
-            using (Deserializer<Account> ad = new())
+            try
             {
-                try
-                {
-                    //IEnumerable<Account> accounts = await ad.GetList();
+                //IEnumerable<Account> accounts = await ad.GetList();
                     return View();
                 }
                 catch (Exception ex)
                 {
                     return View();
                 }
-            }
         }
 
 
