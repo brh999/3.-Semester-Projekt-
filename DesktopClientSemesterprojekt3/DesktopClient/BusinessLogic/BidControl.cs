@@ -46,7 +46,6 @@ namespace DesktopClient.BusinessLogic
                     throw new Exception("Bid was not saved correctly");
                 }
 
-
             }
             else
             {
