@@ -43,9 +43,9 @@
             }
         }
 
-        public string Name { get { return _name; } }
-        public CurrencyEnum Type { get { return _type; } }
-        public IEnumerable<Exchange> Exchanges { get { return _exchanges; } }
+        public string Name { get { return _name; } set { _name = value; } }
+        public CurrencyEnum Type { get { return _type; } set { } }
+        public IEnumerable<Exchange> Exchanges { get { return _exchanges; } init { _exchanges = value; } }
 
 
     }

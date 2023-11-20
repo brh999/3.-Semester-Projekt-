@@ -96,7 +96,7 @@ namespace WebApi.Database
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
             int res = 0;
             string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
-                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, type, @account_id_fk, @currency_id_fk);";
+                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @account_id_fk, @currency_id_fk);";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -112,11 +112,12 @@ namespace WebApi.Database
                         insertCommand.Parameters.AddWithValue("amount", bid.Amount);
                         insertCommand.Parameters.AddWithValue("price", bid.Price);
                         insertCommand.Parameters.AddWithValue("isComplete", bid.IsComplete);
+                        insertCommand.Parameters.AddWithValue("type", "Bid");
                         //TODO: actually add an account
                         insertCommand.Parameters.AddWithValue("account_id_fk", "1");
                         insertCommand.Parameters.AddWithValue("currency_id_fk", currencyType);
                         insertCommand.ExecuteNonQuery();
-
+                        transaction.Commit();
 
                     }
 

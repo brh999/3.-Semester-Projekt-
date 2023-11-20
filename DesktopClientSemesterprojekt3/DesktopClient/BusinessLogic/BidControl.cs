@@ -24,7 +24,7 @@ namespace DesktopClient.BusinessLogic
             if (amount > 0 && price > 0)
             {
                 newBid = new Bid(amount, price, currency);
-                bool ok = await _postService.SavePost(newBid);
+                bool ok = await _postService.SaveBid(newBid);
 
             }
             else
