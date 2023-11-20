@@ -22,7 +22,10 @@ namespace WebAppWithAuthentication.Controllers
                 }
         }
 
-
+        public IActionResult Login()
+        {
+            return View();
+        }
 
         [HttpGet]
         public IActionResult Edit(int id)
