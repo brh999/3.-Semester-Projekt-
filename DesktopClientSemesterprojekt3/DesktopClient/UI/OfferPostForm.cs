@@ -1,9 +1,11 @@
 ﻿using DesktopClient.BusinessLogic;
+using Microsoft.VisualBasic.Logging;
 using Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -44,16 +46,26 @@ namespace DesktopClient.UI
             IEnumerable<Exchange> exchanges = new List<Exchange>();
             Currency currency = new Currency(currencyEnum, exchanges);
             Offer? createOffer = null;
-            Task createdOffer = Task.Run(() =>
+
+            //Try to create and persist Offer and handle posible errors
+            try
             {
-                _offerControl.CreateOffer(amount, price, currency);
-            });
+                createOffer = await _offerControl.CreateOffer(amount, price, currency);
+            }catch (ArgumentException ex) { 
+                ClearBidInput();
+                MessageBox.Show("Amount and price must be a positive integer");
+                
+            }catch(Exception ex) {
+                MessageBox.Show("Offer was not saved correctly");
+            }
+            
+            
             btnCreateOffer.Enabled = false;
-            await createdOffer;
+            
 
             if (createOffer == null)
             {
-                MessageBox.Show("Input is not valid, only positive integers");
+                
                 ClearBidInput();
             }
 
