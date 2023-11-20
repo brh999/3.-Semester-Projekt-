@@ -39,14 +39,28 @@ namespace DesktopClient
             IEnumerable<Exchange> exchanges = new List<Exchange>();
             Currency currency = new Currency(chosenEnum, exchanges);
             Bid? createBid = null;
-            
+
+            try
+            {
                 createBid = await _bidControl.CreateBid(amount, price, currency);
-            
+            }
+            catch (ArgumentException ex)
+            {
+                ClearBidInput();
+                MessageBox.Show("Amount and price must be a positive integer");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("bid was not saved correctly");
+            }
+
+
+
             btnCreateBid.Enabled = false;
             
 
             if(createBid == null) {
-                MessageBox.Show("Input is not valid, only positive integers");
+                
                 ClearBidInput();
             }
 

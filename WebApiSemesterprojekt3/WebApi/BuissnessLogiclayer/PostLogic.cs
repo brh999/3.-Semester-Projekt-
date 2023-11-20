@@ -1,4 +1,5 @@
 ﻿using Models;
+using System.Security.Cryptography;
 using WebApi.Database;
 
 namespace WebApi.BuissnessLogiclayer
@@ -44,7 +45,16 @@ namespace WebApi.BuissnessLogiclayer
 
         public Offer InsertOffer(Offer offer)
         {
-            throw new NotImplementedException();
+            Offer res = offer;
+            try
+            {
+                _dataAccess.InsertOffer(offer);
+            }
+            catch (Exception ex)
+            {
+                res = null;
+            }
+            return res;
         }
     }
 }

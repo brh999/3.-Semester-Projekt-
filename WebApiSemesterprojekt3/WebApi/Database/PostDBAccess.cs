@@ -1,5 +1,5 @@
-﻿using Dapper;
-using Models;
+﻿using Models;
+using System;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -127,10 +127,45 @@ namespace WebApi.Database
         }
 
 
-                public Offer InsertOffer(Offer offer)
+        public void InsertOffer(Offer offer)
+        {
+            CurrencyDBAccess currencyDBaccess = new(this._configuration);
+            int res = 0;
+            string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
+                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @account_id_fk, @currency_id_fk);";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+                using (SqlCommand insertCommand = conn.CreateCommand())
                 {
-                    throw new NotImplementedException();
+                    {
+                        insertCommand.Transaction = transaction;
+
+                        int currencyType = currencyDBaccess.GetCurrencyID(offer.Currency);
+                        insertCommand.CommandText = queryString;
+                        insertCommand.Parameters.AddWithValue("amount", offer.Amount);
+                        insertCommand.Parameters.AddWithValue("price", offer.Price);
+                        insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
+                        insertCommand.Parameters.AddWithValue("type", "Offer");
+                        //TODO: actually add an account
+                        insertCommand.Parameters.AddWithValue("account_id_fk", "1");
+                        insertCommand.Parameters.AddWithValue("currency_id_fk", currencyType);
+                        insertCommand.ExecuteNonQuery();
+                        transaction.Commit();
+
+                    }
+
                 }
+
             }
         }
+
+
+        
+
+    }
+}
+
 
