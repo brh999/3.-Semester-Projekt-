@@ -12,13 +12,13 @@ namespace WebApi.Database
         public CurrencyDBAccess(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("hildur");
+            _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
         public int GetCurrencyID(Currency item)
         {
 
-            int res;
+            int itemId = 0;
             string queryString = "SELECT id FROM Currencies WHERE currencytype = @type";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -27,13 +27,19 @@ namespace WebApi.Database
                 {
 
                     insertCommand.CommandText = queryString;
-                    insertCommand.Parameters.AddWithValue("type", item.Type.ToString());
-                    SqlDataReader reader = insertCommand.ExecuteReader();
+                    string itemType = item.Type.ToString();
+                    insertCommand.Parameters.AddWithValue("type", itemType);
+                    var result = insertCommand.ExecuteScalar();
 
-                    res = reader.GetInt32(reader.GetOrdinal("id"));
+                    if (result != null)
+                    {
+                        itemId = Convert.ToInt32(result);
+
+                    }
                 }
+                return itemId;
             }
-            return res;
         }
     }
 }
+
