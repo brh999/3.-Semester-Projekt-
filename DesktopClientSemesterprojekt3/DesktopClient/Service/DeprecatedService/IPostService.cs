@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopClient.Service
+namespace DesktopClient.Service.DeprecatedService
 {
     public interface IPostService
     {

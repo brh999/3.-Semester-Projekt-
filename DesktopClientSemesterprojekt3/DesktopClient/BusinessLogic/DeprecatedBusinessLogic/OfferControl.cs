@@ -1,4 +1,4 @@
-﻿using DesktopClient.Service;
+﻿using DesktopClient.Service.DeprecatedService;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -6,16 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopClient.BusinessLogic
+namespace DesktopClient.BusinessLogic.DeprecatedBusinessLogic
 {
     internal class OfferControl : IOfferControl
     {
 
         private IPostService _postService;
 
-        public OfferControl() { 
+        public OfferControl()
+        {
             _postService = new PostService();
-        
+
         }
         public async Task<Offer> CreateOffer(double amount, double price, Currency currency)
         {
@@ -30,7 +31,7 @@ namespace DesktopClient.BusinessLogic
                 {
                     throw new Exception("Offer was not save correctly");
                 }
-                
+
             }
             else
             {

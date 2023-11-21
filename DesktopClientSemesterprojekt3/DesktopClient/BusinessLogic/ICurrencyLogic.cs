@@ -1,5 +1,4 @@
-﻿using Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.BusinessLogic
 {
-    internal interface IOfferControl
+    internal interface ICurrencyLogic
     {
-        Task<Offer> CreateOffer( double amount, double price, Currency currency);
+        bool CreateCurrency(string name);
     }
 }
