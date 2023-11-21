@@ -32,11 +32,11 @@ namespace WebApi.Controllers
             return foundReturn;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet, Route("/{id}")]
         public ActionResult<Account> GetAccount([FromBody] int id)
         {
-
+            return null;
         }
     }
 
