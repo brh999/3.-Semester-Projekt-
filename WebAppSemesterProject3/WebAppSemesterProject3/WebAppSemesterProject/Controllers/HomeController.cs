@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebAppWithAuthentication2.Models;
+using WebAppSemesterProject.Models;
 
 namespace WebAppSemesterProject.Controllers
 {

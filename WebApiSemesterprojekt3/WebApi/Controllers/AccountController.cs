@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using WebApi.BuissnessLogiclayer;
 using WebApi.Database;
 using Models;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,6 +30,13 @@ namespace WebApi.Controllers
 
             foundReturn = _accountCtrl.GetAllAccounts();
             return foundReturn;
+        }
+
+        [Authorize]
+        [HttpGet, Route("/{id}")]
+        public ActionResult<Account> GetAccount([FromBody] int id)
+        {
+
         }
     }
 

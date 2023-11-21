@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using WebAppWithAuthentication2;
+using WebAppSemesterProject;
 using Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAppSemesterProject.Controllers
 {
     public class AccountController : Controller
     {
-        
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
+            string userID = User.Identity.Name;
             try
             {
                 //IEnumerable<Account> accounts = await ad.GetList();
