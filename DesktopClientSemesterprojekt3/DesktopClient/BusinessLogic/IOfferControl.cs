@@ -9,6 +9,6 @@ namespace DesktopClient.BusinessLogic
 {
     internal interface IOfferControl
     {
-        Offer? CreateOffer( double amount, double price, Currency currency);
+        Task<Offer> CreateOffer( double amount, double price, Currency currency);
     }
 }

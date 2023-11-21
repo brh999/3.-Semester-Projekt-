@@ -9,7 +9,7 @@ namespace DesktopClient.Service
 {
     public interface IPostService
     {
-        Task<bool> SavePost(Post item);
+        Task<bool> SaveBid(Bid item);
         Task<List<Bid>> GetAllBids();
         Task<bool> SaveOffer(Offer item);
 

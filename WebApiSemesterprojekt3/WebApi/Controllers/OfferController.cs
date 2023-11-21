@@ -46,12 +46,29 @@ namespace WebApi.Controllers
         }
 
         // POST api/<ValuesController>
-        //[HttpPost, Route("post")]
-        //public IActionResult PostNewOffer([FromBody] Post<Offer> inPost
-        //{
-        //    IActionResult foundReturn;S
-        //    Post insertedOffer = _offerLogic.InsertOffer(inPost)
-        //}
+       [HttpPost]
+        public IActionResult Post([FromBody] Offer inPost)
+        {
+            IActionResult result = StatusCode(500);
+            Offer? isOfferValid = null;
+            try
+            {
+                isOfferValid = _offerLogic.InsertOffer(inPost);
+            }
+            catch (Exception ex) {
+                
+            
+            }
+            
+            // Checks if offer is saved into the database
+            if(isOfferValid != null)
+            {
+                result = Ok();
+            }
+
+            return result;
+            
+        }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
@@ -64,5 +81,7 @@ namespace WebApi.Controllers
         public void Delete(int id)
         {
         }
+
+        
     }
 }

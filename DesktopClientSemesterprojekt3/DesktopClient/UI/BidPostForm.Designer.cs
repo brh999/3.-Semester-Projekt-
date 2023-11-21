@@ -123,7 +123,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(pnlCreateBuyorder);
             Name = "BidPostForm";
-            Text = "Offer Post";
+            Text = "Bid Post";
             pnlCreateBuyorder.ResumeLayout(false);
             pnlCreateBuyorder.PerformLayout();
             ResumeLayout(false);

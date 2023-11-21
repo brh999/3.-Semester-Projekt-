@@ -1,4 +1,5 @@
 ﻿using Models;
+using System;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -90,24 +91,81 @@ namespace WebApi.Database
         }
 
         //TODO contiue implementing this!!
-        public Bid InsertBid(Bid bid)
+        public void InsertBid(Bid bid)
         {
+            CurrencyDBAccess currencyDBaccess = new(this._configuration);
+            int res = 0;
             string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
-                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @, 1);";
+                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @account_id_fk, @currency_id_fk);";
 
-            using SqlConnection conn = new SqlConnection(_connectionString);
-            using SqlCommand insertCommand = new SqlCommand(queryString, conn);
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+                using (SqlCommand insertCommand = conn.CreateCommand())
+                {
+                    {
+                        insertCommand.Transaction = transaction;
+
+                        int currencyType = currencyDBaccess.GetCurrencyID(bid.Currency);
+                        insertCommand.CommandText = queryString;
+                        insertCommand.Parameters.AddWithValue("amount", bid.Amount);
+                        insertCommand.Parameters.AddWithValue("price", bid.Price);
+                        insertCommand.Parameters.AddWithValue("isComplete", bid.IsComplete);
+                        insertCommand.Parameters.AddWithValue("type", "Bid");
+                        //TODO: actually add an account
+                        insertCommand.Parameters.AddWithValue("account_id_fk", "1");
+                        insertCommand.Parameters.AddWithValue("currency_id_fk", currencyType);
+                        insertCommand.ExecuteNonQuery();
+                        transaction.Commit();
+
+                    }
+
+                }
 
             }
-            throw new NotImplementedException();
-
         }
 
-        public Offer InsertOffer(Offer offer)
+
+        public void InsertOffer(Offer offer)
         {
-            throw new NotImplementedException();
+            CurrencyDBAccess currencyDBaccess = new(this._configuration);
+            int res = 0;
+            string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
+                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @account_id_fk, @currency_id_fk);";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+                using (SqlCommand insertCommand = conn.CreateCommand())
+                {
+                    {
+                        insertCommand.Transaction = transaction;
+
+                        int currencyType = currencyDBaccess.GetCurrencyID(offer.Currency);
+                        insertCommand.CommandText = queryString;
+                        insertCommand.Parameters.AddWithValue("amount", offer.Amount);
+                        insertCommand.Parameters.AddWithValue("price", offer.Price);
+                        insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
+                        insertCommand.Parameters.AddWithValue("type", "Offer");
+                        //TODO: actually add an account
+                        insertCommand.Parameters.AddWithValue("account_id_fk", "1");
+                        insertCommand.Parameters.AddWithValue("currency_id_fk", currencyType);
+                        insertCommand.ExecuteNonQuery();
+                        transaction.Commit();
+
+                    }
+
+                }
+
+            }
         }
+
+
+        
+
     }
 }
+
+

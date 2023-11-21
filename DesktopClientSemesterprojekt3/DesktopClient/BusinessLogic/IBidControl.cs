@@ -10,6 +10,8 @@ namespace DesktopClient.BusinessLogic
 {
     public interface IBidControl
     {
-        Bid? CreateBid(double amount, double price, Currency currency);
+
+         Task<Bid?> CreateBid(double amount, double price, Currency currency);
+
     }
 }
