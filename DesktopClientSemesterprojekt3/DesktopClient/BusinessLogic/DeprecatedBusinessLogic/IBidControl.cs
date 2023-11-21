@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace DesktopClient.BusinessLogic
+namespace DesktopClient.BusinessLogic.DeprecatedBusinessLogic
 {
     public interface IBidControl
     {
 
-         Task<Bid?> CreateBid(double amount, double price, Currency currency);
+        Task<Bid?> CreateBid(double amount, double price, Currency currency);
 
     }
 }

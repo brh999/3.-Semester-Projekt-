@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using static System.Net.WebRequestMethods;
 using System.Linq.Expressions;
 
-namespace DesktopClient.Service
+namespace DesktopClient.Service.DeprecatedService
 {
 
     public class PostService : IPostService
@@ -34,7 +34,7 @@ namespace DesktopClient.Service
                     {
                         savedOk = true;
                     }
-                    
+
 
                 }
             }
@@ -42,7 +42,7 @@ namespace DesktopClient.Service
             {
                 savedOk = false;
             }
-            
+
             return savedOk;
         }
 
