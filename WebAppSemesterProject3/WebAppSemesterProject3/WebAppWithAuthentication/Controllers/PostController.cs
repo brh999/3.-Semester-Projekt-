@@ -58,5 +58,77 @@ namespace WebAppWithAuthentication.Controllers
             ViewData["user"] = loggedInUser;
             return View();
         }
+
+        [Authorize]
+        public IActionResult CreateOffer()
+        {
+            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+            return View();
+        }
+
+        
+        [Authorize]
+        [HttpPost]
+        public IActionResult CreateOffer([FromBody] Offer inPost)
+        {
+            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult CreateOffer([FromBody] Bid inPost)
+        {
+            return Ok();
+        }
+
+        [Authorize]
+        public IActionResult EditOffer(int id)
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPut]
+        public IActionResult EditOffer([FromBody] Bid inBid)
+        {
+            return Ok();
+        }
+
+        public IActionResult DeleteOffer(int id)
+        {
+            return Ok();
+        }
+
+
+        [Authorize]
+        public IActionResult CreateBid()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult CreateBid([FromBody] Bid inPost)
+        {
+            return Ok();
+        }
+
+        [Authorize]
+        public IActionResult EditBid(int id)
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPut]
+        public IActionResult EditBid([FromBody] Bid inBid)
+        {
+            return Ok();
+        }
+
+        public IActionResult DeleteBid(int id) {
+            return Ok();
+        }
     }
 }
