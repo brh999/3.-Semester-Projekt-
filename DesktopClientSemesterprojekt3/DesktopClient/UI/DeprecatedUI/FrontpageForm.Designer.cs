@@ -52,54 +52,58 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(800, 450);
+            panel1.Size = new Size(700, 338);
             panel1.TabIndex = 0;
             // 
             // lblOffer
             // 
             lblOffer.AutoSize = true;
-            lblOffer.Location = new Point(546, 66);
+            lblOffer.Location = new Point(478, 50);
             lblOffer.Name = "lblOffer";
-            lblOffer.Size = new Size(94, 20);
+            lblOffer.Size = new Size(75, 15);
             lblOffer.TabIndex = 5;
             lblOffer.Text = "Active Offers";
             // 
             // lblBids
             // 
             lblBids.AutoSize = true;
-            lblBids.Location = new Point(225, 66);
+            lblBids.Location = new Point(197, 50);
             lblBids.Name = "lblBids";
-            lblBids.Size = new Size(82, 20);
+            lblBids.Size = new Size(65, 15);
             lblBids.TabIndex = 4;
             lblBids.Text = "Active Bids";
             // 
             // lstBoxOffer
             // 
             lstBoxOffer.FormattingEnabled = true;
-            lstBoxOffer.ItemHeight = 20;
-            lstBoxOffer.Location = new Point(546, 89);
+            lstBoxOffer.ItemHeight = 15;
+            lstBoxOffer.Location = new Point(478, 67);
+            lstBoxOffer.Margin = new Padding(3, 2, 3, 2);
             lstBoxOffer.Name = "lstBoxOffer";
-            lstBoxOffer.Size = new Size(177, 304);
+            lstBoxOffer.Size = new Size(155, 229);
             lstBoxOffer.TabIndex = 3;
             // 
             // lstBoxBid
             // 
             lstBoxBid.FormattingEnabled = true;
-            lstBoxBid.ItemHeight = 20;
-            lstBoxBid.Location = new Point(225, 89);
+            lstBoxBid.ItemHeight = 15;
+            lstBoxBid.Location = new Point(197, 67);
+            lstBoxBid.Margin = new Padding(3, 2, 3, 2);
             lstBoxBid.Name = "lstBoxBid";
-            lstBoxBid.Size = new Size(177, 304);
+            lstBoxBid.Size = new Size(155, 229);
             lstBoxBid.TabIndex = 2;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 18F));
             tableLayoutPanel1.Controls.Add(btnBidPost, 0, 0);
             tableLayoutPanel1.Controls.Add(btnOfferPost, 0, 1);
-            tableLayoutPanel1.Location = new Point(12, 109);
+            tableLayoutPanel1.Location = new Point(10, 82);
+            tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 8;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
@@ -110,14 +114,15 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel1.Size = new Size(81, 284);
+            tableLayoutPanel1.Size = new Size(71, 213);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // btnBidPost
             // 
-            btnBidPost.Location = new Point(3, 3);
+            btnBidPost.Location = new Point(3, 2);
+            btnBidPost.Margin = new Padding(3, 2, 3, 2);
             btnBidPost.Name = "btnBidPost";
-            btnBidPost.Size = new Size(75, 29);
+            btnBidPost.Size = new Size(65, 22);
             btnBidPost.TabIndex = 0;
             btnBidPost.Text = "Bid";
             btnBidPost.UseVisualStyleBackColor = true;
@@ -125,9 +130,10 @@
             // 
             // btnOfferPost
             // 
-            btnOfferPost.Location = new Point(3, 38);
+            btnOfferPost.Location = new Point(3, 28);
+            btnOfferPost.Margin = new Padding(3, 2, 3, 2);
             btnOfferPost.Name = "btnOfferPost";
-            btnOfferPost.Size = new Size(75, 29);
+            btnOfferPost.Size = new Size(65, 22);
             btnOfferPost.TabIndex = 1;
             btnOfferPost.Text = "Offer";
             btnOfferPost.UseVisualStyleBackColor = true;
@@ -140,16 +146,17 @@
             label1.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point);
             label1.Location = new Point(0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(240, 46);
+            label1.Size = new Size(192, 37);
             label1.TabIndex = 0;
             label1.Text = "Our Exchange";
             // 
             // FrontpageForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(700, 338);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "FrontpageForm";
             Text = "FrontpageForm";
             panel1.ResumeLayout(false);
