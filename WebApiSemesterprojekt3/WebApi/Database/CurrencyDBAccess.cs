@@ -59,8 +59,8 @@ namespace WebApi.Database
                         Currency currency = new Currency()
                         { 
                             
-                            Type = (string)reader["currencytype"]
-
+                            Type = (string)reader["currencytype"],
+                            Exchanges = GetExchangesForCurrency((string)reader["currencytype"])
                         };
                         currencies.Add(currency);
                     }
@@ -68,6 +68,38 @@ namespace WebApi.Database
             }
 
             return currencies;
+        }
+
+        private IEnumerable<Exchange> GetExchangesForCurrency(string currencyType)
+        {
+            List<Exchange> exchanges = new List<Exchange>();
+
+
+          
+            string queryString = " SELECT * FROM Exchanges INNER JOIN Currencies ON Exchanges.ID = Currencies.Exchange_id_fk WHERE currencytype = @type";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                selectCommand.Parameters.AddWithValue("type", currencyType);
+
+                using (SqlDataReader reader = selectCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Exchange exchange = new Exchange()
+                        {
+                           Value = (double)reader["value"],
+                            Date = (DateTime)reader["date"],
+                            
+                        };
+                        exchanges.Add(exchange);
+                    }
+                }
+            }
+
+            return exchanges;
         }
 
     }

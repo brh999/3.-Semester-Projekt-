@@ -16,7 +16,7 @@
             _date = date;
         }
 
-        public double Value { get { return _value; } }
-        public DateTime Date { get { return _date; } }
+        public double Value { get { return _value; } init { _value = value; } }
+        public DateTime Date { get { return _date; } init { _date = value; } }
     }
 }
