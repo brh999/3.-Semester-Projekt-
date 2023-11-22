@@ -1,10 +1,6 @@
 ﻿using Models;
-using System.Text;
-
 using Newtonsoft.Json;
-
-using static System.Net.WebRequestMethods;
-using System.Linq.Expressions;
+using System.Text;
 
 namespace DesktopClient.Service
 {
@@ -34,7 +30,7 @@ namespace DesktopClient.Service
                     {
                         savedOk = true;
                     }
-                    
+
 
                 }
             }
@@ -42,19 +38,24 @@ namespace DesktopClient.Service
             {
                 savedOk = false;
             }
-            
+
             return savedOk;
         }
 
-        public async Task<List<Bid>> GetAllBids()
+        public async Task<List<Bid>> GetAllBids(string tokenToUse)
         {
             List<Bid>? res = null;
-            //Check if the connection is running - if it is, do stuff
+
+            string bearerTokenValue = authenType + " " + tokenToUse;
+            _connection.HttpEnabler.DefaultRequestHeaders.Remove("Authorization");   // To avoid more Authorization headers
+            _connection.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
+
             if (_connection != null)
             {
                 // Attach the route to the url and call the get method in the API
                 _connection.UseUrl = _connection.BaseUrl + "bid/";
                 var serviceResponse = await _connection.CallServiceGet();
+
                 // Check if the call is answered and it was successful
                 if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
                 {
