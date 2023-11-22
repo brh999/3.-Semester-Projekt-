@@ -36,8 +36,16 @@ namespace WebApi.Controllers
         [HttpGet, Route("/{id}")]
         public ActionResult<Account> GetAccount([FromBody] int id)
         {
-            return null;
+            Account account = _accountCtrl.GetAccountById(id);
+
+
+
+            return account;
         }
+
+        
+
+
     }
 
 }

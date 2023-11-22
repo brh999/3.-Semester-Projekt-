@@ -1,0 +1,52 @@
+﻿@model Models.Offer
+@using Models;
+
+@{
+    ViewData["Title"] = "CreateOffer";
+    Account account = ViewData["account"] as Account;
+    List<SelectListItem> listItems = new List<SelectListItem>();
+
+    foreach(var item in account.Wallet)
+    {
+        listItems.Add(new SelectListItem
+        {
+            Text = $"{item.Amount.ToString()} {item.Currency.Name}"
+        });
+    }
+}
+
+<h1>CreateOffer</h1>
+
+<h4>Offer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateOffer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class=" form-group">
+                @Html.DropDownList("yourDropName", listItems, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="CreateOffer" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
