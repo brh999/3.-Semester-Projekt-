@@ -1,20 +1,20 @@
-﻿using DesktopClient.Service;
-using Models;
+﻿using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DesktopClient.Service;
+using DesktopClient.Service.DeprecatedService;
 
-namespace DesktopClient.BusinessLogic
+namespace DesktopClient.BusinessLogic.DeprecatedBusinessLogic
 {
     public class BidControl : IBidControl
-        
+
     {
         private IPostService _postService;
 
-        public BidControl() { 
+        public BidControl()
+        {
             _postService = new PostService();
         }
 
@@ -42,7 +42,8 @@ namespace DesktopClient.BusinessLogic
                 bool ok = await _postService.SaveBid(newBid);
 
                 // Check that the bid was saved correctly
-                if (!ok) {
+                if (!ok)
+                {
                     throw new Exception("Bid was not saved correctly");
                 }
 

@@ -1,4 +1,4 @@
-using DesktopClient.BusinessLogic;
+using DesktopClient.BusinessLogic.DeprecatedBusinessLogic;
 using Models;
 
 namespace DesktopClient

@@ -1,4 +1,4 @@
-﻿using DesktopClient.Service;
+﻿using DesktopClient.Service.DeprecatedService;
 using Models;
 using System;
 using System.Collections.Generic;
