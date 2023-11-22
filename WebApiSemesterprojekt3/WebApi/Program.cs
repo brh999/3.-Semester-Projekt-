@@ -13,6 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IAccountDBAccess, AccountDBAccess>();
 builder.Services.AddSingleton<IPostDBAccess, PostDBAccess>();
 builder.Services.AddSingleton<IPostLogic, PostLogic>();
+builder.Services.AddSingleton<ICurrencyLogic, CurrencyLogic>();
+builder.Services.AddSingleton<ICurrencyDBAccess, CurrencyDBAccess>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = "JwtBearer";

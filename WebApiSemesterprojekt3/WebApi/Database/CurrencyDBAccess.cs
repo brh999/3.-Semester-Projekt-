@@ -6,7 +6,7 @@ namespace WebApi.Database
 {
     public class CurrencyDBAccess : ICurrencyDBAccess
     {
-        private IConfiguration _configuration { get; set; }
+        private IConfiguration _configuration;
         private string? _connectionString;
 
         public CurrencyDBAccess(IConfiguration configuration)
@@ -40,6 +40,38 @@ namespace WebApi.Database
                 return itemId;
             }
         }
+
+        public IEnumerable<Currency> GetCurrencyList()
+        {
+            List<Currency> currencies = new List<Currency>();
+            string queryString = "SELECT * FROM Currencies";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                
+
+                using (SqlDataReader reader = selectCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Currency currency = new Currency()
+                        { 
+                            
+                            Type = (string)reader["currencytype"]
+
+                        };
+                        currencies.Add(currency);
+                    }
+                }
+            }
+
+            return currencies;
+        }
+
     }
 }
+
+
 
