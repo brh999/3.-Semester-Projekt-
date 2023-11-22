@@ -57,8 +57,8 @@ namespace WebApi.Controllers
                 { "email", "smithtest@tesst.com" },
                 { "granttype", grantType },
                 { "exp", ts },
-                { "iss", "https://localhost:5042" }, // Issuer - the party that generates the JWT
-                { "aud", "https://localhost:5042" }  // Audience - The address of the resource
+                { "iss", "http://localhost:5042" }, // Issuer - the party that generates the JWT
+                { "aud", "http://localhost:5042" }  // Audience - The address of the resource
             };
 
             JwtSecurityToken secToken = new JwtSecurityToken(header, payload);

@@ -4,10 +4,11 @@ using System.Text;
 
 namespace DesktopClient.Service.DeprecatedService
 {
-
+    [Obsolete]
     public class PostService : IPostService
     {
         private string baseUrl = "http://localhost:5042/api/";
+        private string authenType;
         private readonly IServiceConnection _connection;
 
         public PostService()
@@ -46,6 +47,7 @@ namespace DesktopClient.Service.DeprecatedService
         {
             List<Bid>? res = null;
 
+            //This does not work, which is fine since it has been depricated 
             string bearerTokenValue = authenType + " " + tokenToUse;
             _connection.HttpEnabler.DefaultRequestHeaders.Remove("Authorization");   // To avoid more Authorization headers
             _connection.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);

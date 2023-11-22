@@ -1,16 +1,12 @@
 ﻿using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DesktopClient.Service.DeprecatedService
 {
+    [Obsolete]
     public interface IPostService
     {
         Task<bool> SaveBid(Bid item);
-        Task<List<Bid>> GetAllBids();
+        Task<List<Bid>> GetAllBids(string tokenToUse);
         Task<bool> SaveOffer(Offer item);
 
         Task<List<Offer>> GetAllOffers();
