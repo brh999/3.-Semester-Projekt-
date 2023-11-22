@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DesktopClient.Service
+﻿namespace DesktopClient.Service
 {
     public class ServiceConnection : IServiceConnection
     {
@@ -15,7 +9,8 @@ namespace DesktopClient.Service
             UseUrl = BaseUrl;
         }
 
-        public HttpClient HttpEnabler { private get; init; }
+
+        public HttpClient HttpEnabler { get; init; }
         public string? BaseUrl { get; init; }
         public string? UseUrl { get; set; }
 
@@ -58,6 +53,17 @@ namespace DesktopClient.Service
             }
             return hrm;
         }
+
+        public async Task<HttpResponseMessage?> CallServicePost(HttpRequestMessage postRequest)
+        {
+            HttpResponseMessage? hrm = null;
+            if (UseUrl != null)
+            {
+                hrm = await HttpEnabler.SendAsync(postRequest);
+            }
+            return hrm;
+        }
+
 
     }
 }

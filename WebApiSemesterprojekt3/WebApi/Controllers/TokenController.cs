@@ -52,7 +52,7 @@ namespace WebApi.Controllers
             int ts = (int)(expiry - new DateTime(1970, 1, 1)).TotalSeconds;
 
             var payload = new JwtPayload {
-                { "sub", "testSubject" },
+                { "sub", "Desktop Authentication" },
                 { "Name", username },
                 { "email", "smithtest@tesst.com" },
                 { "granttype", grantType },

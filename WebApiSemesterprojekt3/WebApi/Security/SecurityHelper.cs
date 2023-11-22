@@ -24,9 +24,13 @@ namespace WebApi.Security
 
         public bool IsValidUsernameAndPassword(string username, string password)
         {
-            string allowedUsername = _configuration["AllowDesktopApp:Username"];
-            string allowedPassword = _configuration["AllowDesktopApp:Password"];
-            bool credentialsOk = (username.Equals(allowedUsername)) && (password.Equals(allowedPassword));
+            string[] allowedUsernames = { _configuration["AllowDesktopApp:Username"], _configuration["AllowWebApp:Username"] };
+            string[] allowedPasswords = { _configuration["AllowDesktopApp:Password"], _configuration["AllowWebApp:Password"] };
+            bool credentialsOk = false;
+            for (int i = 0; i < allowedUsernames.Length && !credentialsOk; i++)
+            {
+                credentialsOk = (username.Equals(allowedUsernames[i])) && (password.Equals(allowedPasswords[i]));
+            }
             return credentialsOk;
         }
     }

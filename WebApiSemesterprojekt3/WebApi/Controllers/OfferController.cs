@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using WebApi.BuissnessLogiclayer;
 
@@ -8,6 +9,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OfferController : ControllerBase
     {
 
@@ -49,7 +51,7 @@ namespace WebApi.Controllers
         }
 
         // POST api/<ValuesController>
-       [HttpPost]
+        [HttpPost]
         public IActionResult Post([FromBody] Offer inPost)
         {
             IActionResult result = StatusCode(500);
@@ -58,19 +60,20 @@ namespace WebApi.Controllers
             {
                 isOfferValid = _offerLogic.InsertOffer(inPost);
             }
-            catch (Exception ex) {
-                
-            
+            catch (Exception ex)
+            {
+
+
             }
-            
+
             // Checks if offer is saved into the database
-            if(isOfferValid != null)
+            if (isOfferValid != null)
             {
                 result = Ok();
             }
 
             return result;
-            
+
         }
 
         // PUT api/<ValuesController>/5
@@ -85,6 +88,6 @@ namespace WebApi.Controllers
         {
         }
 
-        
+
     }
 }

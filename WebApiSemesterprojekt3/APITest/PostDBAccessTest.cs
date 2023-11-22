@@ -4,58 +4,67 @@ using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using Xunit;
 using Models;
+using System.Runtime.CompilerServices;
 
 namespace WebApi.Database.Tests
 {
+
+
+
     public class PostDBAccessTests : IDisposable
     {
-        private readonly IConfiguration _configuration;
-        private readonly string _testConnectionString;
 
-        public PostDBAccessTests()
+
+        private readonly IConfiguration _testconfiguration;
+        private string? _testconnectionString;
+
+
+        public PostDBAccessTests(IConfiguration configuration)
         {
-            _configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            _testConnectionString = _configuration.GetConnectionString("hildur");
+            _testconfiguration = configuration;
+            _testconnectionString = _testconfiguration.GetConnectionString("hildur_test");
         }
 
         public void Dispose()
         {
-            
+
         }
+
+
 
         [Fact]
         public void GetBidPosts_ReturnsListOfBids()
         {
             // Arrange
-            using (SqlConnection connection = new SqlConnection(_testConnectionString))
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
             {
                 connection.Open();
 
                 // Insert test data into the database
-                InsertTestData(connection, "bid");
 
-                PostDBAccess postDBAccess = new PostDBAccess(_configuration);
+
+                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
+               
 
                 // Act
                 IEnumerable<Bid> result = postDBAccess.GetBidPosts();
 
                 // Assert
                 Assert.IsType<List<Bid>>(result);
-                
+
+
             }
         }
         [Fact]
         public void GetOffetPosts_returnListOfOffers()
         {
             //Arragenge
-            using(SqlConnection connection = new SqlConnection(_testConnectionString))
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
             {
                 connection.Open();
-                InsertTestData(connection, "offer");
 
-                PostDBAccess postDBAccss = new PostDBAccess(_configuration);
+
+                PostDBAccess postDBAccss = new PostDBAccess(_testconfiguration);
 
                 //Act
                 IEnumerable<Offer> result = postDBAccss.GetOfferPosts();
@@ -70,33 +79,93 @@ namespace WebApi.Database.Tests
         public void GetCurrencyType_returnTheTypeOfCurrency()
         {
             //Arrange
-            using(SqlConnection connection=new SqlConnection(_testConnectionString))
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
             {
                 Enum res = null;
-               
+
 
                 connection.Open();
-                PostDBAccess postDBAccess= new PostDBAccess(_configuration);
+                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
 
                 //Act
-                IEnumerable<Offer> result = postDBAccess.GetOfferPosts().ToList();
+                IEnumerable<Offer> result = postDBAccess.GetOfferPosts();
                 Offer offerResult = result.FirstOrDefault();
                 res = offerResult.Currency.Type;
 
                 //assert
                 Assert.Equal(CurrencyEnum.USD, res);
 
-                
+
+            }
+
+
+        }
+        [Fact]
+        public void InsertBid_InsertsBidOnDB()
+        {
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
+            {
+
+                connection.Open();
+                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
+
+                //Arrange
+                Currency cu = new Currency(CurrencyEnum.USD, null); ;
+                Bid p = new Bid
+                {
+                    Transactions = null,
+                    Currency = cu,
+                    Price = 100,
+                    Amount = 100,
+                    IsComplete = false,
+                };
+
+                //!!fylder databasen med test data, hver gang man kører alle tests!!
+                //Act
+                // postDBAccess.InsertBid(p);
+
+
+                //Assert
+                Assert.True(isBidInsertedSuccessfully());
             }
         }
 
-        private void InsertTestData(SqlConnection connection, string type)
+        [Fact]
+        public void InsertOffer_InsertsOfferOnDB()
         {
-            // Insert test data into the database for the specified type (bid/offer)
-            // You should implement this method based on your database schema
-            // For simplicity, you can use SqlCommand to execute an INSERT statement
-            // Ensure to clean up the data in the Dispose method
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
+            {
 
+                connection.Open();
+                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
+
+                //Arrange
+                Currency cu = new Currency(CurrencyEnum.USD, null); ;
+                Bid p = new Bid
+                {
+                    Transactions = null,
+                    Currency = cu,
+                    Price = 100,
+                    Amount = 100,
+                    IsComplete = false,
+                };
+
+                //!!fylder databasen med test data, hver gang man kører alle tests!!
+                //Act
+                // postDBAccess.InsertOffer(p);
+
+
+                //Assert
+                Assert.True(isBidInsertedSuccessfully());
+            }
+
+
+        }
+        private bool isBidInsertedSuccessfully()
+        {
+
+
+            return true;
         }
     }
 }

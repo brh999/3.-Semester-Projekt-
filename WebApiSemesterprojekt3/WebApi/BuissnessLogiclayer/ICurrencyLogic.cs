@@ -6,5 +6,7 @@ namespace WebApi.BuissnessLogiclayer
     {
 
         int GetCurrencyId(Currency item);
+
+        List<Currency> GetCurrencyList();
     }
 }

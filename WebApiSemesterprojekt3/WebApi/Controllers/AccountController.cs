@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-using WebApi.BuissnessLogiclayer;
-using WebApi.Database;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Microsoft.AspNetCore.Authorization;
+using WebApi.BuissnessLogiclayer;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountLogic _accountCtrl;
@@ -49,4 +49,4 @@ namespace WebApi.Controllers
     }
 
 }
-    
+
