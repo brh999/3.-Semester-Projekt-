@@ -15,7 +15,11 @@ namespace WebAppSemesterProject.Controllers
             string userID = User.Identity.Name;
             try
             {
-                //IEnumerable<Account> accounts = await ad.GetList();
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("http://localhost:5042/api/");
+                var responseTask = client.GetAsync("bid");
+                responseTask.Wait();
+                //IEnumerable<Account> accounts = await 
                     return View();
                 }
                 catch (Exception ex)
