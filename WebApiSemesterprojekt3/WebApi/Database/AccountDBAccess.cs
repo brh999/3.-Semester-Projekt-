@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using Models;
 using Microsoft.AspNetCore.Http;
+using Models.DTO;
 
 namespace WebApi.Database
 {
@@ -32,17 +33,40 @@ namespace WebApi.Database
             using (SqlConnection conn = new SqlConnection(_connectionString)) {
                 conn.Open();
                 SqlTransaction transaction = conn.BeginTransaction();
-                using (SqlCommand insertCommand = conn.CreateCommand())
+
+                account = conn.Query<Account>(queryStringAccount).Single();
+
+
+
+
+                AccountDto accountDto = new AccountDto();
+
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    
-                    
-    
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = queryStringWallet;
 
 
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        
+                        while(reader.Read())
+                        {
+                            string currencyType = (string)reader["type"];
+                            double amount = (double)reader["amount"];
 
-                return account;
+                            Currency currency = new(new List<Exchange>(), currencyType);
+
+                            CurrencyLine line = new CurrencyLine(amount,currency);
+
+                            account.AddCurrencyLine(line);
+                        }
+                    }
                 }
             }
+
+
+            return account;
         }
 
         public List<Account> GetAllAccounts()
