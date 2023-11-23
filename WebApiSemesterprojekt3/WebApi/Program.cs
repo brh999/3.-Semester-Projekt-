@@ -15,6 +15,7 @@ builder.Services.AddSingleton<IPostLogic, PostLogic>();
 builder.Services.AddSingleton<ICurrencyLogic, CurrencyLogic>();
 builder.Services.AddSingleton<ICurrencyDBAccess, CurrencyDBAccess>();
 
+
 // Configure the JWT Authentication Service
 builder.Services.AddAuthentication(options =>
 {
