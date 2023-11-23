@@ -76,7 +76,7 @@ namespace WebApi.Database
 
         private Currency CreateCurrency(string inType)
         {
-            Currency res = new Currency(new List<Exchange>(), inType);
+            Currency res = new Currency(new Exchange(), inType);
 
             return res;
     
