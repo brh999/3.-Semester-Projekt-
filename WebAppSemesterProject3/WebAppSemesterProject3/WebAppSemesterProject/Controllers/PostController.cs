@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Models.DTO;
 
 namespace WebAppSemesterProject.Controllers
 {
@@ -8,15 +9,38 @@ namespace WebAppSemesterProject.Controllers
     {
         // It's important to note, that 'Post' in this controller
         // - does not refer HTML post action, but Post of bid & offers in our system.
-         [Route("{controller}/getallposts")]
+
+        private Uri _url;
+        private readonly IConfiguration _configuration;
+        public PostController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            string? url = _configuration.GetConnectionString("DefaultAPI");
+            if(url != null)
+            {
+                _url = new Uri(url);
+
+            }
+            else
+            {
+                throw new Exception("Could not find");
+            }
+        }
+
+        [Authorize]
+        
+        [Route("{controller}/getallposts")]
         public IActionResult GetAllPosts()
         {
+            
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-            IEnumerable<Post> bids = null;
+            
+            IEnumerable <Post> bids = null;
             IEnumerable<Post> offers = null;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:5042/api/");
+                client.BaseAddress = _url; 
+
                 // Get bids:
                 var responseTask = client.GetAsync("bid");
                 responseTask.Wait();
@@ -52,7 +76,12 @@ namespace WebAppSemesterProject.Controllers
                     ModelState.AddModelError(string.Empty, "Server error - No offers found");
                 }
 
+
+
             }
+
+            
+
             ViewData["bids"] = bids;
             ViewData["offers"] = offers;
             ViewData["user"] = loggedInUser;
@@ -62,12 +91,13 @@ namespace WebAppSemesterProject.Controllers
         [Authorize]
         public IActionResult CreateOffer()
         {
-            Account? account = null;
+            AccountDto? account = null;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:5042/api/");
-
-                var task = client.GetAsync("account");
+                client.BaseAddress = _url;
+                
+                //This should find put which account that makes the request.
+                var task = client.GetAsync("Account");
 
                 task.Wait();
 
@@ -75,7 +105,7 @@ namespace WebAppSemesterProject.Controllers
 
                 if (result.IsSuccessStatusCode)
                 {
-                    var readTask = result.Content.ReadAsAsync<Account>();
+                    var readTask = result.Content.ReadAsAsync<AccountDto>();
                     readTask.Wait();
                     account = readTask.Result;
 

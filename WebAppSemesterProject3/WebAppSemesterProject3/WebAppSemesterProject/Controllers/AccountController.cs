@@ -3,12 +3,28 @@ using System.Net;
 using WebAppSemesterProject;
 using Models;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace WebAppSemesterProject.Controllers
 {
     public class AccountController : Controller
     {
+        private Uri _url;
+        IConfiguration _configuration;
+        public AccountController(IConfiguration configuration) 
+        {
+            _configuration = configuration;
+            string? url = _configuration.GetConnectionString("DefaultAPI");
+            if (url != null)
+            {
+                _url = new Uri(url);
 
+            }
+            else
+            {
+                throw new Exception("Could not find");
+            }
+        }
         [Authorize]
         public async Task<IActionResult> Index()
         {
@@ -16,7 +32,7 @@ namespace WebAppSemesterProject.Controllers
             try
             {
                 var client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:5042/api/");
+                client.BaseAddress = _url;
                 var responseTask = client.GetAsync("bid");
                 responseTask.Wait();
                 //IEnumerable<Account> accounts = await 
@@ -43,6 +59,8 @@ namespace WebAppSemesterProject.Controllers
         {
             return View(account);
         }
+
+        
 
     }
 }

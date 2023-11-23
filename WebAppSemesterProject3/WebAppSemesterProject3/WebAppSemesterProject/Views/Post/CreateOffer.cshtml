@@ -10,7 +10,7 @@
     {
         listItems.Add(new SelectListItem
         {
-            Text = $"{item.Amount.ToString()} {item.Currency.Name}"
+            Text = $"{item.Amount.ToString()} {item.Currency.Type}"
         });
     }
 }
@@ -24,7 +24,8 @@
         <form asp-action="CreateOffer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class=" form-group">
-                @Html.DropDownList("yourDropName", listItems, new { @class = "form-control" })
+                
+                @Html.DropDownListFor(Account => Account,listItems, new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>

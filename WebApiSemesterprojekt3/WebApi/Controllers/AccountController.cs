@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using Microsoft.AspNetCore.Authorization;
 using WebApi.BuissnessLogiclayer;
+using Models.DTO;
 
 
 
@@ -11,7 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountLogic _accountCtrl;
@@ -32,15 +33,14 @@ namespace WebApi.Controllers
             return foundReturn;
         }
 
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize]
         [HttpGet, Route("/{id}")]
-        public ActionResult<Account> GetAccount([FromBody] int id)
+        public ActionResult<AccountDto> GetAccount(int id)
         {
             Account account = _accountCtrl.GetAccountById(id);
 
-
-
-            return account;
+            AccountDto accountDto = new AccountDto(account);
+            return accountDto;
         }
 
         
