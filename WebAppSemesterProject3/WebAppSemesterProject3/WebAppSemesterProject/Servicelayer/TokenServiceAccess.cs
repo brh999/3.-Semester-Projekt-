@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using WebAppSemesterProject.Models;
 using WebAppSemesterProject.Servicelayer;
 
+using Models;
+
+
 namespace WebAppSemesterProject.Servicelayer
 {
     public class TokenServiceAccess : ITokenServiceAccess
     {
         readonly IServiceConnection _tokenService;
-        readonly String _serviceBaseUrl = "https://localhost:5042";
+        readonly String _serviceBaseUrl = "http://localhost:5042";
         public TokenServiceAccess()
         {
             _tokenService = new ServiceConnection(_serviceBaseUrl);
