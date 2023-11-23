@@ -24,6 +24,12 @@ namespace Models.DTO
             _discount = account.Discount;
         }
 
+        public double Discount { get { return _discount; } set { _discount = value; } }
+        
+        public List<CurrencyLine> Wallet { get { return _wallet; } }
+        public List<Post> Posts { get { return _posts; } }
+
+
     }
     
 }
