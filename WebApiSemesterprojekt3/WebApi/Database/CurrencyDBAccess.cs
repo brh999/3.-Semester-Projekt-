@@ -70,10 +70,12 @@ namespace WebApi.Database
             return currencies;
         }
 
-        private Exchange GetExchangesForCurrency(string currencyType)
+        private IEnumerable<Exchange> GetExchangesForCurrency(string currencyType)
         {
-            Exchange res = null;   
+            List<Exchange> exchanges = new List<Exchange>();
 
+
+          
             string queryString = " SELECT * FROM Exchanges INNER JOIN Currencies ON Exchanges.ID = Currencies.Exchange_id_fk WHERE currencytype = @type";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -84,22 +86,20 @@ namespace WebApi.Database
 
                 using (SqlDataReader reader = selectCommand.ExecuteReader())
                 {
-
                     while (reader.Read())
                     {
                         Exchange exchange = new Exchange()
                         {
                            Value = (double)reader["value"],
-                           Date = (DateTime)reader["date"],
+                            Date = (DateTime)reader["date"],
                             
                         };
-                       res = exchange;
+                        exchanges.Add(exchange);
                     }
                 }
-                return res;
             }
 
-            
+            return exchanges;
         }
 
     }
