@@ -1,17 +1,21 @@
 ﻿@model Models.Offer
 @using Models;
 
+
 @{
     ViewData["Title"] = "CreateOffer";
-    Account account = ViewData["account"] as Account;
+    Models.DTO.AccountDto account = ViewData["account"] as Models.DTO.AccountDto;
     List<SelectListItem> listItems = new List<SelectListItem>();
 
-    foreach(var item in account.Wallet)
+    foreach (var item in account.Wallet)
     {
         listItems.Add(new SelectListItem
-        {
-            Text = $"{item.Amount.ToString()} {item.Currency.Type}"
-        });
+                {
+
+                    Text = $"{item.Amount.ToString()} {item.Currency.Type}",
+                    Value = item.Currency.Type
+
+                });
     }
 }
 
@@ -21,11 +25,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateOffer">
+        <form asp-action="CreateOffer" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class=" form-group">
-                
-                @Html.DropDownListFor(Account => Account,listItems, new { @class = "form-control" })
+            <div class="form-group">
+                <p>Wallet</p>
+                @Html.DropDownListFor(model => model.Currency.Type, listItems, new { @class = "form-control" })
+                <span asp-validation-for="Currency" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
@@ -49,5 +54,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

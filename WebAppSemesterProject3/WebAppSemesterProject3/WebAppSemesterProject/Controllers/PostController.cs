@@ -39,7 +39,7 @@ namespace WebAppSemesterProject.Controllers
             IEnumerable<Post> offers = null;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = _url; 
+                client.BaseAddress = _url;
 
                 // Get bids:
                 var responseTask = client.GetAsync("bid");
@@ -92,32 +92,39 @@ namespace WebAppSemesterProject.Controllers
         public IActionResult CreateOffer()
         {
             AccountDto? account = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = _url;
-                
-                //This should find put which account that makes the request.
-                var task = client.GetAsync("Account");
+            //using (var client = new HttpClient())
+            //{
+            //    client.BaseAddress = _url;
 
-                task.Wait();
+            //    //This should find put which account that makes the request.
+            //    var task = client.GetAsync("Account");
 
-                var result = task.Result;
+            //    task.Wait();
 
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<AccountDto>();
-                    readTask.Wait();
-                    account = readTask.Result;
+            //    var result = task.Result;
 
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Server error - No offers found");
-                }
+            //    if (result.IsSuccessStatusCode)
+            //    {
+            //        var readTask = result.Content.ReadAsAsync<AccountDto>();
+            //        readTask.Wait();
+            //        account = readTask.Result;
 
-                
+            //    }
+            //    else
+            //    {
+            //        ModelState.AddModelError(string.Empty, "Server error - No offers found");
+            //    }
 
-            }
+
+
+            //}
+            var testData = new Account(100, "Test", "Test@");
+            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new List<Exchange>(), "Dollar")));
+            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new List<Exchange>(), "Euro")));
+            account = new AccountDto(testData);
+           
+            
+           
             ViewData.Add("account", account);
             return View();
         }
@@ -125,18 +132,12 @@ namespace WebAppSemesterProject.Controllers
 
         
         [HttpPost]
-        public IActionResult CreateOffer([FromBody] Offer inPost)
+        public IActionResult CreateOffer(Offer inPost)
         {
 
             return Ok();
         }
 
-        [Authorize]
-        [HttpPost]
-        public IActionResult CreateOffer([FromBody] Bid inPost)
-        {
-            return Ok();
-        }
 
         [Authorize]
         public IActionResult EditOffer(int id)

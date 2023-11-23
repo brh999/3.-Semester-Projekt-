@@ -14,26 +14,8 @@ builder.Services.AddSingleton<IPostDBAccess, PostDBAccess>();
 builder.Services.AddSingleton<IPostLogic, PostLogic>();
 builder.Services.AddSingleton<ICurrencyLogic, CurrencyLogic>();
 builder.Services.AddSingleton<ICurrencyDBAccess, CurrencyDBAccess>();
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = "JwtBearer";
-    options.DefaultChallengeScheme = "JwtBearer";
-})
-    .AddJwtBearer("JwtBearer", jwtOptions =>
-    {
-        jwtOptions.TokenValidationParameters = new TokenValidationParameters()
-        {
-            // The SigningKey is defined in the TokenController class
-            ValidateIssuerSigningKey = true,
-            // IssuerSigningKey = new SecurityHelper(configuration).GetSecurityKey(),
-            IssuerSigningKey = new SecurityHelper(builder.Configuration).GetSecurityKey(),
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidIssuer = "https://localhost:5042/",
-            ValidAudience = "https://localhost:5042/",
-            ValidateLifetime = true
-        };
-    }).AddJwtBearer();
+
+    
 
 // Configure the JWT Authentication Service
 builder.Services.AddAuthentication(options =>
