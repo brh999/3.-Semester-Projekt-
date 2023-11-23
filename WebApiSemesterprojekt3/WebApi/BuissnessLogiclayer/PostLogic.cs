@@ -7,6 +7,7 @@ namespace WebApi.BuissnessLogiclayer
     public class PostLogic : IPostLogic
     {
         private readonly IPostDBAccess _dataAccess;
+
         public PostLogic(IPostDBAccess inDataAccess)
         {
             _dataAccess = inDataAccess;

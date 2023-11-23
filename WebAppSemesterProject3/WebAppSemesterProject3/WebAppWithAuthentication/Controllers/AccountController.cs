@@ -11,19 +11,17 @@ namespace WebAppWithAuthentication.Controllers
 
         public async Task<IActionResult> Index()
         {
-
-            List<Account> accounts = new List<Account>() { new Account(0, "Rasmus", "mail@gmail.com")};
         
             using (Deserializer<Account> ad = new())
             {
                 try
                 {
                     //IEnumerable<Account> accounts = await ad.GetList();
-                    return View(accounts);
+                    return View();
                 }
                 catch (Exception ex)
                 {
-                    return View(accounts);
+                    return View();
                 }
             }
         }

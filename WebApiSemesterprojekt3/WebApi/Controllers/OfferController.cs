@@ -9,7 +9,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class OfferController : ControllerBase
     {
 
@@ -38,7 +38,10 @@ namespace WebApi.Controllers
                 foundOffers = NotFound();
             }
             return foundOffers;
+
         }
+
+       
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]

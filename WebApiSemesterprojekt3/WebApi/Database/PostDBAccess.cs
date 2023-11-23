@@ -76,18 +76,10 @@ namespace WebApi.Database
 
         private Currency CreateCurrency(string inType)
         {
-            Currency res = null;
+            Currency res = new Currency(new Exchange(), inType);
 
-            CurrencyEnum currency;
-            if (Enum.TryParse<CurrencyEnum>(inType, out currency))
-            {
-                res = new Currency(currency, new List<Exchange>());
-            }
-            else
-            {
-                throw new ArgumentException("Currency does not exist");
-            }
             return res;
+    
         }
 
         //TODO contiue implementing this!!
