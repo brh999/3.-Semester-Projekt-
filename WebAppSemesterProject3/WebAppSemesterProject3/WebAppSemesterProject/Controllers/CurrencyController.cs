@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Security.Policy;
 
 namespace WebAppSemesterProject.Controllers
 {
     public class CurrencyController : Controller
+
+
     {
         private Uri _url;
-        private readonly IConfiguration _configuration;
+        IConfiguration _configuration;
+
+
         public CurrencyController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -15,43 +19,111 @@ namespace WebAppSemesterProject.Controllers
             if (url != null)
             {
                 _url = new Uri(url);
-
-            }
-            else
+            }else
             {
                 throw new Exception("Could not find");
             }
         }
 
-
-        [Route("{controller}/getallcurrencies")]
-        public IActionResult GetAlleCurrencies()
+        //[Route,("{controller}/getallcurrencies")]
+        public IActionResult Index()
         {
             IEnumerable<Currency> currencies = null;
 
             using (var client = new HttpClient())
             {
                 client.BaseAddress = _url;
-                var responseTask = client.GetAsync("Currency");
+
+                var responseTask = client.GetAsync("api/currency"); 
                 responseTask.Wait();
 
                 var result = responseTask.Result;
-                if(result.IsSuccessStatusCode)
+
+                if (result.IsSuccessStatusCode)
                 {
-                    var readTask = result.Content.ReadAsAsync<IList<Currency>>();
+                    var readTask = result.Content.ReadAsAsync<List<Currency>>();
                     readTask.Wait();
 
                     currencies = readTask.Result;
-                } else
+                }
+                else
                 {
-                    currencies = Enumerable.Empty<Currency>();
-                    ModelState.AddModelError(string.Empty, "No currencies to be found");
+                    // Handle the error if needed
+                    currencies = Array.Empty<Currency>();
                 }
             }
+
             ViewData["currencies"] = currencies;
             return View();
+        }
 
+        // GET: CurrencyController1/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        // GET: CurrencyController1/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: CurrencyController1/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: CurrencyController1/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: CurrencyController1/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: CurrencyController1/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: CurrencyController1/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }
-
