@@ -8,7 +8,7 @@ namespace WebAppWithAuthentication.Controllers
     {
         public async Task<IActionResult> Index()
         {
-            List<Currency> currencies = new List<Currency>() { new Currency(CurrencyEnum.BTC, new List<Exchange>()) };
+            List<Currency> currencies = new List<Currency>() { new Currency() };
             using (Deserializer<Currency> ad = new())
             {
                 try
