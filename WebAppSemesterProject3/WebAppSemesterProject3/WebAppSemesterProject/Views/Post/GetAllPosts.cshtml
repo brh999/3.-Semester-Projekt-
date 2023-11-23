@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Models.Post>
+@using System.Security.Claims
+@using Models
+
+@{
+    ViewData["Title"] = "Index";
+}
+<script>
+   user = ViewData["user"]
+</script>
+
+<style>
+    label{
+    font-size:30px;
+    margin-top:20px;
+    }
+</style>
+
+<h1>- Bids & Offers -</h1>
+
+<p>
+    <a asp-action="Create">Create Trade Post</a>
+</p>
+&nbsp
+<label>Bids:</label>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Currency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        
+@foreach (var item in ViewData["bids"] as List<Bid>) {
+        <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Currency.Type)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}       
+    </tbody>
+</table>
+&nbsp
+<label>Offers:</label>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Currency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+        </tr>
+    </thead>
+<tbody>
+@foreach (var item in ViewData["offers"] as List<Offer>)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Currency.Type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+    </tbody>
+</table>

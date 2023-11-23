@@ -2,55 +2,26 @@
 {
     public class Currency
     {
-        private CurrencyEnum _type;
-        private string _name;
-        private IEnumerable<Exchange> _exchanges;
+
+        private string _type;
+        private Exchange _exchange;
 
 
         public Currency()
         {
         }
-        public Currency(CurrencyEnum type, IEnumerable<Exchange> exchanges)
+        public Currency(Exchange exchange, string type)
         {
             _type = type;
-            _exchanges = exchanges;
-            switch (_type)
-            {
-                case CurrencyEnum.BTC:
-                    _name = "Bitcoin";
-                    break;
-                case CurrencyEnum.XRP:
-                    _name = "XRP";
-                    break;
-                case CurrencyEnum.ETH:
-                    _name = "Etherium";
-                    break;
-                case CurrencyEnum.DOGE:
-                    _name = "Doge Coin";
-                    break;
-                case CurrencyEnum.AUR:
-                    _name = "Auroracoin";
-                    break;
-                case CurrencyEnum.EUR:
-                    _name = "Euro";
-                    break;
-                case CurrencyEnum.XMR:
-                    _name = "Monero";
-                    break;
-                default:
-                    _name = "Dollar";
-                    break;
-            }
+            _exchange = exchange;
+
         }
 
-        public string Name { get { return _name; } set { _name = value; } }
-        public CurrencyEnum Type { get { return _type; } set { } }
-        public IEnumerable<Exchange> Exchanges { get { return _exchanges; } init { _exchanges = value; } }
+        public string Type { get { return _type; } set { _type = value; } }
+        //ublic CurrencyEnum Type { get { return _type; } set { _type = value; } }
+        public Exchange Exchanges { get { return _exchange; } init { _exchange = value; } }
 
 
-    }
-    public enum CurrencyEnum
-    {
-        USD, BTC, XRP, ETH, DOGE, AUR, EUR, XMR,
     }
 }
+   
