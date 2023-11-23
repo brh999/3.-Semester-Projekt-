@@ -55,7 +55,7 @@ namespace WebApi.Database
                             string currencyType = (string)reader["type"];
                             double amount = (double)reader["amount"];
 
-                            Currency currency = new(new List<Exchange>(), currencyType);
+                            Currency currency = new(new Exchange(), currencyType);
 
                             CurrencyLine line = new CurrencyLine(amount,currency);
 

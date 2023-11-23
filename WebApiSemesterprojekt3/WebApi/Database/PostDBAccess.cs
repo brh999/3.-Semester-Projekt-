@@ -20,7 +20,7 @@ namespace WebApi.Database
         public IEnumerable<Bid> GetBidPosts()
         {
             List<Bid> foundBids = new List<Bid>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currency_id_fk = currencies.exchange_id_fk WHERE posts.type = 'bid'";
+            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'bid'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -49,7 +49,7 @@ namespace WebApi.Database
         {
 
             List<Offer> foundOffers = new List<Offer>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currency_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
+            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -76,7 +76,7 @@ namespace WebApi.Database
 
         private Currency CreateCurrency(string inType)
         {
-            Currency res = new Currency(new List<Exchange>(), inType);
+            Currency res = new Currency(new Exchange(), inType);
 
             return res;
     

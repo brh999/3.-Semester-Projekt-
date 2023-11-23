@@ -10,7 +10,6 @@ using Models.DTO;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
     public class AccountController : ControllerBase
@@ -24,7 +23,7 @@ namespace WebApi.Controllers
         }
 
         // GET: api/account
-        [HttpGet, Route("/")]
+        [HttpGet, Route("api/[Controller]")]
         public ActionResult<List<Account>> GetAllAccounts()
         {
             ActionResult<List<Account>>? foundReturn = null;

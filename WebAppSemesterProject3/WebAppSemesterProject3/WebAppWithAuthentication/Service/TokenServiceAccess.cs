@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebAppSemesterProject.Models;
-using WebAppSemesterProject.Servicelayer;
+using WebAppWithAuthentication.Models;
+using WebAppWithAuthentication.Service;
 
 using Models;
 
 
-namespace WebAppSemesterProject.Servicelayer
+namespace WebAppWithAuthentication.Service
 {
     public class TokenServiceAccess : ITokenServiceAccess
     {

@@ -4,22 +4,22 @@
     {
 
         private string _type;
-        private IEnumerable<Exchange> _exchanges;
+        private Exchange _exchange;
 
 
         public Currency()
         {
         }
-        public Currency(IEnumerable<Exchange> exchanges, string type)
+        public Currency(Exchange exchange, string type)
         {
             _type = type;
-            _exchanges = exchanges;
+            _exchange = exchange;
 
         }
 
         public string Type { get { return _type; } set { _type = value; } }
         //ublic CurrencyEnum Type { get { return _type; } set { _type = value; } }
-        public IEnumerable<Exchange> Exchanges { get { return _exchanges; } init { _exchanges = value; } }
+        public Exchange Exchanges { get { return _exchange; } init { _exchange = value; } }
 
 
     }

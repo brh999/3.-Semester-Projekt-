@@ -5,10 +5,10 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebAppSemesterProject.Models;
-using WebAppSemesterProject.Servicelayer;
+using WebAppWithAuthentication.Models;
+using WebAppWithAuthentication.Service;
 
-namespace WebAppSemesterProject.Security
+namespace WebAppWithAuthentication.Security
 {
     public class TokenManager : ITokenManager
     {
