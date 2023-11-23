@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using PersonServiceClientDesktop.Security;
+using WebAppWithAuthentication.Security;
 
 namespace WebAppWithAuthentication.Controllers
 {
