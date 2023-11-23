@@ -1,6 +1,4 @@
-﻿using WebAppWithAuthentication.Security;
-
-namespace WebAppWithAuthentication.Service
+﻿namespace WebAppWithAuthentication.Service
 {
     public interface ITokenServiceAccess
     {

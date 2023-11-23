@@ -1,4 +1,4 @@
-﻿namespace WebAppWithAuthentication.Security
+﻿namespace WebAppWithAuthentication.Service
 {
     public class ApiAccount
     {

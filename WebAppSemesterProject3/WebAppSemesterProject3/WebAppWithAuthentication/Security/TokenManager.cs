@@ -16,7 +16,7 @@ namespace PersonServiceClientDesktop.Security
 
         public TokenManager()
         {
-            _tokenAdminValues = ConfigurationManager.AppSettings;
+            _tokenAdminValues = System.Configuration.ConfigurationManager.AppSettings;
         }
 
         public async Task<string?> GetToken(TokenState currentState)
@@ -62,8 +62,8 @@ namespace PersonServiceClientDesktop.Security
             {
                 foundData.Password = _tokenAdminValues.Get("Password");
                 foundData.GrantType = _tokenAdminValues.Get("GrantType");
+                foundData.Username = _tokenAdminValues.Get("Username");
             }
-            foundData.Username = GetApplicationAssemblyName();
 
             return foundData;
         }
