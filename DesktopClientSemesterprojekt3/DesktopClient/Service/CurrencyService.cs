@@ -29,7 +29,7 @@ public class CurrencyService : ICurrencyService
         _currencyService.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
 
 
-
+        throw new NotImplementedException();
     }
 
     public async Task<int> SaveCurrency(string tokenToUse, Currency personToSave)
@@ -41,6 +41,6 @@ public class CurrencyService : ICurrencyService
         _currencyService.HttpEnabler.DefaultRequestHeaders.Remove("Authorization");   // To avoid more Authorization headers
         _currencyService.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
 
-
+        throw new NotImplementedException();
     }
 }
