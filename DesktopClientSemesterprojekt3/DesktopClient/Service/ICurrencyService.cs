@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Models;
+using System.Net;
 
 namespace DesktopClient.Service
 {
-    internal interface ICurrencyService
+    public interface ICurrencyService
     {
+        Task<List<Currency>?>? GetCurrencies(string tokenToUse);
+        Task<int> SavePerson(string tokenToUse, Currency currencyToSave);
+        HttpStatusCode CurrentHttpStatusCode { get; set; }
+
     }
 }
