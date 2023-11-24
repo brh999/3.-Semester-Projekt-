@@ -1,4 +1,4 @@
-﻿using DesktopClient.Security.ApiAuthentication;
+﻿using DesktopClient.Security;
 
 namespace DesktopClient.Service
 {
