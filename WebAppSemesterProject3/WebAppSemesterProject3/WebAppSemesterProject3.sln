@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\..\Models\Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppWithAuthentication", "WebAppWithAuthentication\WebAppWithAuthentication.csproj", "{2D4ACCEB-849D-489F-9B19-4BEF5A82FDCE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppSemesterProject", "WebAppSemesterProject\WebAppSemesterProject.csproj", "{F3377DC0-C1A3-4299-81CE-588E02D250A2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{2D4ACCEB-849D-489F-9B19-4BEF5A82FDCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D4ACCEB-849D-489F-9B19-4BEF5A82FDCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D4ACCEB-849D-489F-9B19-4BEF5A82FDCE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3377DC0-C1A3-4299-81CE-588E02D250A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3377DC0-C1A3-4299-81CE-588E02D250A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3377DC0-C1A3-4299-81CE-588E02D250A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3377DC0-C1A3-4299-81CE-588E02D250A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

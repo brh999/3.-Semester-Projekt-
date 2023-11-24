@@ -10,4 +10,7 @@ namespace DesktopClient.BusinessLogic
     {
         bool CreateCurrency(string name);
     }
+
+
+
 }
