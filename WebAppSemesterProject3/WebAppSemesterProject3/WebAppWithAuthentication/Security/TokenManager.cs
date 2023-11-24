@@ -14,14 +14,17 @@ namespace PersonServiceClientDesktop.Security
     {
         private readonly NameValueCollection _tokenAdminValues;
 
+
         public TokenManager()
         {
             _tokenAdminValues = System.Configuration.ConfigurationManager.AppSettings;
         }
 
-        public async Task<string?> GetToken(TokenState currentState)
+
+        public async Task<string?> GetToken()
         {
             string? foundToken = null;
+            TokenState currentState = GetJWTState();
             if (currentState == TokenState.Valid)
             {
                 foundToken = GetTokenExisting();
@@ -33,11 +36,32 @@ namespace PersonServiceClientDesktop.Security
             return foundToken;
         }
 
+
+        // Checks the current JWT and see if it's valid
+        private TokenState GetJWTState()
+        {
+            JWT.TokenState = TokenState.Invalid;
+            string? currentJWT = JWT.CurrentJWT;
+            if(currentJWT != null)
+            {
+                TokenServiceAccess tSA = new TokenServiceAccess();
+                bool hasTokenExpired = tSA.HasTokenExpired(currentJWT);
+
+                if (!hasTokenExpired)
+                {
+                    JWT.TokenState = TokenState.Valid;
+                }
+            }
+            return JWT.TokenState;
+        }
+
+
         private string? GetTokenExisting()
         {
             string? foundToken = JWT.CurrentJWT;
             return foundToken;
         }
+
 
         private async Task<string?> GetTokenNew()
         {

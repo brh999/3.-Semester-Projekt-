@@ -8,6 +8,6 @@ namespace PersonServiceClientDesktop.Security
 {
     public interface ITokenManager
     {
-        Task<string?> GetToken(TokenState currentState);
+        Task<string?> GetToken();
     }
 }

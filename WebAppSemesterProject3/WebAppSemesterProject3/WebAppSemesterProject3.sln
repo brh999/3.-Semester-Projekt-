@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\..\Models\Models\Models.csproj", "{3DA2378C-FF59-42D8-B640-2F342F63463D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppWithAuthentication", "WebAppWithAuthentication\WebAppWithAuthentication.csproj", "{8D82F8C3-7A50-49D0-B19C-63A3B88A5A25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppWithAuthentication", "WebAppWithAuthentication\WebAppWithAuthentication.csproj", "{8D82F8C3-7A50-49D0-B19C-63A3B88A5A25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
