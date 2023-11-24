@@ -1,4 +1,4 @@
-﻿namespace DesktopClient.Security.ApiAuthentication
+﻿namespace DesktopClient.Security
 {
     public class ApiAccount
     {

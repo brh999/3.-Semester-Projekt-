@@ -1,5 +1,4 @@
-﻿using DesktopClient.Security.ApiAuthentication;
-using DesktopClient.Service;
+﻿using DesktopClient.Service;
 using System.Collections.Specialized;
 using System.Configuration;
 
@@ -64,9 +63,9 @@ namespace DesktopClient.Security
 
             if (_tokenAdminValues.HasKeys())
             {
+                foundData.Username = _tokenAdminValues.Get("Username");
                 foundData.Password = _tokenAdminValues.Get("Password");
                 foundData.GrantType = _tokenAdminValues.Get("GrantType");
-                foundData.Username = _tokenAdminValues.Get("Username");
             }
 
 
