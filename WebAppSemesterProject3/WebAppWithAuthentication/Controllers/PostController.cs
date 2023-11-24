@@ -1,7 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+
+using Models.DTO;
+using Newtonsoft.Json;
+using System.Text;
+
 using WebAppWithAuthentication.Security;
+using WebAppWithAuthentication.Service;
 
 namespace WebAppWithAuthentication.Controllers
 {
@@ -12,13 +18,15 @@ namespace WebAppWithAuthentication.Controllers
 
         private Uri _url;
         private readonly IConfiguration _configuration;
+        private ServiceConnection _connection;
         public PostController(IConfiguration configuration)
         {
             _configuration = configuration;
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
-                _url = new Uri(url + "api/");
+
+      _connection = new ServiceConnection(url);
 
             }
             else
@@ -28,7 +36,8 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> GetAllPosts()
+
+        public async Task<IActionResult> Index()
 
         {
             string? tokenValue = await GetToken();
@@ -136,9 +145,53 @@ namespace WebAppWithAuthentication.Controllers
         [HttpPost]
         public IActionResult CreateOffer(Offer inPost)
         {
+            
+            if(inPost.Currency.Exchanges == null)
+            {
+                inPost.Currency.Exchanges = new Exchange();
+            }
+            if(inPost.Transactions == null)
+            {
+                inPost.Transactions = new List<TransactionLine>();
+            }
+
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-            return Ok();
+            ActionResult result = StatusCode(500);
+
+            //Validate input
+            bool goOn = true;
+            if (!(inPost.Amount > 0) || !(inPost.Price > 0))
+            {
+                goOn = false;
+            }
+
+            if (String.IsNullOrEmpty(inPost.Currency.Type))
+            {
+                goOn = false;
+            }
+
+            if (goOn)
+            {
+                _connection.UseUrl = _connection.BaseUrl + "/api/offer";
+                
+                var json = JsonConvert.SerializeObject(inPost);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var serviceResponse = _connection.CallServicePost(content);
+                serviceResponse.Wait();
+
+                if (serviceResponse == null || !serviceResponse.Result.IsSuccessStatusCode)
+                {
+                    result = StatusCode(502);
+                }
+            }
+            else
+            {
+                result = StatusCode(404);
+            }
+
+            return result;
         }
+
 
 
         [Authorize]

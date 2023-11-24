@@ -14,12 +14,17 @@
         {
             _type = type;
             _exchange = exchange;
+        }
 
+        public Currency(string type)
+        {
+            _type=type;
+            _exchange = new Exchange();
         }
 
         public string Type { get { return _type; } set { _type = value; } }
         //ublic CurrencyEnum Type { get { return _type; } set { _type = value; } }
-        public Exchange Exchanges { get { return _exchange; } init { _exchange = value; } }
+        public Exchange Exchanges { get { return _exchange; } set { _exchange = value; } }
 
         public override string? ToString()
         {

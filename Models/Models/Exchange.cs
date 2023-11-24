@@ -8,7 +8,8 @@
 
         public Exchange()
         {
-
+            _value = 0;
+            _date = DateTime.MinValue;
         }
         public Exchange(double value, DateTime date)
         {
