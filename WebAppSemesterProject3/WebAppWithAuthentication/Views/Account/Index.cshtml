@@ -7,15 +7,19 @@
 <h2>Discount: @Model.Discount</h2>
 
 <!-- Wallets Table -->
-<h2>Wallets</h2>
+<h2>Wallet</h2>
 <table class="table">
     <thead>
         <tr>
-          
             <th>
-                @Html.DisplayNameFor(modelItem => Model.Wallet.Count)
+                Type
             </th>
-            <!-- Add more columns as needed for Wallet properties -->
+            <th>
+               Amount
+            </th>
+            <th>
+                
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,7 +53,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Posts)
             </th>
-            <!-- Add more columns as needed for Post properties -->
             <th></th>
         </tr>
     </thead>
@@ -60,7 +63,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => modelItem.Posts.Count)
                 </td>
-                
+                <!-- Display additional columns for Post properties as needed -->
+                <td>
+                    @Html.DisplayFor(modelItem => postItem.Currency)
+                </td>
                 <!-- Add more cells as needed for Post properties -->
                 <td>
                     <!-- Any additional actions or links related to the post item -->
