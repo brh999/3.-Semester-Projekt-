@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WebAppWithAuthentication.Models;
 using WebAppWithAuthentication.Service;
 
-namespace PersonServiceClientDesktop.Security
+namespace WebAppWithAuthentication.Security
 {
     public class TokenManager : ITokenManager
     {

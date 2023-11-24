@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using PersonServiceClientDesktop.Security;
+using Models.DTO;
+using WebAppWithAuthentication.Security;
 
 namespace WebAppWithAuthentication.Controllers
 {
@@ -9,8 +10,27 @@ namespace WebAppWithAuthentication.Controllers
     {
         // It's important to note, that 'Post' in this controller
         // - does not refer HTML post action, but Post of bid & offers in our system.
+
+        private Uri _url;
+        private readonly IConfiguration _configuration;
+        public PostController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            string? url = _configuration.GetConnectionString("DefaultAPI");
+            if (url != null)
+            {
+                _url = new Uri(url);
+
+            }
+            else
+            {
+                throw new Exception("Could not find");
+            }
+        }
+
         [Authorize]
         public async Task<IActionResult> Index()
+
         {
             string? tokenValue = await GetToken();
             if (tokenValue != null)
@@ -23,7 +43,7 @@ namespace WebAppWithAuthentication.Controllers
                     string bearerTokenValue = "Bearer" + " " + tokenValue;
                     client.DefaultRequestHeaders.Remove("Authorization");
                     client.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
-                    client.BaseAddress = new Uri("http://localhost:5042/api/");
+                    client.BaseAddress = _url;
                     // Get bids:
                     var responseTask = client.GetAsync("bid");
                     responseTask.Wait();
@@ -73,6 +93,7 @@ namespace WebAppWithAuthentication.Controllers
 
 
 
+
         // [Authorize]
         // public IActionResult CreateOffer()
         // {
@@ -111,6 +132,7 @@ namespace WebAppWithAuthentication.Controllers
         //}
 
 
+
         [Authorize]
         [HttpPost]
         public IActionResult CreateOffer(Offer inPost)
@@ -118,7 +140,6 @@ namespace WebAppWithAuthentication.Controllers
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             return Ok();
         }
-
 
 
         [Authorize]
@@ -166,6 +187,7 @@ namespace WebAppWithAuthentication.Controllers
             return Ok();
         }
 
+
         public IActionResult DeleteBid(int id)
         {
             return Ok();
@@ -177,6 +199,7 @@ namespace WebAppWithAuthentication.Controllers
             string? foundToken = await tokenHelp.GetToken();
             return foundToken;
         }
+
 
     }
 }

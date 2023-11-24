@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonServiceClientDesktop.Security
+namespace WebAppWithAuthentication.Security
 {
    public enum TokenState { Unregistered, Registered, Valid, Invalid}
 }

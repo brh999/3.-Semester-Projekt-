@@ -8,9 +8,9 @@ namespace WebApi.BuissnessLogiclayer
     {
         private readonly ICurrencyDBAccess _dataAccess;
 
-        public CurrencyLogic(ICurrencyDBAccess dataAccess)
+        public CurrencyLogic(ICurrencyDBAccess inDataAccess)
         {
-            _dataAccess = dataAccess;
+            _dataAccess = inDataAccess;
         }
         public int GetCurrencyId(Currency item)
         {
@@ -18,6 +18,11 @@ namespace WebApi.BuissnessLogiclayer
             res = _dataAccess.GetCurrencyID(item);
 
             return res;
+        }
+
+        public List<Currency> GetCurrencyList()
+        {
+            return (List<Currency>)_dataAccess.GetCurrencyList();
         }
     }
 }

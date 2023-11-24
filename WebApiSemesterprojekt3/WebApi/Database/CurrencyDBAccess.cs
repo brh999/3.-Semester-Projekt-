@@ -6,7 +6,7 @@ namespace WebApi.Database
 {
     public class CurrencyDBAccess : ICurrencyDBAccess
     {
-        private IConfiguration _configuration { get; set; }
+        private IConfiguration _configuration;
         private string? _connectionString;
 
         public CurrencyDBAccess(IConfiguration configuration)
@@ -40,6 +40,70 @@ namespace WebApi.Database
                 return itemId;
             }
         }
+
+        public IEnumerable<Currency> GetCurrencyList()
+        {
+            List<Currency> currencies = new List<Currency>();
+            string queryString = "SELECT * FROM Currencies";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                
+
+                using (SqlDataReader reader = selectCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Currency currency = new Currency()
+                        { 
+                            
+                            Type = (string)reader["currencytype"],
+                            Exchanges = GetExchangesForCurrency((string)reader["currencytype"])
+                        };
+                        currencies.Add(currency);
+                    }
+                }
+            }
+
+            return currencies;
+        }
+
+        private Exchange GetExchangesForCurrency(string currencyType)
+        {
+            Exchange res = null;   
+
+            string queryString = " SELECT * FROM Exchanges INNER JOIN Currencies ON Exchanges.ID = Currencies.Exchange_id_fk WHERE currencytype = @type";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                selectCommand.Parameters.AddWithValue("type", currencyType);
+
+                using (SqlDataReader reader = selectCommand.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+                        Exchange exchange = new Exchange()
+                        {
+                           Value = (double)reader["value"],
+                           Date = (DateTime)reader["date"],
+                            
+                        };
+                       res = exchange;
+                    }
+                }
+                return res;
+            }
+
+            
+        }
+
     }
 }
+
+
 

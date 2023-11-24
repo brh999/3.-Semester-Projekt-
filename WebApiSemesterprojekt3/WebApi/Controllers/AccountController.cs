@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Microsoft.AspNetCore.Authorization;
 using WebApi.BuissnessLogiclayer;
+using Models.DTO;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountLogic _accountCtrl;
@@ -21,7 +23,7 @@ namespace WebApi.Controllers
         }
 
         // GET: api/account
-        [HttpGet, Route("/")]
+        [HttpGet, Route("api/[Controller]")]
         public ActionResult<List<Account>> GetAllAccounts()
         {
             ActionResult<List<Account>>? foundReturn = null;
@@ -29,6 +31,20 @@ namespace WebApi.Controllers
             foundReturn = _accountCtrl.GetAllAccounts();
             return foundReturn;
         }
+
+        [Authorize]
+        [HttpGet, Route("/{id}")]
+        public ActionResult<AccountDto> GetAccount(int id)
+        {
+            Account account = _accountCtrl.GetAccountById(id);
+
+            AccountDto accountDto = new AccountDto(account);
+            return accountDto;
+        }
+
+        
+
+
     }
 
 }

@@ -1,4 +1,4 @@
-﻿using DesktopClient.Security.ApiAuthentication;
+﻿using DesktopClient.Security;
 
 namespace DesktopClient.Service
 {
@@ -6,7 +6,7 @@ namespace DesktopClient.Service
     {
 
         readonly IServiceConnection _tokenService;
-        readonly String _serviceBaseUrl = "https://localhost:5042";     // Insert your own port no
+        readonly String _serviceBaseUrl = "https://localhost:5042";
         public TokenService()
         {
             _tokenService = new ServiceConnection(_serviceBaseUrl);
@@ -41,9 +41,9 @@ namespace DesktopClient.Service
             try
             {
                 var response = await _tokenService.CallServicePost(request);
-                // If response not null
+
                 response?.EnsureSuccessStatusCode();     // Throws exception if not successful
-                // If success                // If success
+
                 if (response != null)
                 {
                     retrievedToken = await response.Content.ReadAsStringAsync();

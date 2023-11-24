@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using WebAppWithAuthentication.Models;
 using WebAppWithAuthentication.Service;
-
 using Models;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -52,13 +51,14 @@ namespace WebAppWithAuthentication.Service
                 {
                     retrievedToken = await response.Content.ReadAsStringAsync();
                 }
-            }
+            } 
             catch
             {
                 retrievedToken = null;
             }
             return retrievedToken;
         }
+
 
         public bool HasTokenExpired(string token)
         {
@@ -71,6 +71,5 @@ namespace WebAppWithAuthentication.Service
             bool result = now >= tokenDate;
             return result;
         }
-
     }
 }
