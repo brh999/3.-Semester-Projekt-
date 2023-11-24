@@ -19,7 +19,7 @@ namespace WebAppWithAuthentication.Controllers
             string? url = _configuration.GetConnectionString("DefaultAPI");
             if (url != null)
             {
-                _url = new Uri(url);
+                _url = new Uri(url + "api/");
 
             }
             else
@@ -29,7 +29,7 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> GetAllPosts()
 
         {
             string? tokenValue = await GetToken();
