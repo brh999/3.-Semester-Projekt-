@@ -19,7 +19,7 @@ namespace WebAppWithAuthentication.Controllers
             string? url = _configuration.GetConnectionString("DefaultAPI");
             if (url != null)
             {
-                _url = new Uri(url);
+                _url = new Uri(url + "api/");
 
             }
             else
@@ -29,13 +29,10 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> GetAllPosts()
 
         {
-            // Get token
-            TokenState currentState = TokenState.Invalid;
-            // Presumed state
-            string? tokenValue = await GetToken(currentState);
+            string? tokenValue = await GetToken();
             if (tokenValue != null)
             {
                 System.Security.Claims.ClaimsPrincipal loggedInUser = User;
@@ -87,55 +84,53 @@ namespace WebAppWithAuthentication.Controllers
                 ViewData["offers"] = offers;
                 ViewData["user"] = loggedInUser;
                 return View();
-            } else
+            }
+            else
             {
-                return Redirect("https://localhost:7113/");
+                return StatusCode(500);
             }
         }
 
 
 
-        [Authorize]
-        public IActionResult CreateOffer()
-        {
-            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-            AccountDto? account = null;
-            //using (var client = new HttpClient())
-            //{
-            //    client.BaseAddress = _url;
 
-            //    //This should find put which account that makes the request.
-            //    var task = client.GetAsync("Account");
+        // [Authorize]
+        // public IActionResult CreateOffer()
+        // {
+        //System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+        //AccountDto? account = null;
+        //using (var client = new HttpClient())
+        //{
+        //    client.BaseAddress = _url;
 
-            //    task.Wait();
+        //    //This should find put which account that makes the request.
+        //    var task = client.GetAsync("Account");
 
-            //    var result = task.Result;
+        //    task.Wait();
 
-            //    if (result.IsSuccessStatusCode)
-            //    {
-            //        var readTask = result.Content.ReadAsAsync<AccountDto>();
-            //        readTask.Wait();
-            //        account = readTask.Result;
+        //    var result = task.Result;
 
-            //    }
-            //    else
-            //    {
-            //        ModelState.AddModelError(string.Empty, "Server error - No offers found");
-            //    }
+        //    if (result.IsSuccessStatusCode)
+        //    {
+        //        var readTask = result.Content.ReadAsAsync<AccountDto>();
+        //        readTask.Wait();
+        //        account = readTask.Result;
 
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Server error - No offers found");
+        //    }
 
+        //}
+        //var testData = new Account(100, "Test", "Test@");
+        //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "Dollar")));
+        //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "Euro")));
+        //account = new AccountDto(testData);
+        //ViewData.Add("account", account);
+        //return View();
+        //}
 
-            //}
-            var testData = new Account(100, "Test", "Test@");
-            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "Dollar")));
-            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "Euro")));
-            account = new AccountDto(testData);
-
-
-
-            ViewData.Add("account", account);
-            return View();
-        }
 
 
         [Authorize]
@@ -146,7 +141,6 @@ namespace WebAppWithAuthentication.Controllers
             return Ok();
         }
 
-        
 
         [Authorize]
         public IActionResult EditOffer(int id)
@@ -193,17 +187,20 @@ namespace WebAppWithAuthentication.Controllers
             return Ok();
         }
 
-        public IActionResult DeleteBid(int id) {
+
+        public IActionResult DeleteBid(int id)
+        {
             return Ok();
         }
 
-        private async Task<string?> GetToken(TokenState useState)
+        private async Task<string?> GetToken()
         {
             TokenManager tokenHelp = new TokenManager();
-            string? foundToken = await tokenHelp.GetToken(useState);
+            string? foundToken = await tokenHelp.GetToken();
             return foundToken;
         }
 
 
     }
 }
+

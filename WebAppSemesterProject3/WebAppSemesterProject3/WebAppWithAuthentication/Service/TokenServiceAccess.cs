@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WebAppWithAuthentication.Models;
 using WebAppWithAuthentication.Service;
-
 using Models;
-
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WebAppWithAuthentication.Service
 {
@@ -60,6 +59,17 @@ namespace WebAppWithAuthentication.Service
             return retrievedToken;
         }
 
-       
+
+        public bool HasTokenExpired(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(token);
+            var tokenExp = jwtSecurityToken.Claims.First(claim => claim.Type.Equals("exp")).Value;
+            var ticks = long.Parse(tokenExp);
+            var tokenDate = DateTimeOffset.FromUnixTimeSeconds(ticks).UtcDateTime;
+            var now = DateTime.Now.ToUniversalTime();
+            bool result = now >= tokenDate;
+            return result;
+        }
     }
 }

@@ -38,24 +38,28 @@
         </tr>
     </thead>
     <tbody>
-        
-@foreach (var item in ViewData["bids"] as List<Bid>) {
-        <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Currency.Type)
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}       
+        @if (ViewData["bids"] != null)
+        {
+            @foreach (var item in ViewData["bids"] as List<Bid>)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Currency.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+
+        }
     </tbody>
 </table>
 &nbsp
@@ -75,23 +79,26 @@
         </tr>
     </thead>
 <tbody>
-@foreach (var item in ViewData["offers"] as List<Offer>)
-{
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Currency.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Amount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
+        @if (ViewData["offers"] != null)
+        {
+            @foreach (var item in ViewData["offers"] as List<Offer>)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Currency.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        }
     </tbody>
 </table>

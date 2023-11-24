@@ -47,7 +47,7 @@ namespace WebApi.Controllers
             JwtHeader header = new JwtHeader(credentials);
 
             // Time to live for newly created JWT Token
-            int ttlInMinutes = 10;
+            int ttlInMinutes = 1;
             DateTime expiry = DateTime.UtcNow.AddMinutes(ttlInMinutes);
             int ts = (int)(expiry - new DateTime(1970, 1, 1)).TotalSeconds;
 
