@@ -32,12 +32,11 @@ namespace WebApi.Controllers
             return foundReturn;
         }
 
-        [Authorize]
-        [HttpGet, Route("/{id}")]
+        
+        [HttpGet, Route("api/[Controller]/{id}")]
         public ActionResult<AccountDto> GetAccount(int id)
         {
             Account account = _accountCtrl.GetAccountById(id);
-
             AccountDto accountDto = new AccountDto(account);
             return accountDto;
         }

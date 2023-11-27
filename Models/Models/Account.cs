@@ -5,6 +5,7 @@
         private double _discount;
         private string _username;
         private string _email;
+        private int _id;
         private List<CurrencyLine> _wallet;
         private List<Post> _posts;
 
@@ -12,13 +13,14 @@
         {
         }
 
-        public Account(double discount, string username, string email, List<CurrencyLine> wallet, List<Post> posts)
+        public Account(int id,double discount, string username, string email, List<CurrencyLine> wallet, List<Post> posts)
         {
             _discount = discount;
             _username = username;
             _email = email;
             _wallet = wallet;
             _posts = posts;
+            _id = id;
         }
         public Account(double discount, string username, string email)
         {
@@ -31,14 +33,16 @@
 
         public void AddCurrencyLine(CurrencyLine line)
         {
-            if(line != null)
+            if (line != null)
             {
                 _wallet.Add(line);
             }
         }
-        public double Discount { get { return _discount; } set {  _discount = value; } }
+        public double Discount { get { return _discount; } set { _discount = value; } }
         public string Username { get { return _username; } set { _username = value; } }
         public string Email { get { return _email; } set { _email = value; } }
+
+        public int Id { get { return _id; } init { _id = value; } }
         public List<CurrencyLine> Wallet { get { return _wallet; } }
         public List<Post> Posts { get { return _posts; } }
     }

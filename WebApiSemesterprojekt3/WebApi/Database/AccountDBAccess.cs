@@ -36,11 +36,6 @@ namespace WebApi.Database
 
                 account = conn.Query<Account>(queryStringAccount).Single();
 
-
-
-
-                AccountDto accountDto = new AccountDto();
-
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.Transaction = transaction;

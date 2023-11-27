@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
+
 using WebAppWithAuthentication.DTO;
+
+using WebAppWithAuthentication.Service;
+
 
 namespace WebAppWithAuthentication.Controllers
 {
     public class AccountController : Controller
     {
 
-        private Uri _url;
+        private ServiceConnection _connection;
         IConfiguration _configuration;
         public AccountController(IConfiguration configuration)
         {
@@ -15,7 +19,7 @@ namespace WebAppWithAuthentication.Controllers
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
-                _url = new Uri(url);
+                _connection = new ServiceConnection(url+"/api");
 
             }
             else
