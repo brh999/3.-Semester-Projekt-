@@ -18,7 +18,10 @@ namespace DesktopClient.BusinessLogic
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Used to fetch a list of all currencies from the database
+        /// </summary>
+        /// <returns>all currencies</returns>
         public async Task<IEnumerable<Currency>> GetAllCurrencies()
         {
             List<Currency>? foundCurrencies = null;
@@ -35,7 +38,7 @@ namespace DesktopClient.BusinessLogic
                 }
             }
             else
-            { 
+            {
                 currentState = TokenState.Invalid;
             }
             if (currentState == TokenState.Invalid)

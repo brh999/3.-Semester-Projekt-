@@ -1,4 +1,6 @@
 ﻿using DesktopClient.Security;
+using System.Collections.Specialized;
+using System.Configuration;
 
 namespace DesktopClient.Service
 {
@@ -6,20 +8,35 @@ namespace DesktopClient.Service
     {
 
         readonly IServiceConnection _tokenService;
-        readonly String _serviceBaseUrl = "http://localhost:5042";
+        readonly string _serviceUseUrl;
+        readonly string? _serviceBaseUrl;
+        private readonly NameValueCollection _appConfig;
+
+
         public TokenService()
         {
-            _tokenService = new ServiceConnection(_serviceBaseUrl);
+            _appConfig = ConfigurationManager.AppSettings;
+            _serviceBaseUrl = _appConfig.Get("BaseUrl");
+            if (_serviceBaseUrl is not null)
+            {
+                _serviceUseUrl = _serviceBaseUrl;
+
+            }
+            _tokenService = new ServiceConnection(_serviceUseUrl);
         }
 
-        // Fetch service from service
+        /// <summary>
+        /// Used to generate a JWT token
+        /// </summary>
+        /// <param name="accountToUse">An account which needs a JWT token to access the data</param>
+        /// <returns>a new JWT token which is used later</returns>
         public async Task<string?> GetNewToken(ApiAccount accountToUse)
         {
             string? retrievedToken = null;
 
             /* Create elements for HTTP request */
             _tokenService.UseUrl = _tokenService.BaseUrl;
-            _tokenService.UseUrl += "/token";
+            _tokenService.UseUrl += "token/";
             var uriToken = new Uri(string.Format(_tokenService.UseUrl));
 
             // Provide username, password and grant_type for the authentication. Content (body data) are posted in. 
