@@ -17,6 +17,9 @@ namespace WebApi.Database
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
+        public PostDBAccess()
+        {
+        }
 
         public IEnumerable<Bid> GetBidPosts()
         {

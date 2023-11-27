@@ -1,171 +1,151 @@
-//using System;
-//using System.Collections.Generic;
-//using Microsoft.Extensions.Configuration;
-//using System.Data.SqlClient;
-//using Xunit;
-//using Models;
-//using System.Runtime.CompilerServices;
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using System.Data.SqlClient;
+using Xunit;
+using Models;
+using System.Runtime.CompilerServices;
 
-//namespace WebApi.Database.Tests
-//{
-
-
-
-//    public class PostDBAccessTests : IDisposable
-//    {
-
-
-//        private readonly IConfiguration _testconfiguration;
-//        private string? _testconnectionString;
-
-
-//        public PostDBAccessTests(IConfiguration configuration)
-//        {
-//            _testconfiguration = configuration;
-//            _testconnectionString = _testconfiguration.GetConnectionString("hildur_test");
-//        }
-
-//        public void Dispose()
-//        {
-
-//        }
+namespace WebApi.Database.Tests
+{
 
 
 
-//        [Fact]
-//        public void GetBidPosts_ReturnsListOfBids()
-//        {
-//            // Arrange
-//            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-//            {
-//                connection.Open();
-
-//                // Insert test data into the database
+    public class PostDBAccessTests : IDisposable
+    {
 
 
-//                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
-               
-
-//                // Act
-//                IEnumerable<Bid> result = postDBAccess.GetBidPosts();
-
-//                // Assert
-//                Assert.IsType<List<Bid>>(result);
+        private readonly IConfiguration _testconfiguration;
+        private string? _testconnectionString;
 
 
-//            }
-//        }
-//        [Fact]
-//        public void GetOffetPosts_returnListOfOffers()
-//        {
-//            //Arragenge
-//            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-//            {
-//                connection.Open();
+        public PostDBAccessTests(IConfiguration configuration)
+        {
+            _testconfiguration = configuration;
+            _testconnectionString = _testconfiguration.GetConnectionString("hildur_test");
+        }
+
+        public void Dispose()
+        {
+
+        }
 
 
-//                PostDBAccess postDBAccss = new PostDBAccess(_testconfiguration);
 
-//                //Act
-//                IEnumerable<Offer> result = postDBAccss.GetOfferPosts();
+        [Fact]
+        public void GetBidPosts_ReturnsListOfBids()
+        {
+            // Arrange
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
+            {
+                connection.Open();
 
-//                //Assert
-//                Assert.IsType<List<Offer>>(result);
-
-//            }
-//        }
-
-//        [Fact]
-//        public void GetCurrencyType_returnTheTypeOfCurrency()
-//        {
-//            //Arrange
-//            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-//            {
-//                Enum res = null;
+                // Insert test data into the database
 
 
-//                connection.Open();
-//                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
-
-//                //Act
-//                IEnumerable<Offer> result = postDBAccess.GetOfferPosts();
-//                Offer offerResult = result.FirstOrDefault();
-//                res = offerResult.Currency.Type;
-
-//                //assert
-//                Assert.Equal(CurrencyEnum.USD, res);
+                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
 
 
-//            }
+                // Act
+                IEnumerable<Bid> result = postDBAccess.GetBidPosts();
+
+                // Assert
+                Assert.IsType<List<Bid>>(result);
 
 
-//        }
-//        [Fact]
-//        public void InsertBid_InsertsBidOnDB()
-//        {
-//            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-//            {
-
-//                connection.Open();
-//                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
-
-//                //Arrange
-//                Currency cu = new Currency(CurrencyEnum.USD, null); ;
-//                Bid p = new Bid
-//                {
-//                    Transactions = null,
-//                    Currency = cu,
-//                    Price = 100,
-//                    Amount = 100,
-//                    IsComplete = false,
-//                };
-
-//                //!!fylder databasen med test data, hver gang man kører alle tests!!
-//                //Act
-//                // postDBAccess.InsertBid(p);
+            }
+        }
+        [Fact]
+        public void GetOffetPosts_returnListOfOffers()
+        {
+            //Arragenge
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
+            {
+                connection.Open();
 
 
-//                //Assert
-//                Assert.True(isBidInsertedSuccessfully());
-//            }
-//        }
+                PostDBAccess postDBAccss = new PostDBAccess(_testconfiguration);
 
-//        [Fact]
-//        public void InsertOffer_InsertsOfferOnDB()
-//        {
-//            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-//            {
+                //Act
+                IEnumerable<Offer> result = postDBAccss.GetOfferPosts();
 
-//                connection.Open();
-//                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
+                //Assert
+                Assert.IsType<List<Offer>>(result);
 
-//                //Arrange
-//                Currency cu = new Currency(CurrencyEnum.USD, null); ;
-//                Bid p = new Bid
-//                {
-//                    Transactions = null,
-//                    Currency = cu,
-//                    Price = 100,
-//                    Amount = 100,
-//                    IsComplete = false,
-//                };
+            }
+        }
 
-//                //!!fylder databasen med test data, hver gang man kører alle tests!!
-//                //Act
-//                // postDBAccess.InsertOffer(p);
+      
+
+        
+
+        
+        [Fact]
+        public void InsertBid_InsertsBidOnDB()
+        {
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
+            {
+
+                connection.Open();
+                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
+
+                //Arrange
+                Currency cu = new Currency(null, "USD"); ;
+                Bid p = new Bid
+                {
+                    Transactions = null,
+                    Currency = cu,
+                    Price = 100,
+                    Amount = 100,
+                    IsComplete = false,
+                };
+
+                //!!fylder databasen med test data, hver gang man kører alle tests!!
+                //Act
+                // postDBAccess.InsertBid(p);
 
 
-//                //Assert
-//                Assert.True(isBidInsertedSuccessfully());
-//            }
+                //Assert
+                Assert.True(isBidInsertedSuccessfully());
+            }
+        }
+
+        [Fact]
+        public void InsertOffer_InsertsOfferOnDB()
+        {
+            using (SqlConnection connection = new SqlConnection(_testconnectionString))
+            {
+
+                connection.Open();
+                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
+
+                //Arrange
+                Currency cu = new Currency(null, "USD"); ;
+                Bid p = new Bid
+                {
+                    Transactions = null,
+                    Currency = cu,
+                    Price = 100,
+                    Amount = 100,
+                    IsComplete = false,
+                };
+
+                //!!fylder databasen med test data, hver gang man kører alle tests!!
+                //Act
+                // postDBAccess.InsertOffer(p);
 
 
-//        }
-//        private bool isBidInsertedSuccessfully()
-//        {
+                //Assert
+                Assert.True(isBidInsertedSuccessfully());
+            }
 
 
-//            return true;
-//        }
-//    }
-//}
+        }
+        private bool isBidInsertedSuccessfully()
+        {
+
+
+            return true;
+        }
+    }
+}
