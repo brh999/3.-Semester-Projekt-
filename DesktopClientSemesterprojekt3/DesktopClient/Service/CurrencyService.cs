@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Microsoft.Extensions.Configuration;
+using Models;
 using System.Net;
 
 namespace DesktopClient.Service;
@@ -6,14 +7,19 @@ public class CurrencyService : ICurrencyService
 {
 
     readonly IServiceConnection _currencyService;
-    readonly String _serviceBaseUrl = "https://localhost:5042/api/currency/";
+    readonly string? _serviceUseUrl;
     static readonly string authenType = "Bearer";
-
     public HttpStatusCode CurrentHttpStatusCode { get; set; }
+    readonly IConfiguration _configuration;
 
-    public CurrencyService()
+    public CurrencyService(IConfiguration configuration)
     {
-        _currencyService = new ServiceConnection(_serviceBaseUrl);
+        _configuration = configuration;
+        string? baseUrl = _configuration.GetConnectionString("BaseUrl");
+
+        if (baseUrl is not null) { _serviceUseUrl = baseUrl + "api/"; }
+
+        _currencyService = new ServiceConnection(_serviceUseUrl);
     }
 
     // Method to retrieve Person(s)

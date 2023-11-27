@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using WebAppWithAuthentication.DTO;
 using Models;
+using WebAppWithAuthentication.DTO;
 
 namespace WebAppWithAuthentication.Controllers
 {
@@ -13,7 +12,7 @@ namespace WebAppWithAuthentication.Controllers
         public AccountController(IConfiguration configuration)
         {
             _configuration = configuration;
-            string? url = _configuration.GetConnectionString("DefaultAPI");
+            string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
                 _url = new Uri(url);
@@ -26,7 +25,7 @@ namespace WebAppWithAuthentication.Controllers
         }
         public async Task<IActionResult> Index()
         {
-        
+
             using (Deserializer<Account> ad = new())
             {
                 try

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 
 namespace WebAppSemesterProject.Controllers
@@ -15,7 +14,7 @@ namespace WebAppSemesterProject.Controllers
         public CurrencyController(IConfiguration configuration)
         {
             _configuration = configuration;
-            string? url = _configuration.GetConnectionString("DefaultAPI");
+            string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
                 _url = new Uri(url);

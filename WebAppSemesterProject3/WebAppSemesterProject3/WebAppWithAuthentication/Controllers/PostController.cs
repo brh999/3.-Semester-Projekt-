@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.DTO;
 using WebAppWithAuthentication.Security;
 
 namespace WebAppWithAuthentication.Controllers
@@ -16,7 +15,7 @@ namespace WebAppWithAuthentication.Controllers
         public PostController(IConfiguration configuration)
         {
             _configuration = configuration;
-            string? url = _configuration.GetConnectionString("DefaultAPI");
+            string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
                 _url = new Uri(url + "api/");
