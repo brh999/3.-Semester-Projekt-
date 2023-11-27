@@ -30,7 +30,6 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         public async Task<IActionResult> GetAllPosts()
-
         {
             string? tokenValue = await GetToken();
             if (tokenValue != null)
