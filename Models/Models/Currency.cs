@@ -21,7 +21,10 @@
         //ublic CurrencyEnum Type { get { return _type; } set { _type = value; } }
         public Exchange Exchanges { get { return _exchange; } init { _exchange = value; } }
 
-
+        public override string? ToString()
+        {
+            return $"Currency Type: {Type}      {Exchanges}";
+        }
     }
 }
    

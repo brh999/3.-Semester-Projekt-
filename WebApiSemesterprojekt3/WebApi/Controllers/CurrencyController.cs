@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using WebApi.BuissnessLogiclayer;
 
@@ -7,6 +6,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class CurrencyController : ControllerBase
     {
         private readonly ICurrencyLogic _currencyLogic;
