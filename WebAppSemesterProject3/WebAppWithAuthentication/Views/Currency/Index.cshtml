@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Models.Currency>
+@using Models
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Currencies</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in ViewData["currencies"] as List<Currency>) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+                    @Html.DisplayFor(modelItem => item.Exchanges)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
