@@ -29,24 +29,38 @@
         private void InitializeComponent()
         {
             btnCreateCurrency = new Button();
+            ListBoxCurrencies = new ListBox();
             SuspendLayout();
             // 
             // btnCreateCurrency
             // 
-            btnCreateCurrency.Location = new Point(38, 73);
+            btnCreateCurrency.Location = new Point(48, 91);
+            btnCreateCurrency.Margin = new Padding(4);
             btnCreateCurrency.Name = "btnCreateCurrency";
-            btnCreateCurrency.Size = new Size(171, 29);
+            btnCreateCurrency.Size = new Size(214, 36);
             btnCreateCurrency.TabIndex = 0;
             btnCreateCurrency.Text = "Create currency";
             btnCreateCurrency.UseVisualStyleBackColor = true;
             btnCreateCurrency.Click += button1_Click;
             // 
+            // ListBoxCurrencies
+            // 
+            ListBoxCurrencies.FormattingEnabled = true;
+            ListBoxCurrencies.ItemHeight = 25;
+            ListBoxCurrencies.Location = new Point(339, 190);
+            ListBoxCurrencies.Name = "ListBoxCurrencies";
+            ListBoxCurrencies.Size = new Size(410, 204);
+            ListBoxCurrencies.TabIndex = 1;
+            ListBoxCurrencies.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+            // 
             // StartupForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1000, 562);
+            Controls.Add(ListBoxCurrencies);
             Controls.Add(btnCreateCurrency);
+            Margin = new Padding(4);
             Name = "StartupForm";
             Text = "StartupForm";
             ResumeLayout(false);
@@ -55,5 +69,6 @@
         #endregion
 
         private Button btnCreateCurrency;
+        private ListBox ListBoxCurrencies;
     }
 }

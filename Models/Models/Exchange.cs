@@ -18,5 +18,10 @@
 
         public double Value { get { return _value; } init { _value = value; } }
         public DateTime Date { get { return _date; } init { _date = value; } }
+
+        public override string? ToString()
+        {
+            return $"Value: {Value}";
+        }
     }
 }

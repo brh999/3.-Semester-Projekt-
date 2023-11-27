@@ -7,5 +7,10 @@ namespace DesktopClient.BusinessLogic
         bool CreateCurrency(string name);
 
         public Task<IEnumerable<Currency>> GetAllCurrencies();
+
+
     }
+
+
+
 }
