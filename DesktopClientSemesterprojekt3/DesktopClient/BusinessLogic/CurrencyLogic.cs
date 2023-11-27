@@ -35,7 +35,7 @@ namespace DesktopClient.BusinessLogic
                 }
             }
             else
-            {
+            { 
                 currentState = TokenState.Invalid;
             }
             if (currentState == TokenState.Invalid)

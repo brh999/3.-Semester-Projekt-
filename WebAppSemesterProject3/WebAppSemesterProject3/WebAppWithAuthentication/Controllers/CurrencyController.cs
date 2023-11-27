@@ -49,7 +49,7 @@ namespace WebAppSemesterProject.Controllers
                 }
                 else
                 {
-                    // Handle the error if needed
+                    
                     currencies = Array.Empty<Currency>();
                 }
             }
