@@ -22,11 +22,13 @@ namespace WebAppWithAuthentication.Controllers
         public PostController(IConfiguration configuration)
         {
             _configuration = configuration;
+
+            //Configure the base API url
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
 
-                _connection = new ServiceConnection(url+"/Api/");
+                _connection = new ServiceConnection(url+"Api/");
 
             }
             else
@@ -35,8 +37,12 @@ namespace WebAppWithAuthentication.Controllers
             }
         }
 
-        [Authorize]
 
+        /// <summary>
+        /// Get homepage view
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
         public async Task<IActionResult> Index()
 
         {
@@ -100,47 +106,49 @@ namespace WebAppWithAuthentication.Controllers
         }
 
 
-
-
+        /// <summary>
+        /// Create and return offer View
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         public IActionResult CreateOffer()
         {
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             AccountDto? account = null;
-            ////This should find put which account that makes the request.
-            //_connection.UseUrl = _connection.BaseUrl + "account/1";
-            //var task = _connection.CallServiceGet();
-            //try
-            //{
-            //    task.Wait();
-            //}
-            //catch
-            //{
+            //This should find put which account that makes the request.
+            _connection.UseUrl = _connection.BaseUrl + "account/1";
+            var task = _connection.CallServiceGet();
+            try
+            {
+                task.Wait();
+            }
+            catch
+            {
 
-            //}
-
-
-            //var result = task.Result;
-
-            //if (result.IsSuccessStatusCode)
-            //{
-            //    var readTask = result.Content.ReadAsAsync<AccountDto>();
-            //    readTask.Wait();
-            //    account = readTask.Result;
-            //}
-            //else
-            //{
-            //    ModelState.AddModelError(string.Empty, "Server error - No offers found");
-            //}
+            }
 
 
+            var result = task.Result;
+
+            if (result.IsSuccessStatusCode)
+            {
+                var readTask = result.Content.ReadAsAsync<AccountDto>();
+                readTask.Wait();
+                account = readTask.Result;
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Server error - No offers found");
+            }
 
 
-            // test account
-            var testData = new Account(100, "Test", "Test@");
-            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "USD")));
-            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "EUR")));
-            account = new AccountDto(testData);
+
+
+            // This is test data
+            //var testData = new Account(100, "Test", "Test@");
+            //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "USD")));
+            //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "EUR")));
+            //account = new AccountDto(testData);
 
 
 
@@ -149,12 +157,19 @@ namespace WebAppWithAuthentication.Controllers
         }
 
 
-
+        /// <summary>
+        /// Create offer from parameter
+        /// </summary>
+        /// <param name="inPost"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost]
         public IActionResult CreateOffer(Offer inPost)
         {
-            
+            //Quick fix, at this point offer dont need to have an exchange or any transaction.
+            //But the API do not comprehend that these values could be null
+            //therefore we create 'Empty' instances of objects.
+            // TODO refractor this in a later sprint.
             if(inPost.Currency.Exchanges == null)
             {
                 inPost.Currency.Exchanges = new Exchange();
@@ -168,6 +183,8 @@ namespace WebAppWithAuthentication.Controllers
             ActionResult result = StatusCode(500);
 
             //Validate input
+            //TODO: create error handling if the input is not valid.
+            //Either at the browser level or Control
             bool goOn = true;
             if (!(inPost.Amount > 0) || !(inPost.Price > 0))
             {
@@ -181,18 +198,24 @@ namespace WebAppWithAuthentication.Controllers
 
             if (goOn)
             {
+                //Create the use url to this call.
                 _connection.UseUrl = _connection.BaseUrl + "offer";
-                
+
+
+                //Serialize the offer object
                 var json = JsonConvert.SerializeObject(inPost);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var serviceResponse = _connection.CallServicePost(content);
                 serviceResponse.Wait();
 
+                //Check response from API
                 if (serviceResponse == null || !serviceResponse.Result.IsSuccessStatusCode)
                 {
+                    //502 Bad Gateway
                     result = StatusCode(502);
                 }
 
+                
                 result = RedirectToAction("Index", "Home");
             }
             else
@@ -255,6 +278,7 @@ namespace WebAppWithAuthentication.Controllers
         {
             return Ok();
         }
+
 
         private async Task<string?> GetToken()
         {

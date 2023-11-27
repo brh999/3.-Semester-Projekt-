@@ -54,6 +54,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]Offer inOffer)
         {
+            //TODO: Error handling
             IActionResult result = StatusCode(500);
             Offer? isOfferValid = null;
             try
@@ -61,10 +62,7 @@ namespace WebApi.Controllers
                 isOfferValid = _offerLogic.InsertOffer(inOffer);
             }
             catch (Exception ex)
-            {
-
-
-            }
+            { }
 
             // Checks if offer is saved into the database
             if (isOfferValid != null)

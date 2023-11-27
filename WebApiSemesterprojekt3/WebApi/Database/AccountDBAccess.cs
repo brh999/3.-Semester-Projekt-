@@ -26,21 +26,37 @@ namespace WebApi.Database
         {
             Account account = null;
 
-            string queryStringAccount = "select * from account";
-            string queryStringWallet = "select * from CurrencyLines where Account_Wallet_fk = @accountId";
+            string queryStringAccount = "SELECT email,username,discount FROM AspNetUsers JOIN Accounts ON Accounts.AspNetUsers_id_fk = AspNetUsers.Id WHERE Accounts.id = @id";
+            string queryStringWallet = "select * from CurrencyLines where Account_id_fk = @accountId";
 
 
             using (SqlConnection conn = new SqlConnection(_connectionString)) {
                 conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
+                string email = "",
+                        username = "";
+                double discount = 0;
 
-                account = conn.Query<Account>(queryStringAccount).Single();
-
+                List<CurrencyLine> wallet = new List<CurrencyLine>();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.Transaction = transaction;
-                    cmd.CommandText = queryStringWallet;
+                    
 
+                    cmd.CommandText = queryStringAccount;
+                    cmd.Parameters.AddWithValue("id", id);
+                    using(SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            email = (string)reader["email"];
+                            username = (string)reader["username"];
+                            discount = (double)reader["discount"];
+                        }
+                        
+                       
+                    }
+
+                    cmd.CommandText = queryStringWallet;
+                    cmd.Parameters.AddWithValue("AccountId", id);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -50,13 +66,19 @@ namespace WebApi.Database
                             string currencyType = (string)reader["type"];
                             double amount = (double)reader["amount"];
 
-                            Currency currency = new(new Exchange(), currencyType);
+                            Currency currency = new(currencyType);
 
                             CurrencyLine line = new CurrencyLine(amount,currency);
 
-                            account.AddCurrencyLine(line);
+                            wallet.Add(line);
+
+
+                            
                         }
                     }
+
+                    account = new Account(id,discount,username,email,wallet, new List<Post>());
+
                 }
             }
 

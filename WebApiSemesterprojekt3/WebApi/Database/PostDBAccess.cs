@@ -17,7 +17,10 @@ namespace WebApi.Database
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
-
+        /// <summary>
+        /// Get all bid Post
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Bid> GetBidPosts()
         {
             List<Bid> foundBids = new List<Bid>();
@@ -46,6 +49,10 @@ namespace WebApi.Database
             }
         }
 
+        /// <summary>
+        /// Get all Offer posts
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Offer> GetOfferPosts()
         {
 
@@ -82,7 +89,10 @@ namespace WebApi.Database
             return res;
     
         }
-
+        /// <summary>
+        /// Insert the Bid into the database
+        /// </summary>
+        /// <param name="bid"></param>
         //TODO contiue implementing this!!
         public void InsertBid(Bid bid)
         {
@@ -119,7 +129,10 @@ namespace WebApi.Database
             }
         }
 
-
+        /// <summary>
+        /// Insert the Offer into the database
+        /// </summary>
+        /// <param name="bid"></param>
         public void InsertOffer(Offer offer)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
@@ -130,13 +143,11 @@ namespace WebApi.Database
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
+                
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     {
-                        insertCommand.Transaction = transaction;
-
-                        
+                        //Parameter binding
                         insertCommand.CommandText = queryString;
                         insertCommand.Parameters.AddWithValue("amount", offer.Amount);
                         insertCommand.Parameters.AddWithValue("price", offer.Price);
@@ -147,8 +158,6 @@ namespace WebApi.Database
                         insertCommand.Parameters.AddWithValue("aspNetId", tempId);
                         insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
                         insertCommand.ExecuteScalar();
-                        transaction.Commit();
-
                     }
 
                 }
