@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Models;
 using Newtonsoft.Json;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Net;
 
 namespace DesktopClient.Service;
@@ -8,18 +10,19 @@ public class CurrencyService : ICurrencyService
 
     readonly IServiceConnection _currencyService;
     readonly string? _serviceUseUrl;
-    readonly String _serviceBaseUrl = "http://localhost:5042/api";
+    readonly string? _serviceBaseUrl;
     static readonly string authenType = "Bearer";
     public HttpStatusCode CurrentHttpStatusCode { get; set; }
-    readonly IConfiguration _configuration;
+    private readonly NameValueCollection _appConfig;
 
-    public CurrencyService(IConfiguration configuration)
+    public CurrencyService()
     {
-        _configuration = configuration;
-        string? baseUrl = _configuration.GetConnectionString("BaseUrl");
-
-        if (baseUrl is not null) { _serviceUseUrl = baseUrl + "api/"; }
-
+        _appConfig = ConfigurationManager.AppSettings;
+        _serviceBaseUrl = ConfigurationManager.AppSettings.Get("BaseUrl");
+        if (!string.IsNullOrEmpty(_serviceBaseUrl))
+        {
+            _serviceUseUrl = _serviceBaseUrl + "api/";
+        }
         _currencyService = new ServiceConnection(_serviceUseUrl);
     }
 
@@ -36,7 +39,7 @@ public class CurrencyService : ICurrencyService
         _currencyService.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
 
 
-        _currencyService.UseUrl = _currencyService.BaseUrl + "/currency";
+        _currencyService.UseUrl = _currencyService.BaseUrl + "currency/";
 
         var serviceResponse = await _currencyService.CallServiceGet();
 
