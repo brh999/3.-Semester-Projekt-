@@ -29,7 +29,7 @@ namespace DesktopClient.UI
 
         private async void UpdateCurrencies ()
         {
-            List<Currency> data = (List<Currency>)await _currencyLogic.GetAllCurrencies();
+            List<Currency> data = (List<Currency>)await _currencyLogic.GetAllCurrencies() ;
             ListBoxCurrencies.Items.Clear();
             ListBoxCurrencies.DataSource = data;
         }
