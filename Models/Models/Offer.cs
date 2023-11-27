@@ -10,6 +10,7 @@ namespace Models
     {
         public Offer(double amount, double price, Currency currency) : base(amount, price, currency)
         {
+            
             IsComplete = false;
         }
         public Offer() 

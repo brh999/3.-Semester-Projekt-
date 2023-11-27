@@ -6,7 +6,7 @@
         private double _price;
         private bool _isComplete;
         private Currency _currency;
-        private IEnumerable<TransactionLine> _transactions;
+        private List<TransactionLine> _transactions;
 
         public Post()
         {
@@ -19,13 +19,14 @@
             _price = price;
             _isComplete = false;
             _transactions = new List<TransactionLine>();
+            
             _currency = currency;
         }
 
         public double Amount { get { return _amount; } init { _amount = value; } }
         public double Price { get { return _price; } init { _price = value; } }
         public bool IsComplete { get { return _isComplete; } set { _isComplete = value; } }
-        public IEnumerable<TransactionLine> Transactions { get { return _transactions; } init { _transactions = value; } }
+        public List<TransactionLine> Transactions { get { return _transactions; } set { _transactions = value; } }
         public Currency Currency { get { return _currency; } init { _currency = value; } }
     }
 }

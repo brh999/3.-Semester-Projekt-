@@ -1,7 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+
+using Models.DTO;
+using Newtonsoft.Json;
+using System.Text;
+
 using WebAppWithAuthentication.Security;
+using WebAppWithAuthentication.Service;
 
 namespace WebAppWithAuthentication.Controllers
 {
@@ -12,13 +18,15 @@ namespace WebAppWithAuthentication.Controllers
 
         private Uri _url;
         private readonly IConfiguration _configuration;
+        private ServiceConnection _connection;
         public PostController(IConfiguration configuration)
         {
             _configuration = configuration;
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
-                _url = new Uri(url + "api/");
+
+                _connection = new ServiceConnection(url+"/Api/");
 
             }
             else
@@ -28,7 +36,8 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> GetAllPosts()
+
+        public async Task<IActionResult> Index()
 
         {
             string? tokenValue = await GetToken();
@@ -93,42 +102,51 @@ namespace WebAppWithAuthentication.Controllers
 
 
 
-        // [Authorize]
-        // public IActionResult CreateOffer()
-        // {
-        //System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-        //AccountDto? account = null;
-        //using (var client = new HttpClient())
-        //{
-        //    client.BaseAddress = _url;
+        [Authorize]
+        public IActionResult CreateOffer()
+        {
+            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+            AccountDto? account = null;
+            ////This should find put which account that makes the request.
+            //_connection.UseUrl = _connection.BaseUrl + "account/1";
+            //var task = _connection.CallServiceGet();
+            //try
+            //{
+            //    task.Wait();
+            //}
+            //catch
+            //{
 
-        //    //This should find put which account that makes the request.
-        //    var task = client.GetAsync("Account");
+            //}
 
-        //    task.Wait();
 
-        //    var result = task.Result;
+            //var result = task.Result;
 
-        //    if (result.IsSuccessStatusCode)
-        //    {
-        //        var readTask = result.Content.ReadAsAsync<AccountDto>();
-        //        readTask.Wait();
-        //        account = readTask.Result;
+            //if (result.IsSuccessStatusCode)
+            //{
+            //    var readTask = result.Content.ReadAsAsync<AccountDto>();
+            //    readTask.Wait();
+            //    account = readTask.Result;
+            //}
+            //else
+            //{
+            //    ModelState.AddModelError(string.Empty, "Server error - No offers found");
+            //}
 
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Server error - No offers found");
-        //    }
 
-        //}
-        //var testData = new Account(100, "Test", "Test@");
-        //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "Dollar")));
-        //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "Euro")));
-        //account = new AccountDto(testData);
-        //ViewData.Add("account", account);
-        //return View();
-        //}
+
+
+            // test account
+            var testData = new Account(100, "Test", "Test@");
+            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "USD")));
+            testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "EUR")));
+            account = new AccountDto(testData);
+
+
+
+            ViewData.Add("account", account);
+            return View();
+        }
 
 
 
@@ -136,9 +154,55 @@ namespace WebAppWithAuthentication.Controllers
         [HttpPost]
         public IActionResult CreateOffer(Offer inPost)
         {
+            
+            if(inPost.Currency.Exchanges == null)
+            {
+                inPost.Currency.Exchanges = new Exchange();
+            }
+            if(inPost.Transactions == null)
+            {
+                inPost.Transactions = new List<TransactionLine>();
+            }
+
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-            return Ok();
+            ActionResult result = StatusCode(500);
+
+            //Validate input
+            bool goOn = true;
+            if (!(inPost.Amount > 0) || !(inPost.Price > 0))
+            {
+                goOn = false;
+            }
+
+            if (String.IsNullOrEmpty(inPost.Currency.Type))
+            {
+                goOn = false;
+            }
+
+            if (goOn)
+            {
+                _connection.UseUrl = _connection.BaseUrl + "offer";
+                
+                var json = JsonConvert.SerializeObject(inPost);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var serviceResponse = _connection.CallServicePost(content);
+                serviceResponse.Wait();
+
+                if (serviceResponse == null || !serviceResponse.Result.IsSuccessStatusCode)
+                {
+                    result = StatusCode(502);
+                }
+
+                result = RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                result = StatusCode(404);
+            }
+
+            return result;
         }
+
 
 
         [Authorize]

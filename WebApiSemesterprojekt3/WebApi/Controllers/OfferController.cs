@@ -41,7 +41,7 @@ namespace WebApi.Controllers
 
         }
 
-       
+
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
@@ -52,13 +52,13 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public IActionResult Post([FromBody] Offer inPost)
+        public IActionResult Post([FromBody]Offer inOffer)
         {
             IActionResult result = StatusCode(500);
             Offer? isOfferValid = null;
             try
             {
-                isOfferValid = _offerLogic.InsertOffer(inPost);
+                isOfferValid = _offerLogic.InsertOffer(inOffer);
             }
             catch (Exception ex)
             {
