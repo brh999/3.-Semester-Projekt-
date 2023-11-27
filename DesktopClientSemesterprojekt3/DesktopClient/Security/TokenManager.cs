@@ -13,8 +13,12 @@ namespace DesktopClient.Security
         {
             _tokenAdminValues = ConfigurationManager.AppSettings;
         }
-
-        // Relay for calling appropriate method according to TokenState
+        /// <summary>
+        /// Used to fetch a JWT token
+        /// </summary>
+        /// <param name="currentState">determines if a new Token needs to be
+        /// created and returned or if we can reuse the newest token</param>
+        /// <returns> the JWT token new or old</returns>
         public async Task<string?> GetToken(TokenState currentState)
         {
             string? foundToken = null;
@@ -29,14 +33,22 @@ namespace DesktopClient.Security
             return foundToken;
         }
 
-        // Get existing JWT token
+        /// <summary>
+        /// Used in GetToken() to return an existing, valid JWT token
+        /// </summary>
+        /// <returns>JWT token</returns>
         private string? GetTokenExisting()
         {
             string? foundToken = JWT.CurrentJWT;
             return foundToken;
         }
 
-        // Manage retrieval and persistence of new token value
+        /// <summary>
+        /// Used in GetToken() to create and return a JWT token
+        /// user data is fetched and a token is generated with
+        /// that data
+        /// </summary>
+        /// <returns>the very same JWT token</returns>
         private async Task<string?> GetTokenNew()
         {
             string? foundToken;
@@ -57,6 +69,11 @@ namespace DesktopClient.Security
         }
 
         // Get application credentials from configuration (AppSettings)
+        /// <summary>
+        /// Used int GetTokenNew() to fetch data which is
+        /// used to generate a new JWT
+        /// </summary>
+        /// <returns> the ApiAccount used to generate the token</returns>
         private ApiAccount GetApiAccountCredentials()
         {
             ApiAccount foundData = new ApiAccount();
