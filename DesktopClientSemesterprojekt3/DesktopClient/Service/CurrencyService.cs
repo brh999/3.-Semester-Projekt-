@@ -18,7 +18,7 @@ public class CurrencyService : ICurrencyService
     public CurrencyService()
     {
         _appConfig = ConfigurationManager.AppSettings;
-        _serviceBaseUrl = ConfigurationManager.AppSettings.Get("BaseUrl");
+        _serviceBaseUrl = _appConfig.Get("BaseUrl");
         if (!string.IsNullOrEmpty(_serviceBaseUrl))
         {
             _serviceUseUrl = _serviceBaseUrl + "api/";
@@ -43,9 +43,9 @@ public class CurrencyService : ICurrencyService
         _currencyService.HttpEnabler.DefaultRequestHeaders.Remove("Authorization");   // To avoid more Authorization headers
         _currencyService.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
         // END JWT
-        
+
         _currencyService.UseUrl = _currencyService.BaseUrl + "currency/";
-        
+
         var serviceResponse = await _currencyService.CallServiceGet();
 
         if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)

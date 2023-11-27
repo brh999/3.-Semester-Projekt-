@@ -1,4 +1,6 @@
 ﻿using DesktopClient.Security;
+using System.Collections.Specialized;
+using System.Configuration;
 
 namespace DesktopClient.Service
 {
@@ -6,10 +8,21 @@ namespace DesktopClient.Service
     {
 
         readonly IServiceConnection _tokenService;
-        readonly String _serviceBaseUrl = "http://localhost:5042/";
+        readonly string _serviceUseUrl;
+        readonly string? _serviceBaseUrl;
+        private readonly NameValueCollection _appConfig;
+
+
         public TokenService()
         {
-            _tokenService = new ServiceConnection(_serviceBaseUrl);
+            _appConfig = ConfigurationManager.AppSettings;
+            _serviceBaseUrl = _appConfig.Get("BaseUrl");
+            if (_serviceBaseUrl is not null)
+            {
+                _serviceUseUrl = _serviceBaseUrl;
+
+            }
+            _tokenService = new ServiceConnection(_serviceUseUrl);
         }
 
         /// <summary>
