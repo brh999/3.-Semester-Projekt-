@@ -24,7 +24,7 @@ namespace DesktopClient.BusinessLogic
             List<Currency>? foundCurrencies = null;
 
             // Get token
-            TokenState currentState = TokenState.Invalid;        // Presumed state
+            TokenState currentState = TokenState.Valid;        // Presumed state
             string? tokenValue = await _tokenManager.GetToken(currentState);
             if (tokenValue != null)
             {
