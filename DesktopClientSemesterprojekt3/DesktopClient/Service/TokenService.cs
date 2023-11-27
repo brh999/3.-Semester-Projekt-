@@ -12,7 +12,11 @@ namespace DesktopClient.Service
             _tokenService = new ServiceConnection(_serviceBaseUrl);
         }
 
-        // Fetch service from service
+        /// <summary>
+        /// Used to generate a JWT token
+        /// </summary>
+        /// <param name="accountToUse">An account which needs a JWT token to access the data</param>
+        /// <returns>a new JWT token which is used later</returns>
         public async Task<string?> GetNewToken(ApiAccount accountToUse)
         {
             string? retrievedToken = null;
