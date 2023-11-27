@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 ﻿using Microsoft.Extensions.Configuration;
-using Models;
-=======
-﻿using Models;
 using Newtonsoft.Json;
->>>>>>> d0ff48fbc5a8830e81ad187c6f2443edfac5d9a7
 using System.Net;
 
 namespace DesktopClient.Service;
@@ -12,11 +7,8 @@ public class CurrencyService : ICurrencyService
 {
 
     readonly IServiceConnection _currencyService;
-<<<<<<< HEAD
     readonly string? _serviceUseUrl;
-=======
     readonly String _serviceBaseUrl = "http://localhost:5042/api";
->>>>>>> d0ff48fbc5a8830e81ad187c6f2443edfac5d9a7
     static readonly string authenType = "Bearer";
     public HttpStatusCode CurrentHttpStatusCode { get; set; }
     readonly IConfiguration _configuration;
