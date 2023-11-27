@@ -6,7 +6,7 @@ namespace DesktopClient.Service
     {
 
         readonly IServiceConnection _tokenService;
-        readonly String _serviceBaseUrl = "https://localhost:5042";
+        readonly String _serviceBaseUrl = "http://localhost:5042";
         public TokenService()
         {
             _tokenService = new ServiceConnection(_serviceBaseUrl);
@@ -19,7 +19,7 @@ namespace DesktopClient.Service
 
             /* Create elements for HTTP request */
             _tokenService.UseUrl = _tokenService.BaseUrl;
-            _tokenService.UseUrl += "/" + "token";
+            _tokenService.UseUrl += "/token";
             var uriToken = new Uri(string.Format(_tokenService.UseUrl));
 
             // Provide username, password and grant_type for the authentication. Content (body data) are posted in. 
