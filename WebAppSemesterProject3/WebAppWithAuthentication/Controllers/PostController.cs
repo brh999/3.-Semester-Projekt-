@@ -131,9 +131,11 @@ namespace WebAppWithAuthentication.Controllers
 
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<AccountDto>();
-                readTask.Wait();
-                account = readTask.Result;
+                var content = result.Content.ReadAsStringAsync();
+                content.Wait();
+                account = JsonConvert.DeserializeObject<AccountDto>(content.Result);
+                
+                
             }
             else
             {

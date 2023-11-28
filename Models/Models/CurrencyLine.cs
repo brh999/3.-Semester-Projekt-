@@ -17,6 +17,6 @@
         }
 
         public double Amount { get { return _amount; } set { _amount = value; } }
-        public Currency Currency { get { return _currency; } }
+        public Currency Currency { get { return _currency; } set { _currency = value; }  }
     }
 }

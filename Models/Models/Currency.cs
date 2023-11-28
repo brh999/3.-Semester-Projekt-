@@ -23,7 +23,7 @@
         }
 
         public string Type { get { return _type; } set { _type = value; } }
-        //ublic CurrencyEnum Type { get { return _type; } set { _type = value; } }
+        
         public Exchange Exchanges { get { return _exchange; } set { _exchange = value; } }
 
         public override string? ToString()
