@@ -7,16 +7,20 @@
     Models.DTO.AccountDto account = ViewData["account"] as Models.DTO.AccountDto;
     List<SelectListItem> listItems = new List<SelectListItem>();
 
-    foreach (var item in account.Wallet)
+    if(account.Wallet != null)
     {
-        listItems.Add(new SelectListItem
-                {
+        foreach (var item in account.Wallet)
+        {
+            listItems.Add(new SelectListItem
+                    {
 
-                    Text = $"{item.Amount.ToString()} {item.Currency.Type}",
-                    Value = item.Currency.Type
+                        Text = $"{item.Amount.ToString()} {item.Currency.Type}",
+                        Value = item.Currency.Type
 
-                });
+                    });
+        }
     }
+
 }
 
 <h1>CreateOffer</h1>
@@ -25,11 +29,15 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateOffer" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (listItems.Count > 0)
+        {
+            <form asp-action="CreateOffer" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <p>Wallet</p>
-                @Html.DropDownListFor(model => model.Currency.Type, listItems, new { @class = "form-control" })
+                
+                    @Html.DropDownListFor(model => model.Currency.Type, listItems, new { @class = "form-control" })
+                
                 <span asp-validation-for="Currency" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -45,7 +53,12 @@
             <div class="form-group">
                 <input type="submit" value="CreateOffer" class="btn btn-primary" />
             </div>
-        </form>
+            </form>
+        }
+        else
+        {
+            <p>Wallet is empty</p>
+        }
     </div>
 </div>
 
