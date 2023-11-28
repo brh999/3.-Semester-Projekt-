@@ -43,8 +43,7 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public async Task<IActionResult> Index()
-
+        public async Task<IActionResult> GetAllPosts()
         {
             string? tokenValue = await GetToken();
             if (tokenValue != null)
