@@ -75,7 +75,12 @@ namespace WebApi.Database.Tests
             }
         }
 
+
+      
+
         
+
+
         
         [Fact]
         public void InsertBid_InsertsBidOnDB()
@@ -87,7 +92,9 @@ namespace WebApi.Database.Tests
                 PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
 
                 //Arrange
+
                 Currency cu = new Currency("USD"); ;
+
                 Bid p = new Bid
                 {
                     Transactions = null,
@@ -117,7 +124,9 @@ namespace WebApi.Database.Tests
                 PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
 
                 //Arrange
+
                 Currency cu = new Currency("USD"); ;
+
                 Bid p = new Bid
                 {
                     Transactions = null,

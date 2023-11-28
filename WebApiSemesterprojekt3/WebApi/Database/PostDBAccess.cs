@@ -17,10 +17,17 @@ namespace WebApi.Database
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
+
         /// <summary>
         /// Get all bid Post
         /// </summary>
         /// <returns></returns>
+
+        public PostDBAccess()
+        {
+        }
+
+
         public IEnumerable<Bid> GetBidPosts()
         {
             List<Bid> foundBids = new List<Bid>();
