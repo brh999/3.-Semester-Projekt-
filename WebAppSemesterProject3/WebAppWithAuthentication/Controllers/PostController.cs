@@ -121,9 +121,9 @@ namespace WebAppWithAuthentication.Controllers
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             AccountDto? account = null;
 
-            //This should find  which account that made the request and not simple account '1'.
+            //This should find  which account that made the request and not simple account 'c811de3f-ab3c-4445-8d70-612e68d61c93'.
             AccountLogic accountLogic = new(_connection);
-            Task<AccountDto?> response = accountLogic.GetAccountById("10101");
+            Task<AccountDto?> response = accountLogic.GetAccountById("c811de3f-ab3c-4445-8d70-612e68d61c93");
             response.Wait();
 
             account = response.Result;

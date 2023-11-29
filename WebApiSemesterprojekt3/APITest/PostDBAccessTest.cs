@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using Xunit;
 using Models;
 using System.Runtime.CompilerServices;
+using Xunit.Abstractions;
+using APITest;
 
 namespace WebApi.Database.Tests
 {
@@ -15,14 +17,16 @@ namespace WebApi.Database.Tests
     {
 
 
-        private readonly IConfiguration _testconfiguration;
-        private string? _testconnectionString;
+        readonly private IPostDBAccess _postAccess;
+        private readonly ITestOutputHelper _extraOutpuit;
 
 
-        public PostDBAccessTests(IConfiguration configuration)
+        public PostDBAccessTests(ITestOutputHelper output)
         {
-            _testconfiguration = configuration;
-            _testconnectionString = _testconfiguration.GetConnectionString("hildur_test");
+            _extraOutpuit = output;
+            IConfiguration inConfig = TestConfigHelper.GetConfigurationRoot();
+            _postAccess = new PostDBAccess(inConfig);
+
         }
 
         public void Dispose()
@@ -35,123 +39,98 @@ namespace WebApi.Database.Tests
         [Fact]
         public void GetBidPosts_ReturnsListOfBids()
         {
-            // Arrange
-            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-            {
-                connection.Open();
-
-                // Insert test data into the database
 
 
-                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
+            // Act
+            IEnumerable<Bid> result = _postAccess.GetBidPosts();
+
+            // Assert
+            Assert.IsType<List<Bid>>(result);
 
 
-                // Act
-                IEnumerable<Bid> result = postDBAccess.GetBidPosts();
 
-                // Assert
-                Assert.IsType<List<Bid>>(result);
-
-
-            }
         }
         [Fact]
         public void GetOffetPosts_returnListOfOffers()
         {
-            //Arragenge
-            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-            {
-                connection.Open();
 
+            //Act
+            IEnumerable<Offer> result = _postAccess.GetOfferPosts();
 
-                PostDBAccess postDBAccss = new PostDBAccess(_testconfiguration);
-
-                //Act
-                IEnumerable<Offer> result = postDBAccss.GetOfferPosts();
-
-                //Assert
-                Assert.IsType<List<Offer>>(result);
-
-            }
-        }
-
-
-      
-
-        
-
-
-        
-        [Fact]
-        public void InsertBid_InsertsBidOnDB()
-        {
-            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-            {
-
-                connection.Open();
-                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
-
-                //Arrange
-
-                Currency cu = new Currency("USD"); ;
-
-                Bid p = new Bid
-                {
-                    Transactions = null,
-                    Currency = cu,
-                    Price = 100,
-                    Amount = 100,
-                    IsComplete = false,
-                };
-
-                //!!fylder databasen med test data, hver gang man kører alle tests!!
-                //Act
-                // postDBAccess.InsertBid(p);
-
-
-                //Assert
-                Assert.True(isBidInsertedSuccessfully());
-            }
-        }
-
-        [Fact]
-        public void InsertOffer_InsertsOfferOnDB()
-        {
-            using (SqlConnection connection = new SqlConnection(_testconnectionString))
-            {
-
-                connection.Open();
-                PostDBAccess postDBAccess = new PostDBAccess(_testconfiguration);
-
-                //Arrange
-
-                Currency cu = new Currency("USD"); ;
-
-                Bid p = new Bid
-                {
-                    Transactions = null,
-                    Currency = cu,
-                    Price = 100,
-                    Amount = 100,
-                    IsComplete = false,
-                };
-
-                //!!fylder databasen med test data, hver gang man kører alle tests!!
-                //Act
-                // postDBAccess.InsertOffer(p);
-
-
-                //Assert
-                Assert.True(isBidInsertedSuccessfully());
-            }
+            //Assert
+            Assert.IsType<List<Offer>>(result);
 
 
         }
-        private bool isBidInsertedSuccessfully()
-        {
 
 
-            return true;
-        }
+
+
+
+
+
+
+        //[Fact]
+        //public void InsertBid_InsertsBidOnDB()
+        //{
+
+
+        //    //Arrange
+        //    Currency cu = new Currency("USD"); ;
+
+        //    Bid p = new Bid
+        //    {
+        //        Transactions = null,
+        //        Currency = cu,
+        //        Price = 100,
+        //        Amount = 100,
+        //        IsComplete = false,
+        //    };
+
+        //    //!!fylder databasen med test data, hver gang man kører alle tests!!
+        //    //Act
+        //    _postAccess.InsertBid(p);
+
+
+        //    //Assert
+        //    Assert.True(isBidInsertedSuccessfully());
+
+        //}
+
+        //[Fact]
+        //public void InsertOffer_InsertsOfferOnDB()
+        //{
+
+        //    //Arrange
+
+        //    Currency cu = new Currency("USD"); ;
+
+        //    Offer p = new Offer
+        //    {
+        //        Transactions = null,
+        //        Currency = cu,
+        //        Price = 100,
+        //        Amount = 100,
+        //        IsComplete = false,
+        //    };
+
+        //    //!!fylder databasen med test data, hver gang man kører alle tests!!
+        //    //Act
+        //    _postAccess.InsertOffer(p);
+
+
+        //    //Assert
+        //    Assert.True(isBidInsertedSuccessfully());
+        //}
+
+         private bool isBidInsertedSuccessfully()
+    {
+
+
+        return true;
     }
+
+    }
+   
 }
+
