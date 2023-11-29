@@ -22,7 +22,7 @@ namespace WebAppWithAuthentication.Service
             string? retrievedToken = null;
 
             _tokenService.UseUrl = _tokenService.BaseUrl;
-            _tokenService.UseUrl += "/" + "token";
+            _tokenService.UseUrl += "token/";
             var uriToken = new Uri(string.Format(_tokenService.UseUrl));
 
             HttpContent appAdminLogin = new FormUrlEncodedContent(new[]
