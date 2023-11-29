@@ -64,7 +64,7 @@ namespace WebApi.Database
         {
 
             List<Offer> foundOffers = new List<Offer>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
+            string queryString = "SELECT * FROM posts JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -78,6 +78,7 @@ namespace WebApi.Database
                         Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
                         Post offer = new Offer
                         {
+                            Id = (int)reader["id"],
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
@@ -189,6 +190,7 @@ namespace WebApi.Database
                         Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
                         Post offer = new Offer
                         {
+                            Id = (int)reader["id"],
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
@@ -199,7 +201,42 @@ namespace WebApi.Database
                 return foundPosts;
             }
         }
+
+        public IEnumerable<TransactionLine> GetTransactionLines(int id)
+        {
+            List<TransactionLine> foundLines = new List<TransactionLine>();
+            string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
+                " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @id";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                readCommand.Parameters.AddWithValue("id", id);
+
+                using (SqlDataReader reader = readCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int buyerId = (int)reader["post_bid_id_fk"];
+                        TransactionLine line = new TransactionLine
+                        {
+                            Date = (DateTime)reader["date"],
+                            Amount = (double)reader["amount"],
+                            Buyer = new Bid()
+                            {
+                                Id = buyerId,
+                            },
+                            Seller = null,
+
+                        };
+                        foundLines.Add(line);
+                    }
+                    return foundLines;
+                }
+            }
+        }
     }
 }
+
 
 
