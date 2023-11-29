@@ -30,6 +30,6 @@
         public bool IsComplete { get { return _isComplete; } set { _isComplete = value; } }
         public List<TransactionLine> Transactions { get { return _transactions; } set { _transactions = value; } }
         public Currency Currency { get { return _currency; } init { _currency = value; } }
-        public int Id { get { return _id; } set { } }
+        public int Id { get { return _id; } set { _id = value; } }
     }
 }

@@ -66,7 +66,7 @@ namespace WebApi.BuissnessLogiclayer
 
         public List<TransactionLine> GetRelatedTransactions(int id)
         {
-            IEnumerable<TransactionLine> foundLines = new List<TransactionLine>();
+            IEnumerable<TransactionLine>? foundLines;
 
             foundLines = _dataAccess.GetTransactionLines(id);
 

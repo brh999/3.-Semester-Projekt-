@@ -64,7 +64,7 @@ namespace WebApi.Database
         {
 
             List<Offer> foundOffers = new List<Offer>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
+            string queryString = "SELECT * FROM posts JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -226,7 +226,7 @@ namespace WebApi.Database
                             {
                                 Id = buyerId,
                             },
-                            seller = null,
+                            Seller = null,
 
                         };
                         foundLines.Add(line);

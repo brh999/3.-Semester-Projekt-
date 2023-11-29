@@ -2,7 +2,7 @@
 {
     public class TransactionLine
     {
-        private readonly DateTime _date;
+        private DateTime _date;
         private double _amount;
         private Bid? _buyer;
         private Offer? _seller;
@@ -18,9 +18,15 @@
             this._buyer = buyer;
             this._seller = seller;
         }
-        public DateTime Date { get { return _date; } set { } }
-        public double Amount { get { return _amount; } set { } }
-        public Bid Buyer { get { return _buyer; } set { } }
-        public Offer seller { get { return _seller; } set { } }
+        public DateTime Date { get { return _date; } set { _date = value; } }
+        public double Amount { get { return _amount; } set { _amount = value; } }
+        public Bid Buyer { get { return _buyer; } set { _buyer = value; } }
+        public Offer Seller { get { return _seller; } set { _seller = value; } }
+
+        public override string? ToString()
+        {
+            string res = $"{_amount} {_buyer.Id} at {_date}";
+            return res;
+        }
     }
 }
