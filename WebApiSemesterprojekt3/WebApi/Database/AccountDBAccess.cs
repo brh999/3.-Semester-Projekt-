@@ -30,7 +30,8 @@ namespace WebApi.Database
             string queryStringWallet = "select * from CurrencyLines JOIN Currencies ON CurrencyLines.currency_id_fk = Currencies.id where Account_id_fk = @AccountId";
 
 
-            using (SqlConnection conn = new SqlConnection(_connectionString)) {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
                 conn.Open();
                 string email = "",
                         username = "";
@@ -39,11 +40,11 @@ namespace WebApi.Database
                 List<CurrencyLine> wallet = new List<CurrencyLine>();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    
+
 
                     cmd.CommandText = queryStringAccount;
                     cmd.Parameters.AddWithValue("id", id);
-                    using(SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -51,7 +52,7 @@ namespace WebApi.Database
                             username = (string)reader["username"];
                             discount = (double)reader["discount"];
                         }
-                     
+
                     }
 
                     cmd.CommandText = queryStringWallet;
@@ -59,21 +60,21 @@ namespace WebApi.Database
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        
-                        while(reader.Read())
+
+                        while (reader.Read())
                         {
                             string currencyType = (string)reader["currencytype"];
                             double amount = (double)reader["amount"];
 
                             Currency currency = new(currencyType);
 
-                            CurrencyLine line = new CurrencyLine(amount,currency);
+                            CurrencyLine line = new CurrencyLine(amount, currency);
 
                             wallet.Add(line);
                         }
                     }
 
-                    account = new Account(id,discount,username,email,wallet, new List<Post>());
+                    account = new Account(id, discount, username, email, wallet, new List<Post>());
 
                 }
             }
@@ -84,20 +85,33 @@ namespace WebApi.Database
 
         public List<Account> GetAllAccounts()
         {
-            List<Account> res = null;
-            
+            List<Account> foundAccounts = new List<Account>();
 
-            //TODO lav "*" om til individuelle kollonner
-            string queryString = "select * from accounts";
+            string queryString = "SELECT email, username, discount, AspNetUsers_id_fk FROM AspNetUsers JOIN Accounts ON AspNetUsers.Id = Accounts.AspNetUsers_id_fk";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
             {
                 conn.Open();
-                //TODO add error chekcing mayhaps?
-                //res = conn.Query<Account,Post,Account>(queryString, (account, post)=> {account.post = post return account }).ToList();
+               
 
+
+                using (SqlDataReader reader = readCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        
+                        Account account = new Account
+                        {
+                            Username = (string)reader["AspNetUsers_id_fk"],
+                            Discount = (double)reader["Discount"],
+                            Email = (string)reader["email"]
+                        };
+                        foundAccounts.Add((Account)account);
+                    }
+                }
+                return foundAccounts;
             }
-            return res;
         }
 
         public bool UpdateAccountById(int id)

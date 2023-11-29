@@ -34,7 +34,7 @@ namespace WebApi.Controllers
 
         
         [HttpGet, Route("api/[Controller]/{id}")]
-        public ActionResult<AccountDto> GetAccount(int id)
+        public ActionResult<AccountDto> GetAccount(int id)  
         {
             Account account = _accountCtrl.GetAccountById(id);
             AccountDto accountDto = new AccountDto(account);
