@@ -20,7 +20,7 @@ namespace WebAppWithAuthentication.Controllers
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
-                _connection = new ServiceConnection(url+"/api");
+                _connection = new ServiceConnection(url+"api/");
 
             }
             else
@@ -30,7 +30,7 @@ namespace WebAppWithAuthentication.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //id = "{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress: mads@ucn.com}";
+            
                 try
                 {
                 //gets the currently logged in users AspNetUser.id (string)
