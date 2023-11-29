@@ -7,6 +7,7 @@ namespace WebApi.BuissnessLogiclayer
         List<Bid> GetAllBids();
 
         List<Offer> GetAllOffers();
+        List<Post> GetAllPosts();
 
         Offer InsertOffer (Offer offer);
 

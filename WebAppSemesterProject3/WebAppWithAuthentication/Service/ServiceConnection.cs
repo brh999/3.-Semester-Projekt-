@@ -1,4 +1,4 @@
-﻿using WebAppWithAuthentication.Security;
+using WebAppWithAuthentication.Security;
 
 namespace WebAppWithAuthentication.Service {
     public class ServiceConnection : IServiceConnection {
@@ -7,7 +7,9 @@ namespace WebAppWithAuthentication.Service {
         public HttpClient HttpEnabler { get; set; }
         private Uri _url;
 
-        public ServiceConnection(String inBaseUrl) {
+
+        public ServiceConnection(String inBaseUrl)
+        {
             HttpEnabler = new HttpClient();
             BaseUrl = inBaseUrl;
             UseUrl = BaseUrl;
@@ -17,19 +19,23 @@ namespace WebAppWithAuthentication.Service {
 
 
 
-        public async Task<HttpResponseMessage?> CallServiceGet() {
+        public async Task<HttpResponseMessage?> CallServiceGet()
+        {
             bool shouldRun = SetupHttpRequest().Result;
             HttpResponseMessage? hrm = null;
-            if (UseUrl != null && shouldRun) {
+            if (UseUrl != null && shouldRun)
+            {
                 hrm = await HttpEnabler.GetAsync(UseUrl);
             }
             return hrm;
         }
 
-        public async Task<HttpResponseMessage?> CallServicePost(StringContent postJson) {
+        public async Task<HttpResponseMessage?> CallServicePost(StringContent postJson)
+        {
             bool shouldRun = SetupHttpRequest().Result;
             HttpResponseMessage? hrm = null;
-            if (UseUrl != null && shouldRun) {
+            if (UseUrl != null && shouldRun)
+            {
                 hrm = await HttpEnabler.PostAsync(UseUrl, postJson);
             }
             return hrm;
@@ -46,10 +52,12 @@ namespace WebAppWithAuthentication.Service {
             return hrm;
         }
 
-        public Task<HttpResponseMessage?> CallServicePut(StringContent postJson) {
+        public Task<HttpResponseMessage?> CallServicePut(StringContent postJson)
+        {
             throw new NotImplementedException();
         }
-        public Task<HttpResponseMessage?> CallServiceDelete() {
+        public Task<HttpResponseMessage?> CallServiceDelete()
+        {
             throw new NotImplementedException();
         }
 

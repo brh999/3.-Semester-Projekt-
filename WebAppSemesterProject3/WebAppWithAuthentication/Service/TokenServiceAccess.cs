@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebAppWithAuthentication.Models;
-using WebAppWithAuthentication.Service;
-using Models;
+﻿using System.Collections.Specialized;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace WebAppWithAuthentication.Service
@@ -13,12 +6,15 @@ namespace WebAppWithAuthentication.Service
     public class TokenServiceAccess : ITokenServiceAccess
     {
         readonly IServiceConnection _tokenService;
-        readonly String _serviceBaseUrl = "http://localhost:5042";
+
+        private readonly NameValueCollection _apiUrl;
+        readonly String _serviceBaseUrl;
         public TokenServiceAccess()
         {
+            _apiUrl = System.Configuration.ConfigurationManager.AppSettings;
+            _serviceBaseUrl = _apiUrl.Get("BaseUrl");
             _tokenService = new ServiceConnection(_serviceBaseUrl);
         }
-
 
 
         public async Task<string?> GetNewToken(ApiAccount accountToUse)
@@ -26,7 +22,7 @@ namespace WebAppWithAuthentication.Service
             string? retrievedToken = null;
 
             _tokenService.UseUrl = _tokenService.BaseUrl;
-            _tokenService.UseUrl += "/" + "token";
+            _tokenService.UseUrl += "token/";
             var uriToken = new Uri(string.Format(_tokenService.UseUrl));
 
             HttpContent appAdminLogin = new FormUrlEncodedContent(new[]
@@ -51,7 +47,7 @@ namespace WebAppWithAuthentication.Service
                 {
                     retrievedToken = await response.Content.ReadAsStringAsync();
                 }
-            } 
+            }
             catch
             {
                 retrievedToken = null;

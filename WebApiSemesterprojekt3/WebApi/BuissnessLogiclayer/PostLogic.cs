@@ -12,7 +12,13 @@ namespace WebApi.BuissnessLogiclayer
         {
             _dataAccess = inDataAccess;
         }
+        public List<Post> GetAllPosts()
+        {
+            IEnumerable<Post>? res;
+            res = _dataAccess.GetAllPosts();
 
+            return (List<Post>)res;
+        }
         public List<Bid> GetAllBids()
         {
             IEnumerable<Bid> bids = new List<Bid>();

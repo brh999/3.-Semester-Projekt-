@@ -4,8 +4,10 @@ using Models;
 
 using Models.DTO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Text;
-
+using WebAppWithAuthentication.BusinessLogic;
+using WebAppWithAuthentication.Models;
 using WebAppWithAuthentication.Security;
 using WebAppWithAuthentication.Service;
 
@@ -28,6 +30,7 @@ namespace WebAppWithAuthentication.Controllers
             if (url != null)
             {
 
+                _connection = new ServiceConnection(url + "Api/");
                 _connection = new ServiceConnection(url + "Api/");
 
             }
@@ -105,51 +108,40 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
+        
         public IActionResult CreateOffer()
         {
+
+            ActionResult result = null;
+
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             AccountDto? account = null;
-            //This should find put which account that makes the request.
-            _connection.UseUrl = _connection.BaseUrl + "account/1";
-            var task = _connection.CallServiceGet();
-            try
+
+            //This should find  which account that made the request and not simple account '1'.
+            AccountLogic accountLogic = new(_connection);
+            Task<AccountDto?> response = accountLogic.GetAccountById("10101");
+            response.Wait();
+
+            account = response.Result;
+
+          
+            if (account != null)
             {
-                task.Wait();
-            }
-            catch
-            {
-
-            }
-
-
-            var result = task.Result;
-
-            if (result.IsSuccessStatusCode)
-            {
-                var content = result.Content.ReadAsAsync<AccountDto>();
-                content.Wait();
-                account = content.Result;
-
-
+                ViewData.Add("account", account);
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Server error - No offers found");
+                ErrorViewModel errorViewModel = new ErrorViewModel();
+                result = View("~/Views/Shared/Error.cshtml", errorViewModel);
+
             }
 
-
-
-
-            // This is test data
-            //var testData = new Account(100, "Test", "Test@");
-            //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "USD")));
-            //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "EUR")));
-            //account = new AccountDto(testData);
-
-
-
-            ViewData.Add("account", account);
-            return View();
+            if (result == null)
+            {
+                ErrorViewModel errorViewModel = new ErrorViewModel();
+                result = View("~/Views/Shared/Error.cshtml", errorViewModel);
+            }
+            return result;
         }
 
 
@@ -166,11 +158,11 @@ namespace WebAppWithAuthentication.Controllers
             //But the API do not comprehend that these values could be null
             //therefore we create 'Empty' instances of objects.
             // TODO refractor this in a later sprint.
-            if (inPost.Currency.Exchanges == null)
+            if  (inPost.Currency.Exchanges == null)
             {
                 inPost.Currency.Exchanges = new Exchange();
             }
-            if (inPost.Transactions == null)
+            if  (inPost.Transactions == null)
             {
                 inPost.Transactions = new List<TransactionLine>();
             }
@@ -222,7 +214,36 @@ namespace WebAppWithAuthentication.Controllers
             return result;
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Offer>>> GetAllOffersAsync()
+        {
+            List<Offer> foundOffers = new();
 
+            _connection.UseUrl = _connection.BaseUrl + "offer/";
+
+            try
+            {
+                var response = await _connection.CallServiceGet();
+                response?.EnsureSuccessStatusCode();
+
+                if (response is not null)
+                {
+                    var readResponse = await response.Content.ReadAsAsync<List<Offer>>();
+                }
+                else
+                {
+                    return StatusCode(500); //internal server error
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+
+            return Ok(foundOffers);
+        }
 
         [Authorize]
         public IActionResult EditOffer(int id)

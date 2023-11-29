@@ -94,7 +94,7 @@ namespace WebApi.Database
             Currency res = new Currency(new Exchange(), inType);
 
             return res;
-    
+
         }
         /// <summary>
         /// Insert the Bid into the database
@@ -150,7 +150,7 @@ namespace WebApi.Database
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                
+
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     {
@@ -172,9 +172,33 @@ namespace WebApi.Database
             }
         }
 
+        public IEnumerable<Post> GetAllPosts()
+        {
+            List<Post> foundPosts = new List<Post>();
+            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk";
 
-        
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
 
+                using (SqlDataReader reader = readCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+                        Post offer = new Offer
+                        {
+                            Amount = (double)reader["amount"],
+                            Price = (double)reader["price"],
+                            Currency = generatedCurrency,
+                        };
+                        foundPosts.Add((Offer)offer);
+                    }
+                }
+                return foundPosts;
+            }
+        }
     }
 }
 
