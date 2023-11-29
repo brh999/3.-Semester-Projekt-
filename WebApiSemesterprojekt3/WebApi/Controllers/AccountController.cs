@@ -34,10 +34,17 @@ namespace WebApi.Controllers
 
         
         [HttpGet, Route("api/[Controller]/{id}")]
+
         public ActionResult<AccountDto> GetAccount(int id)  
+
         {
+            AccountDto? accountDto = null;
             Account account = _accountCtrl.GetAccountById(id);
-            AccountDto accountDto = new AccountDto(account);
+            if(!string.IsNullOrEmpty(account.Email) && !string.IsNullOrEmpty(account.Username))
+            {
+                accountDto = new AccountDto(account);
+            }
+            
             return accountDto;
         }
 

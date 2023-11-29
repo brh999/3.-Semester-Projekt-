@@ -1,0 +1,38 @@
+﻿@model Models.Post
+
+@{
+    ViewData["Title"] = "PostState";
+    string type = ViewBag["type"];
+}
+
+<h1>PostState</h1>
+
+@if(Model != null)
+{
+    <div>
+        <h4>@type is successful</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Amount)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IsComplete)
+            </dt>
+        </dl>
+    </div>
+}
+else
+{
+    <h2>Error</h2>
+    <div>
+        <p>Something went wrong please try again</p>
+        <p>If the issue persist please contact customer support</p>
+    </div>
+}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
