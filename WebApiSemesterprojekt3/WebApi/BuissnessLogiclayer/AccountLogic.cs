@@ -11,7 +11,7 @@ namespace WebApi.BuissnessLogiclayer
             _dataAccess = inDataAccess;
         }
 
-        public Account? GetAccountById(int id)
+        public Account? GetAccountById(string id)
         {
             Account? account = null;
 

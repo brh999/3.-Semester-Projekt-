@@ -1,13 +1,10 @@
-﻿@model IEnumerable<Models.Account>
-
-@{
-    ViewData["Title"] = "Index";
-}
+﻿@model Models.DTO.AccountDto
+@using Models;
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+  
 </p>
 <table class="table">
     <thead>
@@ -16,32 +13,28 @@
                 @Html.DisplayNameFor(model => model.Discount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                @Html.DisplayNameFor(model => model.Wallet)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.Posts)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Discount)
+                @Html.DisplayFor(modelItem => modelItem.Discount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Username)
+                @Html.DisplayFor(modelItem => modelItem.Wallet)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                @Html.DisplayFor(modelItem => modelItem.Posts)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+               
             </td>
         </tr>
-}
     </tbody>
 </table>

@@ -6,7 +6,7 @@ namespace WebApi.Database
     {
         public List<Account> GetAllAccounts();
 
-        public Account GetAccountById(int id);
+        public Account GetAccountById(string id);
 
         public bool DeleteAccountById(int id);
 

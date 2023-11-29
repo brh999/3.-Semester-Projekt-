@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
-
+using System.Security.Claims;
+using WebAppWithAuthentication.BusinessLogic;
 using WebAppWithAuthentication.DTO;
 
 using WebAppWithAuthentication.Service;
@@ -29,19 +30,26 @@ namespace WebAppWithAuthentication.Controllers
         }
         public async Task<IActionResult> Index()
         {
-
-            using (Deserializer<Account> ad = new())
-            {
+            //id = "{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress: mads@ucn.com}";
                 try
                 {
-                    //IEnumerable<Account> accounts = await ad.GetList();
-                    return View();
+                //gets the currently logged in users AspNetUser.id (string)
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                AccountLogic al = new(_connection);
+
+                    var accountDto = await al.GetAccountById(userId);
+
+                    if (accountDto == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(accountDto);
                 }
                 catch (Exception ex)
                 {
                     return View();
                 }
-            }
+            
         }
 
 

@@ -22,11 +22,11 @@ namespace WebApi.Database
             throw new NotImplementedException();
         }
 
-        public Account GetAccountById(int id)
+        public Account GetAccountById(string AspNetId)
         {
             Account account = null;
 
-            string queryStringAccount = "SELECT email,username,discount FROM AspNetUsers JOIN Accounts ON Accounts.AspNetUsers_id_fk = AspNetUsers.Id WHERE Accounts.id = @id";
+            string queryStringAccount = "SELECT Accounts.id,email, username, discount FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.Id WHERE Accounts.AspNetUsers_id_fk = @id";
             string queryStringWallet = "select * from CurrencyLines JOIN Currencies ON CurrencyLines.currency_id_fk = Currencies.id where Account_id_fk = @AccountId";
 
 
@@ -36,6 +36,7 @@ namespace WebApi.Database
                 string email = "",
                         username = "";
                 double discount = 0;
+                int accountId = -1;
 
                 List<CurrencyLine> wallet = new List<CurrencyLine>();
                 using (SqlCommand cmd = conn.CreateCommand())
@@ -43,11 +44,12 @@ namespace WebApi.Database
 
 
                     cmd.CommandText = queryStringAccount;
-                    cmd.Parameters.AddWithValue("id", id);
+                    cmd.Parameters.AddWithValue("id", AspNetId);
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
+                            accountId = (int)reader["id"];
                             email = (string)reader["email"];
                             username = (string)reader["username"];
                             discount = (double)reader["discount"];
@@ -56,7 +58,7 @@ namespace WebApi.Database
                     }
 
                     cmd.CommandText = queryStringWallet;
-                    cmd.Parameters.AddWithValue("AccountId", id);
+                    cmd.Parameters.AddWithValue("AccountId", accountId);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -74,7 +76,7 @@ namespace WebApi.Database
                         }
                     }
 
-                    account = new Account(id, discount, username, email, wallet, new List<Post>());
+                    account = new Account(accountId, discount, username, email, wallet, new List<Post>());
 
                 }
             }
