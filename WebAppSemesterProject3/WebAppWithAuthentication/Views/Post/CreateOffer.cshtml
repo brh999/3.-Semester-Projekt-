@@ -4,10 +4,10 @@
 
 @{
     ViewData["Title"] = "CreateOffer";
-    Models.DTO.AccountDto account = ViewData["account"] as Models.DTO.AccountDto;
+    Models.DTO.AccountDto? account = ViewData["account"] as Models.DTO.AccountDto;
     List<SelectListItem> listItems = new List<SelectListItem>();
 
-    if(account.Wallet != null)
+    if(account != null && account.Wallet != null)
     {
         foreach (var item in account.Wallet)
         {

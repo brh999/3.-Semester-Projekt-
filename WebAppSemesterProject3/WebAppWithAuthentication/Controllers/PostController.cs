@@ -4,8 +4,10 @@ using Models;
 
 using Models.DTO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Text;
-
+using WebAppWithAuthentication.BusinessLogic;
+using WebAppWithAuthentication.Models;
 using WebAppWithAuthentication.Security;
 using WebAppWithAuthentication.Service;
 
@@ -110,51 +112,40 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
+        
         public IActionResult CreateOffer()
         {
+
+            ActionResult result = null;
+
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             AccountDto? account = null;
-            //This should find put which account that makes the request.
-            _connection.UseUrl = _connection.BaseUrl + "account/1";
-            var task = _connection.CallServiceGet();
-            try
+
+            //This should find  which account that made the request and not simple account '1'.
+            AccountLogic accountLogic = new(_connection);
+            Task<AccountDto?> response = accountLogic.GetAccountById("10101");
+            response.Wait();
+
+            account = response.Result;
+
+          
+            if (account != null)
             {
-                task.Wait();
-            }
-            catch
-            {
-
-            }
-
-
-            var result = task.Result;
-
-            if (result.IsSuccessStatusCode)
-            {
-                var content = result.Content.ReadAsAsync<AccountDto>();
-                content.Wait();
-                account = content.Result;
-                
-                
+                ViewData.Add("account", account);
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Server error - No offers found");
+                ErrorViewModel errorViewModel = new ErrorViewModel();
+                result = View("~/Views/Shared/Error.cshtml", errorViewModel);
+
             }
 
-
-
-
-            // This is test data
-            //var testData = new Account(100, "Test", "Test@");
-            //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "USD")));
-            //testData.AddCurrencyLine(new CurrencyLine(10, new Currency(new Exchange(), "EUR")));
-            //account = new AccountDto(testData);
-
-
-
-            ViewData.Add("account", account);
-            return View();
+            if (result == null)
+            {
+                ErrorViewModel errorViewModel = new ErrorViewModel();
+                result = View("~/Views/Shared/Error.cshtml", errorViewModel);
+            }
+            return result;
         }
 
 
