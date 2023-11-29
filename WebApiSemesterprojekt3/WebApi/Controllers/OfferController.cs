@@ -20,8 +20,23 @@ namespace WebApi.Controllers
             _offerLogic = inControl;
         }
 
-
-        // GET: api/<ValuesController>
+        // GET: api/<OfferController>
+        [HttpGet("{id:int}")]
+            public ActionResult<IEnumerable<TransactionLine>> GetRelatedTransactionLines(int id)
+        {
+            ActionResult<IEnumerable<TransactionLine>>? foundLines = null;
+            List<TransactionLine> res = null;
+            res = _offerLogic.GetRelatedTransactions(id);
+            if (res != null)
+            {
+                foundLines = Ok(res);
+            } else
+            {
+                foundLines = NotFound();
+            }
+            return foundLines;
+        }
+        // GET: api/<OfferController>
         [HttpGet]
         public ActionResult<IEnumerable<Offer>> GetAll()
         {

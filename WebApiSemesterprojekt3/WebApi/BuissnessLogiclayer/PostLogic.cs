@@ -63,5 +63,14 @@ namespace WebApi.BuissnessLogiclayer
             }
             return res;
         }
+
+        public List<TransactionLine> GetRelatedTransactions(int id)
+        {
+            IEnumerable<TransactionLine> foundLines = new List<TransactionLine>();
+
+            foundLines = _dataAccess.GetTransactionLines(id);
+
+            return (List<TransactionLine>)foundLines;
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace WebApi.Database
         IEnumerable<Offer> GetOfferPosts();
         IEnumerable<Bid> GetBidPosts();
         IEnumerable<Post> GetAllPosts();
+        IEnumerable<TransactionLine> GetTransactionLines(int id);
 
         void InsertOffer(Offer offer);
 

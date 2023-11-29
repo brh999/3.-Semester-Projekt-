@@ -30,14 +30,14 @@ namespace DesktopClient.UI
             new CreateCurrencyForm(this).ShowDialog();
         }
 
-        private async void UpdateCurrencies ()
+        private async void UpdateCurrencies()
         {
-            List<Currency> data = (List<Currency>)await _currencyLogic.GetAllCurrencies() ;
+            List<Currency> data = (List<Currency>)await _currencyLogic.GetAllCurrencies();
             ListBoxCurrencies.Items.Clear();
             ListBoxCurrencies.DataSource = data;
         }
 
-       
+
 
 
 
@@ -51,6 +51,25 @@ namespace DesktopClient.UI
             List<Offer> data = (List<Offer>)await _postLogic.GetAllPosts();
             listPosts.Items.Clear();
             listPosts.DataSource = data;
+        }
+
+        private void listPosts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            Offer? offer = (Offer)listPosts.SelectedItem;
+            if(offer != null)
+            {
+                UpdateTransactions(offer);
+
+            }
+            
+        }
+
+        private async void UpdateTransactions(Offer offer)
+        {
+            List<TransactionLine> data = (List<TransactionLine>)await _postLogic.GetRelatedTransactions(offer);
+            listTransactions.DataSource = null;
+            listTransactions.DataSource = data;
         }
     }
 }

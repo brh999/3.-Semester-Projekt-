@@ -13,7 +13,7 @@ namespace Models
         {
             
         }
-        public Bid(double amount, double price, Currency currency) : base(amount, price, currency)
+        public Bid(double amount, double price, Currency currency, int id) : base(amount, price, currency,id)
         {
         }
 
