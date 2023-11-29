@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebAppWithAuthentication.Models;
+﻿using System.Collections.Specialized;
 using WebAppWithAuthentication.Service;
 
 namespace WebAppWithAuthentication.Security
@@ -42,7 +35,7 @@ namespace WebAppWithAuthentication.Security
         {
             JWT.TokenState = TokenState.Invalid;
             string? currentJWT = JWT.CurrentJWT;
-            if(currentJWT != null)
+            if (currentJWT != null)
             {
                 TokenServiceAccess tSA = new TokenServiceAccess();
                 bool hasTokenExpired = tSA.HasTokenExpired(currentJWT);

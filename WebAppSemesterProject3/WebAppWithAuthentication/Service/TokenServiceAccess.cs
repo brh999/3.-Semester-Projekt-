@@ -1,19 +1,19 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Collections.Specialized;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WebAppWithAuthentication.Service
 {
     public class TokenServiceAccess : ITokenServiceAccess
     {
         readonly IServiceConnection _tokenService;
-        IConfiguration _configuration;
+
+        private readonly NameValueCollection _apiUrl;
         readonly String _serviceBaseUrl;
-        public TokenServiceAccess(IConfiguration configuration)
+        public TokenServiceAccess()
         {
-            _configuration = configuration;
-            _serviceBaseUrl = configuration.GetConnectionString("BaseUrl");
-
+            _apiUrl = System.Configuration.ConfigurationManager.AppSettings;
+            _serviceBaseUrl = _apiUrl.Get("BaseUrl");
             _tokenService = new ServiceConnection(_serviceBaseUrl);
-
         }
 
 
