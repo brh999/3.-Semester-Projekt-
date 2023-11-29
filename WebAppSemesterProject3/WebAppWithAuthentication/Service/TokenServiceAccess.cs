@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebAppWithAuthentication.Models;
-using WebAppWithAuthentication.Service;
-using Models;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 
 namespace WebAppWithAuthentication.Service
 {
     public class TokenServiceAccess : ITokenServiceAccess
     {
         readonly IServiceConnection _tokenService;
-        readonly String _serviceBaseUrl = "http://localhost:5042";
-        public TokenServiceAccess()
+        IConfiguration _configuration;
+        readonly String _serviceBaseUrl;
+        public TokenServiceAccess(IConfiguration configuration)
         {
-            _tokenService = new ServiceConnection(_serviceBaseUrl);
-        }
+            _configuration = configuration;
+            _serviceBaseUrl = configuration.GetConnectionString("BaseUrl");
 
+            _tokenService = new ServiceConnection(_serviceBaseUrl);
+
+        }
 
 
         public async Task<string?> GetNewToken(ApiAccount accountToUse)
@@ -51,7 +47,7 @@ namespace WebAppWithAuthentication.Service
                 {
                     retrievedToken = await response.Content.ReadAsStringAsync();
                 }
-            } 
+            }
             catch
             {
                 retrievedToken = null;
