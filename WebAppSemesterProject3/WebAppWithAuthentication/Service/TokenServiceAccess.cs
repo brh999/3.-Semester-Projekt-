@@ -5,25 +5,26 @@ namespace WebAppWithAuthentication.Service
 {
     public class TokenServiceAccess : ITokenServiceAccess
     {
-        readonly IServiceConnection _tokenService;
 
+        private HttpClient _httpClient;
+        private Uri _uri;
         private readonly NameValueCollection _apiUrl;
         readonly String _serviceBaseUrl;
         public TokenServiceAccess()
         {
             _apiUrl = System.Configuration.ConfigurationManager.AppSettings;
             _serviceBaseUrl = _apiUrl.Get("BaseUrl");
-            _tokenService = new ServiceConnection(_serviceBaseUrl);
+            _httpClient = new HttpClient();
+            _uri = new Uri(_serviceBaseUrl);
         }
 
 
         public async Task<string?> GetNewToken(ApiAccount accountToUse)
         {
             string? retrievedToken = null;
-
-            _tokenService.UseUrl = _tokenService.BaseUrl;
-            _tokenService.UseUrl += "token/";
-            var uriToken = new Uri(string.Format(_tokenService.UseUrl));
+            Uri uriToUse = new Uri(_serviceBaseUrl + "token/");
+            _httpClient.BaseAddress = uriToUse;
+            var uriToken = new Uri(string.Format(_httpClient.UseUrl));
 
             HttpContent appAdminLogin = new FormUrlEncodedContent(new[]
             {
@@ -41,7 +42,7 @@ namespace WebAppWithAuthentication.Service
 
             try
             {
-                var response = await _tokenService.CallServicePost(request);
+                var response = await _httpClient.GetAsync(uriToUse);
                 response?.EnsureSuccessStatusCode();
                 if (response != null)
                 {
