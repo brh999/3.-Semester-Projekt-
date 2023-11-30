@@ -4,12 +4,14 @@ namespace WebApi.Database
 {
     public interface IAccountDBAccess
     {
-        public List<Account> GetAllAccounts();
+        List<Account> GetAllAccounts();
 
-        public Account GetAccountById(string id);
+        Account GetAccountById(string id);
 
-        public bool DeleteAccountById(int id);
+        bool DeleteAccountById(int id);
 
-        public bool UpdateAccountById(int id);
+        bool UpdateAccountById(int id);
+
+        IEnumerable<CurrencyLine> GetCurrencyLines(int id);
     }
 }

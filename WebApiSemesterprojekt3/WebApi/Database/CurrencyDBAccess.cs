@@ -60,7 +60,7 @@ namespace WebApi.Database
                         { 
                             
                             Type = (string)reader["currencytype"],
-                            Exchanges = GetExchangesForCurrency((string)reader["currencytype"])
+                            Exchange = GetExchangesForCurrency((string)reader["currencytype"])
                         };
                         currencies.Add(currency);
                     }

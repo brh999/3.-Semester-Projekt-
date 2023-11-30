@@ -29,5 +29,14 @@ namespace WebApi.BuissnessLogiclayer
 
             return foundAccounts;
         }
+
+        public List<CurrencyLine> GetRelatedCurrencyLines(int id)
+        {
+            IEnumerable<CurrencyLine> foundCurrencyLines;
+
+            foundCurrencyLines = _dataAccess.GetCurrencyLines(id);
+
+            return (List<CurrencyLine>)foundCurrencyLines;
+        }
     }
 }
