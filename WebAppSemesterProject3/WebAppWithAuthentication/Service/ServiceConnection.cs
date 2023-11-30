@@ -73,7 +73,7 @@ namespace WebAppWithAuthentication.Service {
             bool result = false;
             string tokenValue = await GetToken();
 
-            if(String.IsNullOrEmpty(tokenValue))
+            if(!String.IsNullOrEmpty(tokenValue))
             {
                 string bearerTokenValue = "Bearer" + " " + tokenValue;
                 HttpEnabler.DefaultRequestHeaders.Remove("Authorization");

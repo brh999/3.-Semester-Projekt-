@@ -57,44 +57,44 @@ namespace WebAppWithAuthentication.Controllers
                 _connection.UseUrl = _connection.BaseUrl + "bid";
                 var response = _connection.CallServiceGet();
                 response.Wait();
-
                 var result = response.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<IList<Bid>>();
-                    readTask.Wait();
+                if (result != null) {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var readTask = result.Content.ReadAsAsync<IList<Bid>>();
+                        readTask.Wait();
 
-                    bids = readTask.Result;
+                        bids = readTask.Result;
+                    }
+                    else
+                    {
+                        bids = Enumerable.Empty<Post>();
+                        ModelState.AddModelError(string.Empty, "No bids found");
+                    }
+                    // Get offers:
+                    _connection.UseUrl = _connection.BaseUrl + "offer";
+                    response = _connection.CallServiceGet();
+                    response.Wait();
+
+                    result = response.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var readTask = result.Content.ReadAsAsync<IList<Offer>>();
+                        readTask.Wait();
+
+                        offers = readTask.Result;
+                    }
+                    else
+                    {
+                        offers = Enumerable.Empty<Offer>();
+                        ModelState.AddModelError(string.Empty, "No offers found");
+                    }
+                    ViewData["bids"] = bids;
+                    ViewData["offers"] = offers;
+                    ViewData["user"] = loggedInUser;
+                    return View();
                 }
-                else
-                {
-                    bids = Enumerable.Empty<Post>();
-                    ModelState.AddModelError(string.Empty, "No bids found");
-                }
-                // Get offers:
-                _connection.UseUrl = _connection.BaseUrl + "offer";
-                response = _connection.CallServiceGet();
-                response.Wait();
-
-                result = response.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<IList<Offer>>();
-                    readTask.Wait();
-
-                    offers = readTask.Result;
-                }
-                else
-                {
-                    offers = Enumerable.Empty<Offer>();
-                    ModelState.AddModelError(string.Empty, "No offers found");
-                }
-
-
-                ViewData["bids"] = bids;
-                ViewData["offers"] = offers;
-                ViewData["user"] = loggedInUser;
-                return View();
+                return StatusCode(500);
             }
             catch
             {

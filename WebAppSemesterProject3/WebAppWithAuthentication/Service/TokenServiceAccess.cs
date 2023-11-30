@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections.Specialized;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace WebAppWithAuthentication.Service
@@ -22,9 +23,8 @@ namespace WebAppWithAuthentication.Service
         public async Task<string?> GetNewToken(ApiAccount accountToUse)
         {
             string? retrievedToken = null;
-            Uri uriToUse = new Uri(_serviceBaseUrl + "token/");
-            _httpClient.BaseAddress = uriToUse;
-            var uriToken = new Uri(string.Format(_httpClient.UseUrl));
+            string? uriToUse = _serviceBaseUrl + "token/";
+            var uriToken = new Uri(string.Format(uriToUse));
 
             HttpContent appAdminLogin = new FormUrlEncodedContent(new[]
             {
@@ -42,7 +42,7 @@ namespace WebAppWithAuthentication.Service
 
             try
             {
-                var response = await _httpClient.GetAsync(uriToUse);
+                var response = await _httpClient.GetAsync(uriToken);
                 response?.EnsureSuccessStatusCode();
                 if (response != null)
                 {
