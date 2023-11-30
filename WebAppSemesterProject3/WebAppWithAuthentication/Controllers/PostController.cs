@@ -129,7 +129,7 @@ namespace WebAppWithAuthentication.Controllers
           
             if (account != null)
             {
-                ViewData.Add("account", null);
+                ViewData.Add("account", account);
                 result = View();
 
             }
