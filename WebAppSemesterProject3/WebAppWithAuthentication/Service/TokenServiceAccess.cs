@@ -42,7 +42,7 @@ namespace WebAppWithAuthentication.Service
 
             try
             {
-                var response = await _httpClient.GetAsync(uriToken);
+                var response = await _httpClient.PostAsync(uriToUse, appAdminLogin);
                 response?.EnsureSuccessStatusCode();
                 if (response != null)
                 {
