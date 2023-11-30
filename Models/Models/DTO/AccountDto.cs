@@ -20,7 +20,7 @@ namespace Models.DTO
         public AccountDto(Account account) 
         {
             _wallet = account.Wallet;
-            //_posts = account.Posts;
+            _posts = account.Posts;
             _discount = account.Discount;
         }
 

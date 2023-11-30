@@ -83,7 +83,7 @@ namespace WebAppWithAuthentication.Controllers
                     {
                         if (result.IsSuccessStatusCode)
                         {
-                            var readTask = result.Content.ReadAsAsync<IList<Offer>>();
+                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
                             readTask.Wait();
                             offers = readTask.Result;
                             ViewData["offers"] = offers;
@@ -91,7 +91,7 @@ namespace WebAppWithAuthentication.Controllers
                     }
                     else
                     {
-                        offers = Enumerable.Empty<Offer>();
+                        offers = Enumerable.Empty<Post>();
                         ModelState.AddModelError(string.Empty, "No offers found");
                     }
                     return View();
@@ -152,7 +152,7 @@ namespace WebAppWithAuthentication.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public IActionResult CreateOffer(Offer inPost)
+        public IActionResult CreateOffer(Post inPost)
         {
             //Quick fix, at this point offer dont need to have an exchange or any transaction.
             //But the API do not comprehend that these values could be null
