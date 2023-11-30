@@ -158,9 +158,9 @@ namespace WebAppWithAuthentication.Controllers
             //But the API do not comprehend that these values could be null
             //therefore we create 'Empty' instances of objects.
             // TODO refractor this in a later sprint.
-            if (inPost.Currency.Exchanges == null)
+            if (inPost.Currency.Exchange == null)
             {
-                inPost.Currency.Exchanges = new Exchange();
+                inPost.Currency.Exchange = new Exchange();
             }
             if (inPost.Transactions == null)
             {
