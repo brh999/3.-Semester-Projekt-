@@ -73,7 +73,6 @@ namespace DesktopClient.UI
         private async void UpdateTransactions(Offer offer)
         {
             List<TransactionLine> data = (List<TransactionLine>)await _postLogic.GetRelatedTransactions(offer);
-            listTransactions.DataSource = null;
             listTransactions.DataSource = data;
         }
         private async void UpdateAccounts()
@@ -95,6 +94,16 @@ namespace DesktopClient.UI
         {
             List<CurrencyLine> data = (List<CurrencyLine>)await _accountLogic.GetRelatedCurrencyLines(account);
             listCurrencyLines.DataSource = data;
+            txtBoxTotal.Text = UpdatePrice(data).ToString(); 
+        }
+        private double UpdatePrice(List<CurrencyLine> data)
+        {
+            double res = 0;
+            foreach(CurrencyLine currencyLine in data)
+            {
+                res += currencyLine.GetPrice();
+            }
+            return res;
         }
     }
 }
