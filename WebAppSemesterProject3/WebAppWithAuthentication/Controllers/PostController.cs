@@ -123,7 +123,7 @@ namespace WebAppWithAuthentication.Controllers
 
             //This should find  which account that made the request and not simple account '1'.
             AccountLogic accountLogic = new(_connection);
-            Task<AccountDto?> response = accountLogic.GetAccountById("10101");
+            Task<AccountDto?> response = accountLogic.GetAccountById("1");
             response.Wait();
 
             account = response.Result;
@@ -131,14 +131,13 @@ namespace WebAppWithAuthentication.Controllers
           
             if (account != null)
             {
-                ViewData.Add("account", account);
-            }
-            else
-            {
-                ErrorViewModel errorViewModel = new ErrorViewModel();
-                result = View("~/Views/Shared/Error.cshtml", errorViewModel);
+                ViewData.Add("account", null);
+                result = View();
 
             }
+            
+            
+
 
             if (result == null)
             {
@@ -208,7 +207,9 @@ namespace WebAppWithAuthentication.Controllers
                 }
 
 
-                result = RedirectToAction("Index", "Home");
+                ViewData["type"] = "offer";
+                result = View("PostState",inPost);
+
             }
             else
             {
