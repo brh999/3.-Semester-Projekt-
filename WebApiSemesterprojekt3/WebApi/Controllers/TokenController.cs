@@ -31,7 +31,7 @@ namespace WebApi.Controllers
             }
             else
             {
-                foundToken = BadRequest();
+                foundToken = StatusCode(401); //unauthorized
             }
             return foundToken;
         }

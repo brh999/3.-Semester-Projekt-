@@ -3,38 +3,69 @@
 
 <h1>Index</h1>
 
-<p>
-  
-</p>
+<!-- Display Discount -->
+<h2>Discount: @Model.Discount</h2>
+
+<!-- Wallets Table -->
+<h2>Wallets</h2>
 <table class="table">
     <thead>
         <tr>
+          
             <th>
-                @Html.DisplayNameFor(model => model.Discount)
+                @Html.DisplayNameFor(modelItem => Model.Wallet.Count)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Wallet)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts)
-            </th>
+            <!-- Add more columns as needed for Wallet properties -->
             <th></th>
         </tr>
     </thead>
     <tbody>
+        @foreach (var walletItem in Model.Wallet)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => walletItem.Currency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => walletItem.Amount)
+                </td>
+                <!-- Add more cells as needed for Wallet properties -->
+                <td>
+                    <!-- Any additional actions or links related to the wallet item -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Posts Table -->
+<h2>Posts</h2>
+<table class="table">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.Discount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.Wallet)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.Posts)
-            </td>
-            <td>
-               
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts.Count)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts)
+            </th>
+            <!-- Add more columns as needed for Post properties -->
+            <th></th>
         </tr>
+    </thead>
+    <tbody>
+        @foreach (var postItem in Model.Posts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Posts.Count)
+                </td>
+                
+                <!-- Add more cells as needed for Post properties -->
+                <td>
+                    <!-- Any additional actions or links related to the post item -->
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
