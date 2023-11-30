@@ -58,13 +58,15 @@ namespace WebAppWithAuthentication.Controllers
                 var response = _connection.CallServiceGet();
                 response.Wait();
                 var result = response.Result;
-                if (result != null) {
-                    if (result.IsSuccessStatusCode)
+                    if (result != null)
                     {
-                        var readTask = result.Content.ReadAsAsync<IList<Bid>>();
-                        readTask.Wait();
-
-                        bids = readTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            var readTask = result.Content.ReadAsAsync<IList<Bid>>();
+                            readTask.Wait();
+                            bids = readTask.Result;
+                            ViewData["bids"] = bids;
+                        }
                     }
                     else
                     {
@@ -77,24 +79,22 @@ namespace WebAppWithAuthentication.Controllers
                     response.Wait();
 
                     result = response.Result;
-                    if (result.IsSuccessStatusCode)
+                    if (result != null)
                     {
-                        var readTask = result.Content.ReadAsAsync<IList<Offer>>();
-                        readTask.Wait();
-
-                        offers = readTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            var readTask = result.Content.ReadAsAsync<IList<Offer>>();
+                            readTask.Wait();
+                            offers = readTask.Result;
+                            ViewData["offers"] = offers;
+                        }
                     }
                     else
                     {
                         offers = Enumerable.Empty<Offer>();
                         ModelState.AddModelError(string.Empty, "No offers found");
                     }
-                    ViewData["bids"] = bids;
-                    ViewData["offers"] = offers;
-                    ViewData["user"] = loggedInUser;
                     return View();
-                }
-                return StatusCode(500);
             }
             catch
             {
