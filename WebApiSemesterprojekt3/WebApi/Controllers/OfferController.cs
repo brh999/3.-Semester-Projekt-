@@ -58,14 +58,6 @@ namespace WebApi.Controllers
 
         }
 
-        [HttpPost]
-        public IActionResult BuyOffer([FromBody] int offerId, [FromBody] int accountId)
-        {
-
-
-
-            return Ok();
-        }
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
