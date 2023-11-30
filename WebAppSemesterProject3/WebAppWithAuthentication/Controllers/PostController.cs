@@ -5,10 +5,10 @@ using Models;
 using Models.DTO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Security.Claims;
 using System.Text;
 using WebAppWithAuthentication.BusinessLogic;
 using WebAppWithAuthentication.Models;
-using WebAppWithAuthentication.Security;
 using WebAppWithAuthentication.Service;
 
 namespace WebAppWithAuthentication.Controllers
@@ -31,6 +31,7 @@ namespace WebAppWithAuthentication.Controllers
             {
 
                 _connection = new ServiceConnection(url + "Api/");
+                _connection = new ServiceConnection(url + "Api/");
 
             }
             else
@@ -47,60 +48,55 @@ namespace WebAppWithAuthentication.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllPosts()
         {
-            string? tokenValue = await GetToken();
-            if (tokenValue != null)
+            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+            IEnumerable<Post> bids = null;
+            IEnumerable<Post> offers = null;
+            try
             {
-                System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-                IEnumerable<Post> bids = null;
-                IEnumerable<Post> offers = null;
-                using (var client = new HttpClient())
-                {
-                    string bearerTokenValue = "Bearer" + " " + tokenValue;
-                    client.DefaultRequestHeaders.Remove("Authorization");
-                    client.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
-                    client.BaseAddress = _url;
-                    // Get bids:
-                    var responseTask = client.GetAsync("bid");
-                    responseTask.Wait();
-
-                    var result = responseTask.Result;
-                    if (result.IsSuccessStatusCode)
+                // Get bids:
+                _connection.UseUrl = _connection.BaseUrl + "bid";
+                var response = _connection.CallServiceGet();
+                response.Wait();
+                var result = response.Result;
+                    if (result != null)
                     {
-                        var readTask = result.Content.ReadAsAsync<IList<Bid>>();
-                        readTask.Wait();
-
-                        bids = readTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            var readTask = result.Content.ReadAsAsync<IList<Bid>>();
+                            readTask.Wait();
+                            bids = readTask.Result;
+                            ViewData["bids"] = bids;
+                        }
                     }
                     else
                     {
                         bids = Enumerable.Empty<Post>();
-                        ModelState.AddModelError(string.Empty, "Server error - No bids found");
+                        ModelState.AddModelError(string.Empty, "No bids found");
                     }
                     // Get offers:
-                    responseTask = client.GetAsync("offer");
-                    responseTask.Wait();
+                    _connection.UseUrl = _connection.BaseUrl + "offer";
+                    response = _connection.CallServiceGet();
+                    response.Wait();
 
-                    result = responseTask.Result;
-                    if (result.IsSuccessStatusCode)
+                    result = response.Result;
+                    if (result != null)
                     {
-                        var readTask = result.Content.ReadAsAsync<IList<Offer>>();
-                        readTask.Wait();
-
-                        offers = readTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            var readTask = result.Content.ReadAsAsync<IList<Offer>>();
+                            readTask.Wait();
+                            offers = readTask.Result;
+                            ViewData["offers"] = offers;
+                        }
                     }
                     else
                     {
                         offers = Enumerable.Empty<Offer>();
-                        ModelState.AddModelError(string.Empty, "Server error - No offers found");
+                        ModelState.AddModelError(string.Empty, "No offers found");
                     }
-
-                }
-                ViewData["bids"] = bids;
-                ViewData["offers"] = offers;
-                ViewData["user"] = loggedInUser;
-                return View();
+                    return View();
             }
-            else
+            catch
             {
                 return StatusCode(500);
             }
@@ -112,33 +108,33 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        
+
         public IActionResult CreateOffer()
         {
 
             ActionResult result = null;
 
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountDto? account = null;
 
             //This should find  which account that made the request and not simple account 'c811de3f-ab3c-4445-8d70-612e68d61c93'.
             AccountLogic accountLogic = new(_connection);
-            Task<AccountDto?> response = accountLogic.GetAccountById("c811de3f-ab3c-4445-8d70-612e68d61c93");
+            Task<AccountDto?> response = accountLogic.GetAccountById(userId);
             response.Wait();
 
             account = response.Result;
 
-          
+
             if (account != null)
             {
                 ViewData.Add("account", account);
-            }
-            else
-            {
-                ErrorViewModel errorViewModel = new ErrorViewModel();
-                result = View("~/Views/Shared/Error.cshtml", errorViewModel);
+                result = View();
 
             }
+            
+            
+
 
             if (result == null)
             {
@@ -191,7 +187,8 @@ namespace WebAppWithAuthentication.Controllers
             if (goOn)
             {
                 //Create the use url to this call.
-                _connection.UseUrl = _connection.BaseUrl + "offer";
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _connection.UseUrl = _connection.BaseUrl + "offer/" + userId;
 
 
                 //Serialize the offer object
@@ -208,7 +205,9 @@ namespace WebAppWithAuthentication.Controllers
                 }
 
 
-                result = RedirectToAction("Index", "Home");
+                ViewData["type"] = "offer";
+                result = View("PostState",inPost);
+
             }
             else
             {
@@ -218,36 +217,6 @@ namespace WebAppWithAuthentication.Controllers
             return result;
         }
 
-        [Authorize]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Offer>>> GetAllOffersAsync()
-        {
-            List<Offer> foundOffers = new();
-
-            _connection.UseUrl = _connection.BaseUrl + "offer/";
-
-            try
-            {
-                var response = await _connection.CallServiceGet();
-                response?.EnsureSuccessStatusCode();
-
-                if (response is not null)
-                {
-                    var readResponse = await response.Content.ReadAsAsync<List<Offer>>();
-                }
-                else
-                {
-                    return StatusCode(500); //internal server error
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-
-
-            return Ok(foundOffers);
-        }
 
         [Authorize]
         public IActionResult EditOffer(int id)
@@ -299,15 +268,6 @@ namespace WebAppWithAuthentication.Controllers
         {
             return Ok();
         }
-
-
-        private async Task<string?> GetToken()
-        {
-            TokenManager tokenHelp = new TokenManager();
-            string? foundToken = await tokenHelp.GetToken();
-            return foundToken;
-        }
-
 
     }
 }

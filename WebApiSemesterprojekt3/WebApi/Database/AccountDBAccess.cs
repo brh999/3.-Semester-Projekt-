@@ -119,7 +119,7 @@ namespace WebApi.Database
         {
             List<Account> foundAccounts = new List<Account>();
 
-            string queryString = "SELECT email, username, discount, AspNetUsers_id_fk FROM AspNetUsers JOIN Accounts ON AspNetUsers.Id = Accounts.AspNetUsers_id_fk";
+            string queryString = "SELECT email,Accounts.id, username, discount, AspNetUsers_id_fk FROM AspNetUsers JOIN Accounts ON AspNetUsers.Id = Accounts.AspNetUsers_id_fk";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -135,9 +135,11 @@ namespace WebApi.Database
 
                         Account account = new Account
                         {
-                            Username = (string)reader["AspNetUsers_id_fk"],
+                            Username = (string)reader["username"],
                             Discount = (double)reader["Discount"],
-                            Email = (string)reader["email"]
+                            Email = (string)reader["email"],
+                            Id = (int)reader["id"],
+                            Wallet = new List<CurrencyLine>(),
                         };
                         foundAccounts.Add((Account)account);
                     }
@@ -149,6 +151,41 @@ namespace WebApi.Database
         public bool UpdateAccountById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<CurrencyLine> GetCurrencyLines(int id)
+        {
+            List<CurrencyLine> found = new List<CurrencyLine>();
+            string queryString = "SELECT CurrencyLines.amount,Currencies.currencyType,Exchanges.value FROM CurrencyLines JOIN Currencies ON " +
+                "CurrencyLines.currency_id_fk = Currencies.id JOIN Exchanges ON Currencies.exchange_id_fk = Exchanges.id WHERE account_id_fk = @id";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                readCommand.Parameters.AddWithValue("id", id);
+
+                using (SqlDataReader reader = readCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        CurrencyLine line = new CurrencyLine
+                        {
+                            Amount = (double)reader["amount"],
+                            Currency = new Currency
+                            {
+                                Type = (string)reader["currencytype"],
+                                Exchange = new Exchange
+                                {
+                                    Value = (double)reader["value"],
+                                    Date = DateTime.UtcNow
+                                }
+                            }
+                        };
+                        found.Add(line);
+                    }
+                    return found;
+                }
+            }
         }
     }
 }

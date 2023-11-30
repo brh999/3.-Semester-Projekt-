@@ -24,11 +24,11 @@
 
         public string Type { get { return _type; } set { _type = value; } }
         
-        public Exchange Exchanges { get { return _exchange; } set { _exchange = value; } }
+        public Exchange Exchange { get { return _exchange; } set { _exchange = value; } }
 
         public override string? ToString()
         {
-            return $"Currency Type: {Type}      {Exchanges}";
+            return $"Currency Type: {Type}      {Exchange}";
         }
     }
 }
