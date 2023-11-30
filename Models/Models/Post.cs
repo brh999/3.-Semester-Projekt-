@@ -2,6 +2,7 @@
 {
     public abstract class Post
     {
+        private int _id;
         private double _amount;
         private double _price;
         private bool _isComplete;
@@ -13,8 +14,9 @@
         }
 
 
-        public Post(double amount, double price, Currency currency)
+        public Post(double amount, double price, Currency currency, int id)
         {
+            _id = id;
             _amount = amount;
             _price = price;
             _isComplete = false;
@@ -28,5 +30,6 @@
         public bool IsComplete { get { return _isComplete; } set { _isComplete = value; } }
         public List<TransactionLine> Transactions { get { return _transactions; } set { _transactions = value; } }
         public Currency Currency { get { return _currency; } init { _currency = value; } }
+        public int Id { get { return _id; } set { _id = value; } }
     }
 }

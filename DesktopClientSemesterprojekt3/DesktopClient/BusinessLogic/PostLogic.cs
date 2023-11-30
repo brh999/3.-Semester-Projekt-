@@ -19,7 +19,7 @@ namespace DesktopClient.BusinessLogic
         }
         public async Task<IEnumerable<Offer>> GetAllPosts()
         {
-            List<Offer>? foundPosts;
+            IEnumerable<Offer>? foundPosts;
             foundPosts = await _postService.GetPosts();
             if (foundPosts == null){
                 foundPosts = new List<Offer>();
@@ -28,6 +28,17 @@ namespace DesktopClient.BusinessLogic
 
 
             return foundPosts;
+        }
+
+        public async Task<IEnumerable<TransactionLine>> GetRelatedTransactions(Offer item)
+        {
+            IEnumerable<TransactionLine> foundTransactions;
+            foundTransactions = await _postService.GetRelatedTransactions(item);
+            if (foundTransactions == null)
+            {
+                foundTransactions = new List<TransactionLine>();
+            }
+            return foundTransactions;
         }
     }
 }

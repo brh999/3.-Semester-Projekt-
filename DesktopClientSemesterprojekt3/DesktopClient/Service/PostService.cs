@@ -27,10 +27,10 @@ namespace DesktopClient.Service
             }
             _postService = new ServiceConnection(_serviceUseUrl);
         }
-        public async Task<List<Offer>?>? GetPosts()
+        public async Task<IEnumerable<Offer>?>? GetPosts()
         {
             List<Offer>? res = null;
-            _postService.UseUrl = _postService.BaseUrl + "post/" ;
+            _postService.UseUrl = _postService.BaseUrl + "offer/" ;
 
             var serviceResponse = await _postService.CallServiceGet();
 
@@ -38,6 +38,22 @@ namespace DesktopClient.Service
             {
                 var responsePosts = await serviceResponse.Content.ReadAsStringAsync();
                 res = JsonConvert.DeserializeObject<List<Offer>>(responsePosts);
+            }
+            return res;
+        }
+
+        public async Task<IEnumerable<TransactionLine>?>? GetRelatedTransactions(Offer item)
+        {
+            List<TransactionLine>? res = null;
+            string id = item.Id.ToString();
+            _postService.UseUrl = _postService.BaseUrl + $"offer/{id}";
+
+            var serviceResponse = await _postService.CallServiceGet();
+
+            if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
+            {
+                var responseTransactions = await serviceResponse.Content.ReadAsStringAsync();
+                res = JsonConvert.DeserializeObject<List<TransactionLine>>(responseTransactions);
             }
             return res;
         }

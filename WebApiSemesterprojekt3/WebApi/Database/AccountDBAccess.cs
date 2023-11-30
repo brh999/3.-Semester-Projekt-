@@ -22,58 +22,61 @@ namespace WebApi.Database
             throw new NotImplementedException();
         }
 
-        public Account GetAccountById(int id)
+        public Account GetAccountById(string AspNetId)
         {
             Account account = null;
 
-            string queryStringAccount = "SELECT email,username,discount FROM AspNetUsers JOIN Accounts ON Accounts.AspNetUsers_id_fk = AspNetUsers.Id WHERE Accounts.id = @id";
+            string queryStringAccount = "SELECT Accounts.id,email, username, discount FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.Id WHERE Accounts.AspNetUsers_id_fk = @id";
             string queryStringWallet = "select * from CurrencyLines JOIN Currencies ON CurrencyLines.currency_id_fk = Currencies.id where Account_id_fk = @AccountId";
 
 
-            using (SqlConnection conn = new SqlConnection(_connectionString)) {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
                 conn.Open();
                 string email = "",
                         username = "";
                 double discount = 0;
+                int accountId = -1;
 
                 List<CurrencyLine> wallet = new List<CurrencyLine>();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    
+
 
                     cmd.CommandText = queryStringAccount;
-                    cmd.Parameters.AddWithValue("id", id);
-                    using(SqlDataReader reader = cmd.ExecuteReader())
+                    cmd.Parameters.AddWithValue("id", AspNetId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
+                            accountId = (int)reader["id"];
                             email = (string)reader["email"];
                             username = (string)reader["username"];
                             discount = (double)reader["discount"];
                         }
-                     
+
                     }
 
                     cmd.CommandText = queryStringWallet;
-                    cmd.Parameters.AddWithValue("AccountId", id);
+                    cmd.Parameters.AddWithValue("AccountId", accountId);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        
-                        while(reader.Read())
+
+                        while (reader.Read())
                         {
                             string currencyType = (string)reader["currencytype"];
                             double amount = (double)reader["amount"];
 
                             Currency currency = new(currencyType);
 
-                            CurrencyLine line = new CurrencyLine(amount,currency);
+                            CurrencyLine line = new CurrencyLine(amount, currency);
 
                             wallet.Add(line);
                         }
                     }
 
-                    account = new Account(id,discount,username,email,wallet, new List<Post>());
+                    account = new Account(accountId, discount, username, email, wallet, new List<Post>());
 
                 }
             }
@@ -84,20 +87,33 @@ namespace WebApi.Database
 
         public List<Account> GetAllAccounts()
         {
-            List<Account> res = null;
-            
+            List<Account> foundAccounts = new List<Account>();
 
-            //TODO lav "*" om til individuelle kollonner
-            string queryString = "select * from accounts";
+            string queryString = "SELECT email, username, discount, AspNetUsers_id_fk FROM AspNetUsers JOIN Accounts ON AspNetUsers.Id = Accounts.AspNetUsers_id_fk";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
             {
                 conn.Open();
-                //TODO add error chekcing mayhaps?
-                //res = conn.Query<Account,Post,Account>(queryString, (account, post)=> {account.post = post return account }).ToList();
+               
 
+
+                using (SqlDataReader reader = readCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        
+                        Account account = new Account
+                        {
+                            Username = (string)reader["AspNetUsers_id_fk"],
+                            Discount = (double)reader["Discount"],
+                            Email = (string)reader["email"]
+                        };
+                        foundAccounts.Add((Account)account);
+                    }
+                }
+                return foundAccounts;
             }
-            return res;
         }
 
         public bool UpdateAccountById(int id)

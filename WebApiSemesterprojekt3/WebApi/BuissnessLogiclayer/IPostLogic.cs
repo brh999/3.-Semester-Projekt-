@@ -12,5 +12,6 @@ namespace WebApi.BuissnessLogiclayer
         Offer InsertOffer (Offer offer);
 
         Bid InsertBid (Bid bid);
+        List<TransactionLine> GetRelatedTransactions(int id);
     }
 }
