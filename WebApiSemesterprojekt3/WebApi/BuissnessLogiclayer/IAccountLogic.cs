@@ -6,5 +6,6 @@ namespace WebApi.BuissnessLogiclayer
     {
         List<Account> GetAllAccounts();
         Account GetAccountById(string id);
+        List<CurrencyLine> GetRelatedCurrencyLines(int id);
     }
 }
