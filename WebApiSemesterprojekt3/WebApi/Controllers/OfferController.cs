@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using WebApi.BuissnessLogiclayer;
 
@@ -38,6 +37,7 @@ namespace WebApi.Controllers
             }
             return foundLines;
         }
+
         // GET: api/<OfferController>
         [HttpGet]
         public ActionResult<IEnumerable<Offer>> GetAll()
@@ -58,7 +58,14 @@ namespace WebApi.Controllers
 
         }
 
+        [HttpPost]
+        public IActionResult BuyOffer([FromBody] int offerId, [FromBody] int accountId)
+        {
 
+
+
+            return Ok();
+        }
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
@@ -69,17 +76,19 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost("{aspNetUserId}")]
-        public IActionResult Post([FromBody]Offer inOffer, string aspNetUserId)
+        public IActionResult Post([FromBody] Offer inOffer, string aspNetUserId)
         {
             //TODO: Error handling
             IActionResult result = StatusCode(500);
             Offer? isOfferValid = null;
             try
             {
-                isOfferValid = _offerLogic.InsertOffer(inOffer,aspNetUserId);
+                isOfferValid = _offerLogic.InsertOffer(inOffer, aspNetUserId);
             }
-            catch (Exception ex)
-            { }
+            catch (Exception)
+            {
+                return result;
+            }
 
             // Checks if offer is saved into the database
             if (isOfferValid != null)
