@@ -50,12 +50,12 @@ namespace WebApi.BuissnessLogiclayer
             return res;
         }
 
-        public Offer InsertOffer(Offer offer)
+        public Offer InsertOffer(Offer offer,string aspNetUserId)
         {
             Offer res = offer;
             try
             {
-                _dataAccess.InsertOffer(offer);
+                _dataAccess.InsertOffer(offer, aspNetUserId);
             }
             catch (Exception ex)
             {

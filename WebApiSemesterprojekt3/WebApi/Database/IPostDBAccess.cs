@@ -10,7 +10,7 @@ namespace WebApi.Database
         IEnumerable<Post> GetAllPosts();
         IEnumerable<TransactionLine> GetTransactionLines(int id);
 
-        void InsertOffer(Offer offer);
+        void InsertOffer(Offer offer,string aspNetUserId);
 
         void InsertBid(Bid bid);
     }
