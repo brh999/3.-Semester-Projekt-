@@ -1,4 +1,7 @@
-﻿namespace Models
+﻿
+using System.Reflection.Metadata.Ecma335;
+
+namespace Models
 {
     public class Account
     {
@@ -41,9 +44,23 @@
         public double Discount { get { return _discount; } set { _discount = value; } }
         public string Username { get { return _username; } set { _username = value; } }
         public string Email { get { return _email; } set { _email = value; } }
-
         public int Id { get { return _id; } init { _id = value; } }
-        public List<CurrencyLine> Wallet { get { return _wallet; } }
-        public List<Post> Posts { get { return _posts; } }
+        public List<CurrencyLine> Wallet { get { return _wallet; } init { _wallet = value; } }
+        public List<Post> Posts { get { return _posts; } init { _posts = value; } }
+
+        public override string? ToString()
+        {
+            string res = $"{Username}";  
+            return  res;
+        }
+        //private double getTotalMoney()
+        //{
+        //    double res = 0;
+        //    foreach (CurrencyLine line in _wallet)
+        //    {
+        //        res += line.getPrice();
+        //    }
+        //    return res;
+        //}
     }
 }

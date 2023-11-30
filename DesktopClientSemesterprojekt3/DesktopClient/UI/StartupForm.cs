@@ -14,16 +14,21 @@ namespace DesktopClient.UI
 {
     public partial class StartupForm : Form
     {
-        private CurrencyLogic _currencyLogic;
-        private PostLogic _postLogic;
+        private ICurrencyLogic _currencyLogic;
+        private IPostLogic _postLogic;
+        private IAccountLogic _accountLogic;
         public StartupForm()
         {
             InitializeComponent();
             _currencyLogic = new CurrencyLogic();
             _postLogic = new PostLogic();
+            _accountLogic = new AccountLogic();
             UpdateCurrencies();
             UpdatePosts();
+            UpdateAccounts();
         }
+
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -57,19 +62,48 @@ namespace DesktopClient.UI
         {
 
             Offer? offer = (Offer)listPosts.SelectedItem;
-            if(offer != null)
+            if (offer != null)
             {
                 UpdateTransactions(offer);
 
             }
-            
+
         }
 
         private async void UpdateTransactions(Offer offer)
         {
             List<TransactionLine> data = (List<TransactionLine>)await _postLogic.GetRelatedTransactions(offer);
-            listTransactions.DataSource = null;
             listTransactions.DataSource = data;
+        }
+        private async void UpdateAccounts()
+        {
+            List<Account> data = (List<Account>)await _accountLogic.GetAllAccounts();
+            listBoxAccounts.DataSource = data;
+        }
+
+        private void listBoxAccounts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Account? account = (Account)listBoxAccounts.SelectedItem;
+            if (account != null)
+            {
+                UpdateCurrencyLines(account);
+            }
+        }
+
+        private async void UpdateCurrencyLines(Account account)
+        {
+            List<CurrencyLine> data = (List<CurrencyLine>)await _accountLogic.GetRelatedCurrencyLines(account);
+            listCurrencyLines.DataSource = data;
+            txtBoxTotal.Text = UpdatePrice(data).ToString(); 
+        }
+        private double UpdatePrice(List<CurrencyLine> data)
+        {
+            double res = 0;
+            foreach(CurrencyLine currencyLine in data)
+            {
+                res += currencyLine.GetPrice();
+            }
+            return res;
         }
     }
 }
