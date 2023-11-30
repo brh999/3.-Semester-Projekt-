@@ -217,6 +217,13 @@ namespace WebAppWithAuthentication.Controllers
             return result;
         }
 
+        [Authorize]
+        public IActionResult BuyOffer(Offer offer, string userID)
+        {
+            ViewData["offer"] = offer;
+            ViewData["userID"] = userID;
+            return View();
+        }
 
         [Authorize]
         public IActionResult EditOffer(int id)
