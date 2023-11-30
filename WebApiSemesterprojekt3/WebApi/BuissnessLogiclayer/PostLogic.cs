@@ -12,7 +12,13 @@ namespace WebApi.BuissnessLogiclayer
         {
             _dataAccess = inDataAccess;
         }
+        public List<Post> GetAllPosts()
+        {
+            IEnumerable<Post>? res;
+            res = _dataAccess.GetAllPosts();
 
+            return (List<Post>)res;
+        }
         public List<Bid> GetAllBids()
         {
             IEnumerable<Bid> bids = new List<Bid>();
@@ -56,6 +62,15 @@ namespace WebApi.BuissnessLogiclayer
                 res = null;
             }
             return res;
+        }
+
+        public List<TransactionLine> GetRelatedTransactions(int id)
+        {
+            IEnumerable<TransactionLine>? foundLines;
+
+            foundLines = _dataAccess.GetTransactionLines(id);
+
+            return (List<TransactionLine>)foundLines;
         }
     }
 }

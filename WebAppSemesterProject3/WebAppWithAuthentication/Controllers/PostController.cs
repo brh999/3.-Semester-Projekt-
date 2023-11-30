@@ -30,7 +30,7 @@ namespace WebAppWithAuthentication.Controllers
             if (url != null)
             {
 
-                _connection = new ServiceConnection(url+"Api/");
+                _connection = new ServiceConnection(url + "Api/");
 
             }
             else
@@ -162,11 +162,11 @@ namespace WebAppWithAuthentication.Controllers
             //But the API do not comprehend that these values could be null
             //therefore we create 'Empty' instances of objects.
             // TODO refractor this in a later sprint.
-            if(inPost.Currency.Exchanges == null)
+            if (inPost.Currency.Exchanges == null)
             {
                 inPost.Currency.Exchanges = new Exchange();
             }
-            if(inPost.Transactions == null)
+            if (inPost.Transactions == null)
             {
                 inPost.Transactions = new List<TransactionLine>();
             }
@@ -207,7 +207,7 @@ namespace WebAppWithAuthentication.Controllers
                     result = StatusCode(502);
                 }
 
-                
+
                 result = RedirectToAction("Index", "Home");
             }
             else
@@ -218,7 +218,36 @@ namespace WebAppWithAuthentication.Controllers
             return result;
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Offer>>> GetAllOffersAsync()
+        {
+            List<Offer> foundOffers = new();
 
+            _connection.UseUrl = _connection.BaseUrl + "offer/";
+
+            try
+            {
+                var response = await _connection.CallServiceGet();
+                response?.EnsureSuccessStatusCode();
+
+                if (response is not null)
+                {
+                    var readResponse = await response.Content.ReadAsAsync<List<Offer>>();
+                }
+                else
+                {
+                    return StatusCode(500); //internal server error
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+
+            return Ok(foundOffers);
+        }
 
         [Authorize]
         public IActionResult EditOffer(int id)
