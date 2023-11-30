@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "PostState";
-    string type = ViewBag["type"];
+    string? type = ViewData["type"] as string;
 }
 
 <h1>PostState</h1>
@@ -34,5 +34,5 @@ else
     </div>
 }
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="@Url.Action("Index", "Home")">Go to Home</a>
 </div>
