@@ -1,77 +1,35 @@
 ﻿@model Models.DTO.AccountDto
-@using Models;
+
+@{
+    ViewData["Title"] = "Index";
+}
 
 <h1>Index</h1>
 
-<!-- Display Discount -->
-<h2>Discount: @Model.Discount</h2>
-
-<!-- Wallets Table -->
-<h2>Wallet</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Type
-            </th>
-            <th>
-               Amount
-            </th>
-            <th>
-                
+                @Html.DisplayNameFor(model => model.Wallet)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var walletItem in Model.Wallet)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => walletItem.Currency)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => walletItem.Amount)
-                </td>
-                <!-- Add more cells as needed for Wallet properties -->
-                <td>
-                    <!-- Any additional actions or links related to the wallet item -->
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
-<!-- Posts Table -->
-<h2>Posts</h2>
-<table class="table">
-    <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.Count)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts)
-            </th>
-            <th></th>
+            <td>
+              
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var postItem in Model.Posts)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.Posts.Count)
-                </td>
-                <!-- Display additional columns for Post properties as needed -->
-                <td>
-                    @Html.DisplayFor(modelItem => postItem.Currency)
-                </td>
-                <!-- Add more cells as needed for Post properties -->
-                <td>
-                    <!-- Any additional actions or links related to the post item -->
-                </td>
-            </tr>
-        }
+}
     </tbody>
 </table>
