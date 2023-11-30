@@ -31,6 +31,7 @@ namespace WebAppWithAuthentication.Controllers
             {
 
                 _connection = new ServiceConnection(url + "Api/");
+                _connection = new ServiceConnection(url + "Api/");
 
             }
             else
@@ -47,23 +48,17 @@ namespace WebAppWithAuthentication.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllPosts()
         {
-            string? tokenValue = await GetToken();
-            if (tokenValue != null)
+            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+            IEnumerable<Post> bids = null;
+            IEnumerable<Post> offers = null;
+            try
             {
-                System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-                IEnumerable<Post> bids = null;
-                IEnumerable<Post> offers = null;
-                using (var client = new HttpClient())
-                {
-                    string bearerTokenValue = "Bearer" + " " + tokenValue;
-                    client.DefaultRequestHeaders.Remove("Authorization");
-                    client.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
-                    client.BaseAddress = _url;
-                    // Get bids:
-                    var responseTask = client.GetAsync("bid");
-                    responseTask.Wait();
-
-                    var result = responseTask.Result;
+                // Get bids:
+                _connection.UseUrl = _connection.BaseUrl + "bid";
+                var response = _connection.CallServiceGet();
+                response.Wait();
+                var result = response.Result;
+                if (result != null) {
                     if (result.IsSuccessStatusCode)
                     {
                         var readTask = result.Content.ReadAsAsync<IList<Bid>>();
@@ -74,13 +69,14 @@ namespace WebAppWithAuthentication.Controllers
                     else
                     {
                         bids = Enumerable.Empty<Post>();
-                        ModelState.AddModelError(string.Empty, "Server error - No bids found");
+                        ModelState.AddModelError(string.Empty, "No bids found");
                     }
                     // Get offers:
-                    responseTask = client.GetAsync("offer");
-                    responseTask.Wait();
+                    _connection.UseUrl = _connection.BaseUrl + "offer";
+                    response = _connection.CallServiceGet();
+                    response.Wait();
 
-                    result = responseTask.Result;
+                    result = response.Result;
                     if (result.IsSuccessStatusCode)
                     {
                         var readTask = result.Content.ReadAsAsync<IList<Offer>>();
@@ -91,16 +87,16 @@ namespace WebAppWithAuthentication.Controllers
                     else
                     {
                         offers = Enumerable.Empty<Offer>();
-                        ModelState.AddModelError(string.Empty, "Server error - No offers found");
+                        ModelState.AddModelError(string.Empty, "No offers found");
                     }
-
+                    ViewData["bids"] = bids;
+                    ViewData["offers"] = offers;
+                    ViewData["user"] = loggedInUser;
+                    return View();
                 }
-                ViewData["bids"] = bids;
-                ViewData["offers"] = offers;
-                ViewData["user"] = loggedInUser;
-                return View();
+                return StatusCode(500);
             }
-            else
+            catch
             {
                 return StatusCode(500);
             }
@@ -162,11 +158,11 @@ namespace WebAppWithAuthentication.Controllers
             //But the API do not comprehend that these values could be null
             //therefore we create 'Empty' instances of objects.
             // TODO refractor this in a later sprint.
-            if (inPost.Currency.Exchanges == null)
+            if  (inPost.Currency.Exchanges == null)
             {
                 inPost.Currency.Exchanges = new Exchange();
             }
-            if (inPost.Transactions == null)
+            if  (inPost.Transactions == null)
             {
                 inPost.Transactions = new List<TransactionLine>();
             }
@@ -299,15 +295,6 @@ namespace WebAppWithAuthentication.Controllers
         {
             return Ok();
         }
-
-
-        private async Task<string?> GetToken()
-        {
-            TokenManager tokenHelp = new TokenManager();
-            string? foundToken = await tokenHelp.GetToken();
-            return foundToken;
-        }
-
 
     }
 }
