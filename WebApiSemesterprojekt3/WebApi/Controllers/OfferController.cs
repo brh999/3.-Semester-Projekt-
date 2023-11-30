@@ -22,7 +22,7 @@ namespace WebApi.Controllers
 
         // GET: api/<OfferController>
         [HttpGet("{id:int}")]
-            public ActionResult<IEnumerable<TransactionLine>> GetRelatedTransactionLines(int id)
+        public ActionResult<IEnumerable<TransactionLine>> GetRelatedTransactionLines(int id)
         {
             ActionResult<IEnumerable<TransactionLine>>? foundLines = null;
             List<TransactionLine> res = null;
@@ -68,15 +68,15 @@ namespace WebApi.Controllers
         }
 
         // POST api/<ValuesController>
-        [HttpPost]
-        public IActionResult Post([FromBody]Offer inOffer)
+        [HttpPost("{aspNetUserId}")]
+        public IActionResult Post([FromBody]Offer inOffer, string aspNetUserId)
         {
             //TODO: Error handling
             IActionResult result = StatusCode(500);
             Offer? isOfferValid = null;
             try
             {
-                isOfferValid = _offerLogic.InsertOffer(inOffer);
+                isOfferValid = _offerLogic.InsertOffer(inOffer,aspNetUserId);
             }
             catch (Exception ex)
             { }

@@ -141,7 +141,7 @@ namespace WebApi.Database
         /// Insert the Offer into the database
         /// </summary>
         /// <param name="bid"></param>
-        public void InsertOffer(Offer offer)
+        public void InsertOffer(Offer offer,string aspNetUserId)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
             int res = 0;

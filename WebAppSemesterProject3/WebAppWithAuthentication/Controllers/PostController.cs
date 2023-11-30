@@ -5,6 +5,7 @@ using Models;
 using Models.DTO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Security.Claims;
 using System.Text;
 using WebAppWithAuthentication.BusinessLogic;
 using WebAppWithAuthentication.Models;
@@ -115,11 +116,12 @@ namespace WebAppWithAuthentication.Controllers
             ActionResult result = null;
 
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountDto? account = null;
 
             //This should find  which account that made the request and not simple account 'c811de3f-ab3c-4445-8d70-612e68d61c93'.
             AccountLogic accountLogic = new(_connection);
-            Task<AccountDto?> response = accountLogic.GetAccountById("c811de3f-ab3c-4445-8d70-612e68d61c93");
+            Task<AccountDto?> response = accountLogic.GetAccountById(userId);
             response.Wait();
 
             account = response.Result;
@@ -128,13 +130,12 @@ namespace WebAppWithAuthentication.Controllers
             if (account != null)
             {
                 ViewData.Add("account", account);
-            }
-            else
-            {
-                ErrorViewModel errorViewModel = new ErrorViewModel();
-                result = View("~/Views/Shared/Error.cshtml", errorViewModel);
+                result = View();
 
             }
+            
+            
+
 
             if (result == null)
             {
@@ -187,7 +188,8 @@ namespace WebAppWithAuthentication.Controllers
             if (goOn)
             {
                 //Create the use url to this call.
-                _connection.UseUrl = _connection.BaseUrl + "offer";
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _connection.UseUrl = _connection.BaseUrl + "offer/" + userId;
 
 
                 //Serialize the offer object
@@ -204,7 +206,9 @@ namespace WebAppWithAuthentication.Controllers
                 }
 
 
-                result = RedirectToAction("Index", "Home");
+                ViewData["type"] = "offer";
+                result = View("PostState",inPost);
+
             }
             else
             {

@@ -9,7 +9,7 @@ namespace WebApi.BuissnessLogiclayer
         List<Offer> GetAllOffers();
         List<Post> GetAllPosts();
 
-        Offer InsertOffer (Offer offer);
+        Offer InsertOffer (Offer offer,string aspNetUserId);
 
         Bid InsertBid (Bid bid);
         List<TransactionLine> GetRelatedTransactions(int id);
