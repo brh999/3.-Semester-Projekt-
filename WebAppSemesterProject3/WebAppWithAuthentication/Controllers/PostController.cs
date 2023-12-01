@@ -62,7 +62,7 @@ namespace WebAppWithAuthentication.Controllers
                     {
                         if (result.IsSuccessStatusCode)
                         {
-                            var readTask = result.Content.ReadAsAsync<IList<Bid>>();
+                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
                             readTask.Wait();
                             bids = readTask.Result;
                             ViewData["bids"] = bids;
@@ -226,7 +226,7 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditOffer([FromBody] Bid inBid)
+        public IActionResult EditOffer([FromBody] Post inBid)
         {
             return Ok();
         }
@@ -245,7 +245,7 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult CreateBid([FromBody] Bid inPost)
+        public IActionResult CreateBid([FromBody] Post inPost)
         {
             return Ok();
         }
@@ -258,7 +258,7 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditBid([FromBody] Bid inBid)
+        public IActionResult EditBid([FromBody] Post inBid)
         {
             return Ok();
         }
