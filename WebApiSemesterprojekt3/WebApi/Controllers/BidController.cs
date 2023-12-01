@@ -23,10 +23,10 @@ namespace WebApi.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public ActionResult<IEnumerable<Bid>> GetAll()
+        public ActionResult<IEnumerable<Post>> GetAll()
         {
-            ActionResult<IEnumerable<Bid>>? foundBids = null;
-            List<Bid> res = null;
+            ActionResult<IEnumerable<Post>>? foundBids = null;
+            List<Post> res = null;
             res = _bidLogic.GetAllBids();
 
             if (res != null)
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost, Route("insert")]
-        public void InsertBid(Bid bid)
+        public void InsertBid(Post bid)
         {
             try
             {
