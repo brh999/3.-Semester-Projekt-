@@ -196,6 +196,7 @@ namespace WebApi.Database
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
+                            Type = (string)reader["type"],
                         };
                         foundPosts.Add(offer);
                     }

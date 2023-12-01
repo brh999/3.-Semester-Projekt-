@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Models;
 using System;
 using System.Data.SqlClient;
+using WebApi.BuissnessLogiclayer;
 using Xunit.Abstractions;
 
 namespace WebApi.Database.Tests
@@ -18,6 +19,7 @@ namespace WebApi.Database.Tests
         private readonly ITestOutputHelper _extraOutpuit;
         private readonly string aspNetUserIdTestData = "c811de3f-ab3c-4445-8d70-612e68d61c93",
                                 _connectionString;
+        private PostLogic _postLogic;
 
         public PostLogicTest(ITestOutputHelper output)
         {
@@ -25,7 +27,7 @@ namespace WebApi.Database.Tests
             IConfiguration inConfig = TestConfigHelper.GetConfigurationRoot();
             _postAccess = new PostDBAccess(inConfig);
             _connectionString = inConfig.GetConnectionString("hildur_prod");
-
+            _postLogic = new(_postAccess);
 
         }
 
@@ -46,7 +48,7 @@ namespace WebApi.Database.Tests
             int expectedAmount = 0;
             string query = "SELECT COUNT(*) AS 'RowCount' FROM posts";
             //Act
-            posts = (List<Post>)_postAccess.GetAllPosts();
+            posts = _postLogic.GetAllPosts();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -83,28 +85,30 @@ namespace WebApi.Database.Tests
             Post? result;
             //Act
 
-            _postAccess.InsertOffer(offer, aspNetUserIdTestData);
-            // At this moment, we do not have the functionality to find a specific offer.
-            list = (List<Post>)_postAccess.GetOfferPosts();
-            result = list.Find(x =>
-            {
-                bool isEqual = false;
-                isEqual = x.Price == offer.Price;
-                isEqual = x.Currency.Equals(offer.Currency);
-                isEqual = x.Amount == offer.Amount;
-                isEqual = x.IsComplete == offer.IsComplete;
+            result = _postLogic.InsertOffer(offer, aspNetUserIdTestData);
 
-                return isEqual;
-            });
+
+
 
             //Assert
 
             //This assumes that GetOfferPost() works
-            Assert.NotNull(result);
+            if(result == null)
+            {
+                Assert.Fail("Result is null");
+            }
+            Assert.Equal(result, offer);
 
 
 
         }
+
+        [Fact]
+        public void InsertOfferWithInvalidUserIdShouldReturnNull()
+        {
+
+        }
+
 
         [Fact]
         public void GetRelatedTransactionsShouldReturnAllRelatedTransactions()
@@ -160,7 +164,7 @@ namespace WebApi.Database.Tests
             int expectedAmount = 0;
 
             //Act
-            relatedTransactions = (List<TransactionLine>)_postAccess.GetTransactionLines(postId);
+            relatedTransactions = _postLogic.GetRelatedTransactions(postId);
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
