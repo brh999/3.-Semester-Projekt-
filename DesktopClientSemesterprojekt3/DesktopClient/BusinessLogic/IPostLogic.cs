@@ -11,5 +11,7 @@ namespace DesktopClient.BusinessLogic
     {
         Task<IEnumerable<Post>> GetAllPosts();
         Task<IEnumerable<TransactionLine>> GetRelatedTransactions(Post item);
+
+        void DeletePost(Post item);
     }
 }

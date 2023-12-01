@@ -68,7 +68,8 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost("{aspNetUserId}")]
-        public IActionResult Post([FromBody]Post inOffer, string aspNetUserId)
+        public IActionResult Post([FromBody] Post inOffer, string aspNetUserId)
+        {
 
             //TODO: Error handling
             IActionResult result = StatusCode(500);
@@ -100,8 +101,20 @@ namespace WebApi.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            IActionResult result = StatusCode(500);
+            try
+            {
+                if (_offerLogic.DeleteOffer(id))
+                {
+                    result = Ok();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return result;
         }
 
 

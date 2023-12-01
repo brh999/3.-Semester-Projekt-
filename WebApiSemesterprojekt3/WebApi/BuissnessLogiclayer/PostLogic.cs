@@ -43,14 +43,15 @@ namespace WebApi.BuissnessLogiclayer
             try
             {
                 _dataAccess.InsertBid(bid);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 res = null;
             }
             return res;
         }
 
-        public Post InsertOffer(Post offer,string aspNetUserId)
+        public Post InsertOffer(Post offer, string aspNetUserId)
         {
             Post res = offer;
             try
@@ -72,5 +73,13 @@ namespace WebApi.BuissnessLogiclayer
 
             return (List<TransactionLine>)foundLines;
         }
+
+        public bool DeleteOffer(int id)
+        {
+            bool res = false;
+            res = _dataAccess.DeleteOffer(id);
+            return res;
+        }
     }
 }
+

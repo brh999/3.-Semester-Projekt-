@@ -35,16 +35,17 @@
             label1 = new Label();
             txtCurrencyName = new TextBox();
             tabPosts = new TabPage();
+            btnDeletePost = new Button();
             label_transactions = new Label();
             listTransactions = new ListBox();
             label_Posts = new Label();
             listPosts = new ListBox();
             tab_Accounts = new TabPage();
+            lblTotalAmount = new Label();
+            txtBoxTotal = new TextBox();
+            lblCurrencies = new Label();
             listCurrencyLines = new ListBox();
             listBoxAccounts = new ListBox();
-            lblCurrencies = new Label();
-            txtBoxTotal = new TextBox();
-            lblTotalAmount = new Label();
             tabController.SuspendLayout();
             tab_Currencies.SuspendLayout();
             tabPosts.SuspendLayout();
@@ -115,6 +116,7 @@
             // 
             // tabPosts
             // 
+            tabPosts.Controls.Add(btnDeletePost);
             tabPosts.Controls.Add(label_transactions);
             tabPosts.Controls.Add(listTransactions);
             tabPosts.Controls.Add(label_Posts);
@@ -126,6 +128,17 @@
             tabPosts.TabIndex = 1;
             tabPosts.Text = "Posts";
             tabPosts.UseVisualStyleBackColor = true;
+            // 
+            // btnDeletePost
+            // 
+            btnDeletePost.Enabled = false;
+            btnDeletePost.Location = new Point(318, 64);
+            btnDeletePost.Name = "btnDeletePost";
+            btnDeletePost.Size = new Size(171, 29);
+            btnDeletePost.TabIndex = 6;
+            btnDeletePost.Text = "Delete Post";
+            btnDeletePost.UseVisualStyleBackColor = true;
+            btnDeletePost.Click += btnDeletePost_Click;
             // 
             // label_transactions
             // 
@@ -162,7 +175,7 @@
             listPosts.Location = new Point(23, 45);
             listPosts.Margin = new Padding(2);
             listPosts.Name = "listPosts";
-            listPosts.Size = new Size(225, 324);
+            listPosts.Size = new Size(277, 324);
             listPosts.TabIndex = 2;
             listPosts.SelectedIndexChanged += listPosts_SelectedIndexChanged;
             // 
@@ -180,6 +193,31 @@
             tab_Accounts.TabIndex = 2;
             tab_Accounts.Text = "Accounts";
             tab_Accounts.UseVisualStyleBackColor = true;
+            // 
+            // lblTotalAmount
+            // 
+            lblTotalAmount.AutoSize = true;
+            lblTotalAmount.Location = new Point(517, 213);
+            lblTotalAmount.Name = "lblTotalAmount";
+            lblTotalAmount.Size = new Size(99, 20);
+            lblTotalAmount.TabIndex = 8;
+            lblTotalAmount.Text = "Total Amount";
+            // 
+            // txtBoxTotal
+            // 
+            txtBoxTotal.Location = new Point(517, 236);
+            txtBoxTotal.Name = "txtBoxTotal";
+            txtBoxTotal.Size = new Size(125, 27);
+            txtBoxTotal.TabIndex = 7;
+            // 
+            // lblCurrencies
+            // 
+            lblCurrencies.AutoSize = true;
+            lblCurrencies.Location = new Point(517, 29);
+            lblCurrencies.Name = "lblCurrencies";
+            lblCurrencies.Size = new Size(77, 20);
+            lblCurrencies.TabIndex = 6;
+            lblCurrencies.Text = "Currencies";
             // 
             // listCurrencyLines
             // 
@@ -201,31 +239,6 @@
             listBoxAccounts.Size = new Size(388, 324);
             listBoxAccounts.TabIndex = 3;
             listBoxAccounts.SelectedIndexChanged += listBoxAccounts_SelectedIndexChanged;
-            // 
-            // lblCurrencies
-            // 
-            lblCurrencies.AutoSize = true;
-            lblCurrencies.Location = new Point(517, 29);
-            lblCurrencies.Name = "lblCurrencies";
-            lblCurrencies.Size = new Size(77, 20);
-            lblCurrencies.TabIndex = 6;
-            lblCurrencies.Text = "Currencies";
-            // 
-            // txtBoxTotal
-            // 
-            txtBoxTotal.Location = new Point(517, 236);
-            txtBoxTotal.Name = "txtBoxTotal";
-            txtBoxTotal.Size = new Size(125, 27);
-            txtBoxTotal.TabIndex = 7;
-            // 
-            // lblTotalAmount
-            // 
-            lblTotalAmount.AutoSize = true;
-            lblTotalAmount.Location = new Point(517, 213);
-            lblTotalAmount.Name = "lblTotalAmount";
-            lblTotalAmount.Size = new Size(99, 20);
-            lblTotalAmount.TabIndex = 8;
-            lblTotalAmount.Text = "Total Amount";
             // 
             // StartupForm
             // 
@@ -264,5 +277,6 @@
         private Label lblCurrencies;
         private Label lblTotalAmount;
         private TextBox txtBoxTotal;
+        private Button btnDeletePost;
     }
 }

@@ -50,6 +50,7 @@ namespace WebApi.Database
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
                             Id = (int)reader["id"],
+                            Type = (string)reader["type"],
                         };
                         foundBids.Add(bids);
                     }
@@ -84,6 +85,7 @@ namespace WebApi.Database
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
+                            Type = (string)reader["type"],
                         };
                         foundOffers.Add(offer);
                     }
@@ -143,7 +145,7 @@ namespace WebApi.Database
         /// Insert the Offer into the database
         /// </summary>
         /// <param name="bid"></param>
-        public void InsertOffer(Post offer,string aspNetUserId)
+        public void InsertOffer(Post offer, string aspNetUserId)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
             int res = 0;
@@ -195,6 +197,7 @@ namespace WebApi.Database
                             Id = (int)reader["id"],
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
+                            Type = (string)reader["type"],
                             Currency = generatedCurrency,
                         };
                         foundPosts.Add(offer);
@@ -235,6 +238,27 @@ namespace WebApi.Database
                     }
                     return foundLines;
                 }
+            }
+        }
+
+        public bool DeleteOffer(int id)
+        {
+            bool res = false;
+            int changes = 0;
+            string queryString = "DELETE FROM Posts WHERE id=@id";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand deleteCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                deleteCommand.Parameters.AddWithValue("id", id);
+                changes = deleteCommand.ExecuteNonQuery();
+                if (changes > 0)
+                {
+                    res = true;
+                }
+                return res;
+
             }
         }
     }

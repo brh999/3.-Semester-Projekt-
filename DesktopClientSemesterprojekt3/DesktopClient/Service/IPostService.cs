@@ -11,5 +11,6 @@ namespace DesktopClient.Service
     {
         Task<IEnumerable<Post>?>? GetPosts();
         Task<IEnumerable<TransactionLine>?>? GetRelatedTransactions(Post item);
+        void DeletePost(Post item); 
     }
 }
