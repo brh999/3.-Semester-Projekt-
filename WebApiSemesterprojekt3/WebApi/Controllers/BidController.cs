@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using WebApi.BuissnessLogiclayer;
 
@@ -25,19 +24,20 @@ namespace WebApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Post>> GetAll()
         {
-            ActionResult<IEnumerable<Post>>? foundBids = null;
-            List<Post> res = null;
+
+            IEnumerable<Post> res = new List<Post>();
             res = _bidLogic.GetAllBids();
 
-            if (res != null)
+            if (res != null && res.Count() > 0)
             {
-                foundBids = Ok(res);
+                return Ok(res);
             }
-            else
+            else if (res != null && res.Count() <= 0)
             {
-                foundBids = NotFound();
+                return StatusCode(204); // Success with no content
             }
-            return foundBids;
+
+            return StatusCode(500);
 
         }
 

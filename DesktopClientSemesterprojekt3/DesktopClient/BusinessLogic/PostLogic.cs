@@ -17,6 +17,12 @@ namespace DesktopClient.BusinessLogic
         {
             _postService = new PostService();
         }
+
+        public void DeletePost(Post item)
+        {
+            _postService.DeletePost(item);
+        }
+
         public async Task<IEnumerable<Post>> GetAllPosts()
         {
             IEnumerable<Post>? foundPosts;

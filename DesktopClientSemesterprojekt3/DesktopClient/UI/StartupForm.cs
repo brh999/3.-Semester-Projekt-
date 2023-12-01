@@ -54,7 +54,6 @@ namespace DesktopClient.UI
         private async void UpdatePosts()
         {
             List<Post> data = (List<Post>)await _postLogic.GetAllPosts();
-            listPosts.Items.Clear();
             listPosts.DataSource = data;
         }
 
@@ -65,6 +64,7 @@ namespace DesktopClient.UI
             if (post != null)
             {
                 UpdateTransactions(post);
+                btnDeletePost.Enabled = true;
 
             }
 
@@ -94,16 +94,36 @@ namespace DesktopClient.UI
         {
             List<CurrencyLine> data = (List<CurrencyLine>)await _accountLogic.GetRelatedCurrencyLines(account);
             listCurrencyLines.DataSource = data;
-            txtBoxTotal.Text = UpdatePrice(data).ToString(); 
+            txtBoxTotal.Text = UpdatePrice(data).ToString();
         }
         private double UpdatePrice(List<CurrencyLine> data)
         {
             double res = 0;
-            foreach(CurrencyLine currencyLine in data)
+            foreach (CurrencyLine currencyLine in data)
             {
                 res += currencyLine.GetPrice();
             }
             return res;
+        }
+
+        private void btnDeletePost_Click(object sender, EventArgs e)
+        {
+            Post item = (Post)listPosts.SelectedItem;
+            if(item != null)
+            {
+                DialogResult result = MessageBox.Show("Are you sure you want to delete this item?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                   _postLogic.DeletePost(item);
+                    UpdatePosts();
+                }
+                else
+                {
+                    //Stop, Hammertime!
+                     
+                }
+            }
         }
     }
 }
