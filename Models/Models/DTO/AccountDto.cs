@@ -11,7 +11,7 @@ namespace Models.DTO
     public class AccountDto
     {
         private List<CurrencyLine> _wallet;
-        private List<Offer> _posts;
+        private List<DeleteOffer> _posts;
         private double _discount;
 
         public AccountDto() {}
@@ -27,7 +27,7 @@ namespace Models.DTO
         public double Discount { get { return _discount; } set { _discount = value; } }
         
         public List<CurrencyLine> Wallet { get { return _wallet; } set { _wallet = value; } }
-        public List<Offer> Posts { get { return _posts; } set { _posts = value; } }
+        public List<DeleteOffer> Posts { get { return _posts; } set { _posts = value; } }
 
 
     }

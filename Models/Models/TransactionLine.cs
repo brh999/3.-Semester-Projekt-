@@ -4,14 +4,14 @@
     {
         private DateTime _date;
         private double _amount;
-        private Bid? _buyer;
+        private Post? _buyer;
         private Post? _seller;
 
         public TransactionLine()
         {
         }
 
-        public TransactionLine(DateTime date, double amount, Bid buyer, Post seller)
+        public TransactionLine(DateTime date, double amount, Post buyer, Post seller)
         {
             this._date = date;
             this._amount = amount;
@@ -20,7 +20,7 @@
         }
         public DateTime Date { get { return _date; } set { _date = value; } }
         public double Amount { get { return _amount; } set { _amount = value; } }
-        public Bid Buyer { get { return _buyer; } set { _buyer = value; } }
+        public Post Buyer { get { return _buyer; } set { _buyer = value; } }
         public Post Seller { get { return _seller; } set { _seller = value; } }
 
         public override string? ToString()
