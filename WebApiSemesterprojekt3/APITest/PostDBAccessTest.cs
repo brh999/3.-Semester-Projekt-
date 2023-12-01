@@ -42,10 +42,10 @@ namespace WebApi.Database.Tests
 
 
             // Act
-            IEnumerable<Bid> result = _postAccess.GetBidPosts();
+            IEnumerable<Post> result = _postAccess.GetBidPosts();
 
             // Assert
-            Assert.IsType<List<Bid>>(result);
+            Assert.IsType<List<Post>>(result);
 
 
 
@@ -55,10 +55,10 @@ namespace WebApi.Database.Tests
         {
 
             //Act
-            IEnumerable<Offer> result = _postAccess.GetOfferPosts();
+            IEnumerable<Post> result = _postAccess.GetOfferPosts();
 
             //Assert
-            Assert.IsType<List<Offer>>(result);
+            Assert.IsType<List<Post>>(result);
 
 
         }

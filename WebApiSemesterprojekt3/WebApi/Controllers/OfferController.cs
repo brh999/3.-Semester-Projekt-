@@ -40,10 +40,10 @@ namespace WebApi.Controllers
         }
         // GET: api/<OfferController>
         [HttpGet]
-        public ActionResult<IEnumerable<Offer>> GetAll()
+        public ActionResult<IEnumerable<Post>> GetAll()
         {
-            ActionResult<IEnumerable<Offer>>? foundOffers = null;
-            List<Offer> res = null;
+            ActionResult<IEnumerable<Post>>? foundOffers = null;
+            List<Post> res = null;
             res = _offerLogic.GetAllOffers();
 
             if (res != null)
@@ -69,11 +69,11 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost("{aspNetUserId}")]
-        public IActionResult Post([FromBody]Offer inOffer, string aspNetUserId)
+        public IActionResult Post([FromBody]Post inOffer, string aspNetUserId)
         {
             //TODO: Error handling
             IActionResult result = StatusCode(500);
-            Offer? isOfferValid = null;
+            Post? isOfferValid = null;
             try
             {
                 isOfferValid = _offerLogic.InsertOffer(inOffer,aspNetUserId);

@@ -9,6 +9,7 @@
         private Currency _currency;
         private List<TransactionLine> _transactions;
         private string _type;
+
         public Post()
         {
         }
@@ -31,7 +32,8 @@
         public List<TransactionLine> Transactions { get { return _transactions; } set { _transactions = value; } }
         public Currency Currency { get { return _currency; } init { _currency = value; } }
         public int Id { get { return _id; } set { _id = value; } }
-
         public string Type { get { return _type; } set { _type = value; } }
+
+
     }
 }

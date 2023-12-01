@@ -104,7 +104,7 @@ namespace WebApi.Database
                         }
                     }
                     PostDBAccess pa = new PostDBAccess(_configuration);
-                    List<Offer> po = (List<Offer>)pa.GetOfferPosts();
+                    List<Post> po = (List<Post>)pa.GetOfferPosts();
 
                     account = new Account(accountId, discount, username, email, wallet, po);
 

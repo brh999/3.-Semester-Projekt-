@@ -4,14 +4,14 @@ namespace WebApi.BuissnessLogiclayer
 {
     public interface IPostLogic
     {
-        List<Bid> GetAllBids();
+        List<Post> GetAllBids();
 
-        List<Offer> GetAllOffers();
+        List<Post> GetAllOffers();
         List<Post> GetAllPosts();
 
-        Offer InsertOffer (Offer offer,string aspNetUserId);
+        Post InsertOffer (Post offer,string aspNetUserId);
 
-        Bid InsertBid (Bid bid);
+        Post InsertBid (Post bid);
         List<TransactionLine> GetRelatedTransactions(int id);
     }
 }
