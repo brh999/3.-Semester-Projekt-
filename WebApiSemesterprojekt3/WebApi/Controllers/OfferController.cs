@@ -42,19 +42,20 @@ namespace WebApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Post>> GetAll()
         {
-            ActionResult<IEnumerable<Post>>? foundOffers = null;
-            List<Post> res = null;
-            res = _offerLogic.GetAllOffers();
 
-            if (res != null)
+            IEnumerable<Post> res = new List<Post>();
+            res = _offerLogic.GetAllBids();
+
+            if (res != null && res.Count() > 0)
             {
-                foundOffers = Ok(res);
+                return Ok(res);
             }
-            else
+            else if (res != null && res.Count() <= 0)
             {
-                foundOffers = NotFound();
+                return StatusCode(204); // Success with no content
             }
-            return foundOffers;
+
+            return StatusCode(500);
 
         }
 

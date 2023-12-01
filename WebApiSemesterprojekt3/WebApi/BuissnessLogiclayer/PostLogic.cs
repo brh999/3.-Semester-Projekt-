@@ -1,5 +1,4 @@
 ﻿using Models;
-using System.Security.Cryptography;
 using WebApi.Database;
 
 namespace WebApi.BuissnessLogiclayer
@@ -12,29 +11,29 @@ namespace WebApi.BuissnessLogiclayer
         {
             _dataAccess = inDataAccess;
         }
-        public List<Post> GetAllPosts()
+        public IEnumerable<Post> GetAllPosts()
         {
-            IEnumerable<Post>? res;
+            IEnumerable<Post> res = new List<Post>();
             res = _dataAccess.GetAllPosts();
 
-            return (List<Post>)res;
+            return res;
         }
-        public List<Post> GetAllBids()
+        public IEnumerable<Post> GetAllBids()
         {
             IEnumerable<Post> bids = new List<Post>();
 
             bids = _dataAccess.GetBidPosts();
 
-            return (List<Post>)bids;
+            return bids;
         }
 
-        public List<Post> GetAllOffers()
+        public IEnumerable<Post> GetAllOffers()
         {
             IEnumerable<Post> offers = new List<Post>();
 
             offers = _dataAccess.GetOfferPosts();
 
-            return (List<Post>)offers;
+            return offers;
         }
 
         public Post InsertBid(Post bid)
