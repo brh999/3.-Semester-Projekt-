@@ -26,16 +26,26 @@ namespace WebApi.Controllers
         {
             ActionResult<IEnumerable<TransactionLine>>? foundLines = null;
             List<TransactionLine> res = null;
-            res = _offerLogic.GetRelatedTransactions(id);
 
-            if (res != null)
+            try
             {
-                foundLines = Ok(res);
+                res = _offerLogic.GetRelatedTransactions(id);
+                if (res != null)
+                {
+                    foundLines = Ok(res);
+                }
+                else
+                {
+                    foundLines = NotFound();
+                }
             }
-            else
+            catch (ArgumentException ex)
             {
-                foundLines = NotFound();
+                foundLines = StatusCode(id, ex.Message);
             }
+            
+
+            
             return foundLines;
         }
         // GET: api/<OfferController>

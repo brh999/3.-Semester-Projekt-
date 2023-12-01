@@ -13,7 +13,16 @@
         <tr>
           
             <th>
-                @Html.DisplayNameFor(modelItem => Model.Wallet.Count)
+                <ul>
+                @foreach(var item in Model.Wallet)
+                {
+                    
+                 <li>
+                     @item.ToString();
+                 </li>
+                    
+                }
+                </ul>
             </th>
             <!-- Add more columns as needed for Wallet properties -->
             <th></th>
