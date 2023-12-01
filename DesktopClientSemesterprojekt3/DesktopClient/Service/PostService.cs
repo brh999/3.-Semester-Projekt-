@@ -27,9 +27,9 @@ namespace DesktopClient.Service
             }
             _postService = new ServiceConnection(_serviceUseUrl);
         }
-        public async Task<IEnumerable<Offer>?>? GetPosts()
+        public async Task<IEnumerable<Post>?>? GetPosts()
         {
-            List<Offer>? res = null;
+            List<Post>? res = null;
             _postService.UseUrl = _postService.BaseUrl + "offer/" ;
 
             var serviceResponse = await _postService.CallServiceGet();
@@ -37,12 +37,12 @@ namespace DesktopClient.Service
             if(serviceResponse != null && serviceResponse.IsSuccessStatusCode)
             {
                 var responsePosts = await serviceResponse.Content.ReadAsStringAsync();
-                res = JsonConvert.DeserializeObject<List<Offer>>(responsePosts);
+                res = JsonConvert.DeserializeObject<List<Post>>(responsePosts);
             }
             return res;
         }
 
-        public async Task<IEnumerable<TransactionLine>?>? GetRelatedTransactions(Offer item)
+        public async Task<IEnumerable<TransactionLine>?>? GetRelatedTransactions(Post item)
         {
             List<TransactionLine>? res = null;
             string id = item.Id.ToString();

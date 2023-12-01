@@ -10,13 +10,13 @@ namespace Models
         private string _email;
         private int _id;
         private List<CurrencyLine> _wallet;
-        private List<DeleteOffer> _posts;
+        private List<Post> _posts;
 
         public Account()
         {
         }
 
-        public Account(int id,double discount, string username, string email, List<CurrencyLine> wallet, List<DeleteOffer> posts)
+        public Account(int id,double discount, string username, string email, List<CurrencyLine> wallet, List<Post> posts)
         {
             _discount = discount;
             _username = username;
@@ -31,7 +31,7 @@ namespace Models
             _username = username;
             _email = email;
             _wallet = new List<CurrencyLine>();
-            _posts = new List<DeleteOffer>();
+            _posts = new List<Post>();
         }
 
         public void AddCurrencyLine(CurrencyLine line)
@@ -46,7 +46,7 @@ namespace Models
         public string Email { get { return _email; } set { _email = value; } }
         public int Id { get { return _id; } init { _id = value; } }
         public List<CurrencyLine> Wallet { get { return _wallet; } init { _wallet = value; } }
-        public List<DeleteOffer> Posts { get { return _posts; } init { _posts = value; } }
+        public List<Post> Posts { get { return _posts; } init { _posts = value; } }
 
         public override string? ToString()
         {

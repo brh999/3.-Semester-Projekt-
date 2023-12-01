@@ -9,7 +9,7 @@ namespace DesktopClient.BusinessLogic
 {
     internal interface IPostLogic
     {
-        Task<IEnumerable<Offer>> GetAllPosts();
-        Task<IEnumerable<TransactionLine>> GetRelatedTransactions(Offer item);
+        Task<IEnumerable<Post>> GetAllPosts();
+        Task<IEnumerable<TransactionLine>> GetRelatedTransactions(Post item);
     }
 }
