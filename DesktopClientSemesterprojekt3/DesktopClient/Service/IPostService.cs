@@ -9,7 +9,7 @@ namespace DesktopClient.Service
 {
     internal interface IPostService
     {
-        Task<IEnumerable<Offer>?>? GetPosts();
-        Task<IEnumerable<TransactionLine>?>? GetRelatedTransactions(Offer item);
+        Task<IEnumerable<Post>?>? GetPosts();
+        Task<IEnumerable<TransactionLine>?>? GetRelatedTransactions(Post item);
     }
 }

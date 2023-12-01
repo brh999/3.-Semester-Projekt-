@@ -25,12 +25,13 @@ namespace WebApi.Database
 
         public PostDBAccess()
         {
+
         }
 
 
-        public IEnumerable<Bid> GetBidPosts()
+        public IEnumerable<Post> GetBidPosts()
         {
-            List<Bid> foundBids = new List<Bid>();
+            List<Post> foundBids = new List<Post>();
             string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'bid'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -43,13 +44,14 @@ namespace WebApi.Database
                     while (reader.Read())
                     {
                         Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
-                        Post bids = new Bid
+                        Post bids = new Post
                         {
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
+                            Id = (int)reader["id"],
                         };
-                        foundBids.Add((Bid)bids);
+                        foundBids.Add(bids);
                     }
                 }
                 return foundBids;
@@ -60,10 +62,10 @@ namespace WebApi.Database
         /// Get all Offer posts
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Offer> GetOfferPosts()
+        public IEnumerable<Post> GetOfferPosts()
         {
 
-            List<Offer> foundOffers = new List<Offer>();
+            List<Post> foundOffers = new List<Post>();
             string queryString = "SELECT * FROM posts JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -76,14 +78,14 @@ namespace WebApi.Database
                     while (reader.Read())
                     {
                         Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
-                        Post offer = new Offer
+                        Post offer = new Post
                         {
                             Id = (int)reader["id"],
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
                         };
-                        foundOffers.Add((Offer)offer);
+                        foundOffers.Add(offer);
                     }
                 }
                 return foundOffers;
@@ -102,7 +104,7 @@ namespace WebApi.Database
         /// </summary>
         /// <param name="bid"></param>
         //TODO contiue implementing this!!
-        public void InsertBid(Bid bid)
+        public void InsertBid(Post bid)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
             int res = 0;
@@ -141,7 +143,7 @@ namespace WebApi.Database
         /// Insert the Offer into the database
         /// </summary>
         /// <param name="bid"></param>
-        public void InsertOffer(Offer offer,string aspNetUserId)
+        public void InsertOffer(Post offer,string aspNetUserId)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
             int res = 0;
@@ -187,29 +189,15 @@ namespace WebApi.Database
                     while (reader.Read())
                     {
                         Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
-                        Post post;
-                        if (((string)reader["type"]).Equals("Offer"))
+
+                        Post offer = new Post
                         {
-                            post = new Offer
-                            {
-                                Id = (int)reader["id"],
-                                Amount = (double)reader["amount"],
-                                Price = (double)reader["price"],
-                                Currency = generatedCurrency,
-                                
-                            };
-                        }
-                        else
-                        {
-                            post = new Bid
-                            {
-                                Id = (int)reader["id"],
-                                Amount = (double)reader["amount"],
-                                Price = (double)reader["price"],
-                                Currency = generatedCurrency,
-                            };
-                        }
-                        foundPosts.Add(post);
+                            Id = (int)reader["id"],
+                            Amount = (double)reader["amount"],
+                            Price = (double)reader["price"],
+                            Currency = generatedCurrency,
+                        };
+                        foundPosts.Add(offer);
                     }
                 }
                 return foundPosts;
@@ -242,7 +230,7 @@ namespace WebApi.Database
                         {
                             Date = (DateTime)reader["date"],
                             Amount = (double)reader["amount"],
-                            Buyer = new Bid()
+                            Buyer = new Post()
                             {
                                 Id = buyerId,
                             },

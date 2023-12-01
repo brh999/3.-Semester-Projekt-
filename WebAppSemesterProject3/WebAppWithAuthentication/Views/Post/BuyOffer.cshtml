@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Models.Post>
+@using Models
+
+@{
+    Post offer = ViewData["offer"] as Post;
+}
+
+
+<h1>- Confirm buy order -</h1>
+&nbsp
+<div> Buy @offer.Amount  @offer.Currency for price: @offer.Price </div>
+&nbsp
+<div></div>

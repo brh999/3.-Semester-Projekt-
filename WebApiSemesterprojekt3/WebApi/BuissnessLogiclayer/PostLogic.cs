@@ -19,27 +19,27 @@ namespace WebApi.BuissnessLogiclayer
 
             return (List<Post>)res;
         }
-        public List<Bid> GetAllBids()
+        public List<Post> GetAllBids()
         {
-            IEnumerable<Bid> bids = new List<Bid>();
+            IEnumerable<Post> bids = new List<Post>();
 
             bids = _dataAccess.GetBidPosts();
 
-            return (List<Bid>)bids;
+            return (List<Post>)bids;
         }
 
-        public List<Offer> GetAllOffers()
+        public List<Post> GetAllOffers()
         {
-            IEnumerable<Offer> offers = new List<Offer>();
+            IEnumerable<Post> offers = new List<Post>();
 
             offers = _dataAccess.GetOfferPosts();
 
-            return (List<Offer>)offers;
+            return (List<Post>)offers;
         }
 
-        public Bid InsertBid(Bid bid)
+        public Post InsertBid(Post bid)
         {
-            Bid res = bid;
+            Post res = bid;
             try
             {
                 _dataAccess.InsertBid(bid);
@@ -50,9 +50,9 @@ namespace WebApi.BuissnessLogiclayer
             return res;
         }
 
-        public Offer InsertOffer(Offer offer,string aspNetUserId)
+        public Post InsertOffer(Post offer,string aspNetUserId)
         {
-            Offer res = offer;
+            Post res = offer;
             try
             {
                 _dataAccess.InsertOffer(offer, aspNetUserId);

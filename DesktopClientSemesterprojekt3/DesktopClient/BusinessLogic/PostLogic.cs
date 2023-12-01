@@ -17,12 +17,12 @@ namespace DesktopClient.BusinessLogic
         {
             _postService = new PostService();
         }
-        public async Task<IEnumerable<Offer>> GetAllPosts()
+        public async Task<IEnumerable<Post>> GetAllPosts()
         {
-            IEnumerable<Offer>? foundPosts;
+            IEnumerable<Post>? foundPosts;
             foundPosts = await _postService.GetPosts();
             if (foundPosts == null){
-                foundPosts = new List<Offer>();
+                foundPosts = new List<Post>();
             }
 
 
@@ -30,7 +30,7 @@ namespace DesktopClient.BusinessLogic
             return foundPosts;
         }
 
-        public async Task<IEnumerable<TransactionLine>> GetRelatedTransactions(Offer item)
+        public async Task<IEnumerable<TransactionLine>> GetRelatedTransactions(Post item)
         {
             IEnumerable<TransactionLine> foundTransactions;
             foundTransactions = await _postService.GetRelatedTransactions(item);

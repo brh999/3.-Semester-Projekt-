@@ -62,7 +62,7 @@ namespace WebAppWithAuthentication.Controllers
                     {
                         if (result.IsSuccessStatusCode)
                         {
-                            var readTask = result.Content.ReadAsAsync<IList<Bid>>();
+                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
                             readTask.Wait();
                             bids = readTask.Result;
                             ViewData["bids"] = bids;
@@ -83,7 +83,7 @@ namespace WebAppWithAuthentication.Controllers
                     {
                         if (result.IsSuccessStatusCode)
                         {
-                            var readTask = result.Content.ReadAsAsync<IList<Offer>>();
+                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
                             readTask.Wait();
                             offers = readTask.Result;
                             ViewData["offers"] = offers;
@@ -91,7 +91,7 @@ namespace WebAppWithAuthentication.Controllers
                     }
                     else
                     {
-                        offers = Enumerable.Empty<Offer>();
+                        offers = Enumerable.Empty<Post>();
                         ModelState.AddModelError(string.Empty, "No offers found");
                     }
                     return View();
@@ -152,15 +152,15 @@ namespace WebAppWithAuthentication.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public IActionResult CreateOffer(Offer inPost)
+        public IActionResult CreateOffer(Post inPost)
         {
             //Quick fix, at this point offer dont need to have an exchange or any transaction.
             //But the API do not comprehend that these values could be null
             //therefore we create 'Empty' instances of objects.
             // TODO refractor this in a later sprint.
-            if (inPost.Currency.Exchanges == null)
+            if (inPost.Currency.Exchange == null)
             {
-                inPost.Currency.Exchanges = new Exchange();
+                inPost.Currency.Exchange = new Exchange();
             }
             if (inPost.Transactions == null)
             {
@@ -217,6 +217,13 @@ namespace WebAppWithAuthentication.Controllers
             return result;
         }
 
+        [Authorize]
+        public IActionResult BuyOffer(Offer offer, string userID)
+        {
+            ViewData["offer"] = offer;
+            ViewData["userID"] = userID;
+            return View();
+        }
 
         [Authorize]
         public IActionResult EditOffer(int id)
@@ -226,7 +233,7 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditOffer([FromBody] Bid inBid)
+        public IActionResult EditOffer([FromBody] Post inBid)
         {
             return Ok();
         }
@@ -245,7 +252,7 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult CreateBid([FromBody] Bid inPost)
+        public IActionResult CreateBid([FromBody] Post inPost)
         {
             return Ok();
         }
@@ -258,7 +265,7 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditBid([FromBody] Bid inBid)
+        public IActionResult EditBid([FromBody] Post inBid)
         {
             return Ok();
         }

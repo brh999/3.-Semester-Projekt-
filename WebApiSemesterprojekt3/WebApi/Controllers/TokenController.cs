@@ -7,7 +7,10 @@ namespace WebApi.Controllers
 {
     public class TokenController : ControllerBase
     {
+        private readonly int ttlInMinutes = 10;
+
         private readonly IConfiguration _configuration;
+
 
         // Fetches configuration from more sources
         public TokenController(IConfiguration inConfiguration)
@@ -47,19 +50,35 @@ namespace WebApi.Controllers
             JwtHeader header = new JwtHeader(credentials);
 
             // Time to live for newly created JWT Token
-            int ttlInMinutes = 1;
             DateTime expiry = DateTime.UtcNow.AddMinutes(ttlInMinutes);
             int ts = (int)(expiry - new DateTime(1970, 1, 1)).TotalSeconds;
 
-            var payload = new JwtPayload {
-                { "sub", "Desktop Authentication" },
-                { "Name", username },
-                { "email", "smithtest@tesst.com" },
-                { "granttype", grantType },
-                { "exp", ts },
-                { "iss", "http://localhost:5042" }, // Issuer - the party that generates the JWT
-                { "aud", "http://localhost:5042" }  // Audience - The address of the resource
-            };
+            JwtPayload payload = null;
+
+            if (username == _configuration["AllowDesktopApp:Username"])
+            {
+                payload = new JwtPayload {
+                    { "sub", "Desktop Authentication" },
+                    { "Name", username },
+                    { "email", "exchangetest@testmail.com" },
+                    { "granttype", grantType },
+                    { "exp", ts },
+                    { "iss", "http://localhost:5042" }, // Issuer - the party that generates the JWT
+                    { "aud", "http://localhost:5042" }  // Audience - The address of the resource
+                };
+            }
+            else if (username == _configuration["AllowWebApp:Username"])
+            {
+                payload = new JwtPayload {
+                    { "sub", "Web App Authentication" },
+                    { "Name", username },
+                    { "email", "exchangetest@testmail.com" },
+                    { "granttype", grantType },
+                    { "exp", ts },
+                    { "iss", "http://localhost:5042" }, // Issuer - the party that generates the JWT
+                    { "aud", "http://localhost:5042" }  // Audience - The address of the resource
+                };
+            }
 
             JwtSecurityToken secToken = new JwtSecurityToken(header, payload);
 

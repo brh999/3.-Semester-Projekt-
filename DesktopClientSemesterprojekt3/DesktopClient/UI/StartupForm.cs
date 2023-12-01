@@ -53,7 +53,7 @@ namespace DesktopClient.UI
 
         private async void UpdatePosts()
         {
-            List<Offer> data = (List<Offer>)await _postLogic.GetAllPosts();
+            List<Post> data = (List<Post>)await _postLogic.GetAllPosts();
             listPosts.Items.Clear();
             listPosts.DataSource = data;
         }
@@ -61,18 +61,18 @@ namespace DesktopClient.UI
         private void listPosts_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            Offer? offer = (Offer)listPosts.SelectedItem;
-            if (offer != null)
+            Post? post = (Post)listPosts.SelectedItem;
+            if (post != null)
             {
-                UpdateTransactions(offer);
+                UpdateTransactions(post);
 
             }
 
         }
 
-        private async void UpdateTransactions(Offer offer)
+        private async void UpdateTransactions(Post post)
         {
-            List<TransactionLine> data = (List<TransactionLine>)await _postLogic.GetRelatedTransactions(offer);
+            List<TransactionLine> data = (List<TransactionLine>)await _postLogic.GetRelatedTransactions(post);
             listTransactions.DataSource = data;
         }
         private async void UpdateAccounts()

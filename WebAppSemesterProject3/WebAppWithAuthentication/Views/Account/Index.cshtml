@@ -1,78 +1,77 @@
 ﻿@model Models.DTO.AccountDto
-@using Models;
+
+@{
+    ViewData["Title"] = "Index";
+}
 
 <h1>Index</h1>
 
-<!-- Display Discount -->
-<h2>Discount: @Model.Discount</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 
-<!-- Wallets Table -->
-<h2>Wallets</h2>
+<h2>Posts</h2>
 <table class="table">
     <thead>
         <tr>
-          
             <th>
-                <ul>
-                @foreach(var item in Model.Wallet)
-                {
-                    
-                 <li>
-                     @item.ToString();
-                 </li>
-                    
-                }
-                </ul>
+                ID
             </th>
-            <!-- Add more columns as needed for Wallet properties -->
+            <th>
+                Title
+            </th>
+            <!-- Add more columns as needed for the Offer object -->
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var walletItem in Model.Wallet)
+        @foreach (var post in Model.Posts)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => walletItem.Currency)
+                    @post.Id
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => walletItem.Amount)
+                    @post.
                 </td>
-                <!-- Add more cells as needed for Wallet properties -->
+                <!-- Add more cells as needed for the Offer object -->
                 <td>
-                    <!-- Any additional actions or links related to the wallet item -->
+                    @Html.ActionLink("Edit", "Edit", new { id = post.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = post.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = post.Id })
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<!-- Posts Table -->
-<h2>Posts</h2>
+<h2>Wallet</h2>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Posts.Count)
+                Currency
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Posts)
+                Amount
             </th>
-            <!-- Add more columns as needed for Post properties -->
+            <!-- Add more columns as needed for the CurrencyLine object -->
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var postItem in Model.Posts)
+        @foreach (var currencyLine in Model.Wallet)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => modelItem.Posts.Count)
+                    @currencyLine.Currency
                 </td>
-                
-                <!-- Add more cells as needed for Post properties -->
                 <td>
-                    <!-- Any additional actions or links related to the post item -->
+                    @currencyLine.Amount
+                </td>
+                <!-- Add more cells as needed for the CurrencyLine object -->
+                <td>
+                    @* Add action links for Wallet operations if needed *@
                 </td>
             </tr>
         }
