@@ -79,6 +79,7 @@ namespace WebApi.Controllers
         // POST api/<ValuesController>
         [HttpPost("{aspNetUserId}")]
         public IActionResult Post([FromBody]Post inOffer, string aspNetUserId)
+        { 
 
             //TODO: Error handling
             IActionResult result = StatusCode(500);
