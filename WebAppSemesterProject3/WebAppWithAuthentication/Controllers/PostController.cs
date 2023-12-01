@@ -58,43 +58,43 @@ namespace WebAppWithAuthentication.Controllers
                 var response = _connection.CallServiceGet();
                 response.Wait();
                 var result = response.Result;
-                    if (result != null)
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
                     {
-                        if (result.IsSuccessStatusCode)
-                        {
-                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                            readTask.Wait();
-                            bids = readTask.Result;
-                            ViewData["bids"] = bids;
-                        }
+                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
+                        readTask.Wait();
+                        bids = readTask.Result;
+                        ViewData["bids"] = bids;
                     }
-                    else
-                    {
-                        bids = Enumerable.Empty<Post>();
-                        ModelState.AddModelError(string.Empty, "No bids found");
-                    }
-                    // Get offers:
-                    _connection.UseUrl = _connection.BaseUrl + "offer";
-                    response = _connection.CallServiceGet();
-                    response.Wait();
+                }
+                else
+                {
+                    bids = Enumerable.Empty<Post>();
+                    ModelState.AddModelError(string.Empty, "No bids found");
+                }
+                // Get offers:
+                _connection.UseUrl = _connection.BaseUrl + "offer";
+                response = _connection.CallServiceGet();
+                response.Wait();
 
-                    result = response.Result;
-                    if (result != null)
+                result = response.Result;
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
                     {
-                        if (result.IsSuccessStatusCode)
-                        {
-                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                            readTask.Wait();
-                            offers = readTask.Result;
-                            ViewData["offers"] = offers;
-                        }
+                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
+                        readTask.Wait();
+                        offers = readTask.Result;
+                        ViewData["offers"] = offers;
                     }
-                    else
-                    {
-                        offers = Enumerable.Empty<Post>();
-                        ModelState.AddModelError(string.Empty, "No offers found");
-                    }
-                    return View();
+                }
+                else
+                {
+                    offers = Enumerable.Empty<Post>();
+                    ModelState.AddModelError(string.Empty, "No offers found");
+                }
+                return View();
             }
             catch
             {
@@ -132,8 +132,8 @@ namespace WebAppWithAuthentication.Controllers
                 result = View();
 
             }
-            
-            
+
+
 
 
             if (result == null)
@@ -206,7 +206,7 @@ namespace WebAppWithAuthentication.Controllers
 
 
                 ViewData["type"] = "offer";
-                result = View("PostState",inPost);
+                result = View("PostState", inPost);
 
             }
             else
@@ -225,6 +225,13 @@ namespace WebAppWithAuthentication.Controllers
             ViewData["offerCurrency"] = offerCurrency;
             ViewData["userID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, string userID)
+        {
+            return Redirect(_configuration.GetConnectionString("BaseURL"));
         }
 
         [Authorize]

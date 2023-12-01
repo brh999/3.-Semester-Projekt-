@@ -9,8 +9,10 @@
 }
 
 
+
+
 <h1>- Confirm buy order -</h1>
 &nbsp
 <div> Buy @offerAmount @offerCurrency for price: @offerPrice </div>
 &nbsp
-<div>@userID</div>
+<div>@Html.ActionLink("Confirm Order", "ConfirmBuyOffer", "Post", new {offerAmount = offerAmount, offerPrice = offerPrice, offerCurrency = offerCurrency, userID = userID}, null)</div>
