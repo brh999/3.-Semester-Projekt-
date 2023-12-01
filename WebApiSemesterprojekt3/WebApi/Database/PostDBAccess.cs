@@ -261,6 +261,7 @@ namespace WebApi.Database
                 return res;
 
             }
+        }
 
         public IEnumerable<Post?> GetOfferPostsById(string aspNetUser)
         {
@@ -305,6 +306,7 @@ namespace WebApi.Database
         }
     }
 }
+
 
 
 

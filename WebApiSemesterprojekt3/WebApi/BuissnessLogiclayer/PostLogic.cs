@@ -1,5 +1,5 @@
 ﻿using Models;
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Security.Cryptography;
 using WebApi.Database;
@@ -82,6 +82,7 @@ namespace WebApi.BuissnessLogiclayer
             bool res = false;
             res = _dataAccess.DeleteOffer(id);
             return res;
+        }
 
         public ActionResult<List<Post>>? GetAllOffersById(string aspNetUser)
         {
@@ -94,4 +95,5 @@ namespace WebApi.BuissnessLogiclayer
         }
     }
 }
+
 

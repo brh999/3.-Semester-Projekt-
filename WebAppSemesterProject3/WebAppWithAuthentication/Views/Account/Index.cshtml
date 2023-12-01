@@ -1,5 +1,5 @@
 ﻿@model Models.DTO.AccountDto
-
+@using Models
 @{
     ViewData["Title"] = "Index";
 }
@@ -15,12 +15,14 @@
     <thead>
         <tr>
             <th>
-                ID
+                Currency
             </th>
             <th>
-                Title
+                Price
             </th>
-            <!-- Add more columns as needed for the Offer object -->
+            <th>
+                Amount
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -28,11 +30,16 @@
         @foreach (var post in Model.Posts)
         {
             <tr>
-                <td>
-                    @post.ToString
-                </td>
                
-                <!-- Add more cells as needed for the Offer object -->
+                <td>
+                    @post.Currency
+                </td>
+                <td>
+                    @post.Price
+                </td>
+                <td>
+                    @post.Amount
+                </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = post.Id }) |
                     @Html.ActionLink("Details", "Details", new { id = post.Id }) |
