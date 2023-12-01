@@ -25,6 +25,7 @@ namespace WebApi.Database
 
         public PostDBAccess()
         {
+
         }
 
 
@@ -48,6 +49,7 @@ namespace WebApi.Database
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
+                            Id = (int)reader["id"],
                         };
                         foundBids.Add(bids);
                     }
