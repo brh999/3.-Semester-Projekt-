@@ -218,7 +218,7 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public IActionResult BuyOffer(Offer offer, string userID)
+        public IActionResult BuyOffer(Post offer, string userID)
         {
             ViewData["offer"] = offer;
             ViewData["userID"] = userID;

@@ -15,6 +15,38 @@ namespace WebApi.Database
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
+        public Currency? GetCurrencyById(int currencyID)
+        {
+            Currency? res = null;
+
+            string queryString = "select * from Currencies where id = @currencyID";
+
+
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
+            {
+
+                selectCommand.Parameters.AddWithValue("@currencyID", currencyID);
+
+                conn.Open();
+                using (SqlDataReader reader = selectCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                         res = new Currency()
+                        {
+                            Type = (string)reader["currencytype"],
+                            Exchange = new Exchange(),
+                        };
+
+                    }
+
+                }
+            }
+            return res;
+        }
+
         public int GetCurrencyID(Currency item)
         {
 
@@ -50,15 +82,15 @@ namespace WebApi.Database
             using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
             {
                 conn.Open();
-                
+
 
                 using (SqlDataReader reader = selectCommand.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         Currency currency = new Currency()
-                        { 
-                            
+                        {
+
                             Type = (string)reader["currencytype"],
                             Exchange = GetExchangesForCurrency((string)reader["currencytype"])
                         };
@@ -70,9 +102,10 @@ namespace WebApi.Database
             return currencies;
         }
 
+
         private Exchange GetExchangesForCurrency(string currencyType)
         {
-            Exchange res = null;   
+            Exchange res = null;
 
             string queryString = " SELECT * FROM Exchanges INNER JOIN Currencies ON Exchanges.ID = Currencies.Exchange_id_fk WHERE currencytype = @type";
 
@@ -89,17 +122,17 @@ namespace WebApi.Database
                     {
                         Exchange exchange = new Exchange()
                         {
-                           Value = (double)reader["value"],
-                           Date = (DateTime)reader["date"],
-                            
+                            Value = (double)reader["value"],
+                            Date = (DateTime)reader["date"],
+
                         };
-                       res = exchange;
+                        res = exchange;
                     }
                 }
                 return res;
             }
 
-            
+
         }
 
     }

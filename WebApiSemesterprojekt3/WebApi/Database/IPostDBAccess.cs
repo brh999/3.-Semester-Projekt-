@@ -15,5 +15,8 @@ namespace WebApi.Database
         void InsertBid(Post bid);
 
         bool DeleteOffer(int id);
+
+        IEnumerable<Post?> GetOfferPostsById(string aspNetuser);
+
     }
 }
