@@ -27,6 +27,16 @@ namespace DesktopClient.Service
             }
             _postService = new ServiceConnection(_serviceUseUrl);
         }
+
+        public async void DeletePost(Post item)
+        {
+            _postService.UseUrl = _postService.BaseUrl + $"offer/{item.Id}";
+
+            var serviceResponse = await _postService.CallServiceDelete();
+
+
+        }
+
         public async Task<IEnumerable<Post>?>? GetPosts()
         {
             List<Post>? res = null;
