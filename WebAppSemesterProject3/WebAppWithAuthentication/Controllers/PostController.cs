@@ -218,10 +218,12 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public IActionResult BuyOffer(Offer offer, string userID)
+        public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency)
         {
-            ViewData["offer"] = offer;
-            ViewData["userID"] = userID;
+            ViewData["offerAmount"] = offerAmount;
+            ViewData["offerPrice"] = offerPrice;
+            ViewData["offerCurrency"] = offerCurrency;
+            ViewData["userID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View();
         }
 

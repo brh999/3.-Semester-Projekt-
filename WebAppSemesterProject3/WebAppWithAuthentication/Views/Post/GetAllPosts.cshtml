@@ -40,7 +40,7 @@
     <tbody>
         @if (ViewData["bids"] != null)
         {
-            @foreach (var item in ViewData["bids"] as List<Bid>)
+            @foreach (var item in ViewData["bids"] as List<Post>)
             {
                 <tr>
                     <td>
@@ -92,10 +92,7 @@
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Buy", "BuyOffer", "Post", new {offer = item, userID = User.Identity}, null)
+                        @Html.ActionLink("Buy", "BuyOffer", "Post", new {offerAmount = item.Amount, offerPrice = item.Price, offerCurrency = item.Currency.Type}, null)
                     </td>
                 </tr>
             }

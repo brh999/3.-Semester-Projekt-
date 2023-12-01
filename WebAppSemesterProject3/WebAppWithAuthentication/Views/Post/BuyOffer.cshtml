@@ -2,12 +2,15 @@
 @using Models
 
 @{
-    Post offer = ViewData["offer"] as Post;
+    double offerAmount = (double)ViewData["offerAmount"];
+    double offerPrice = (double)ViewData["offerPrice"];
+    string offerCurrency = (string)ViewData["offerCurrency"];
+    string userID = (string)ViewData["userID"];
 }
 
 
 <h1>- Confirm buy order -</h1>
 &nbsp
-<div> Buy @offer.Amount  @offer.Currency for price: @offer.Price </div>
+<div> Buy @offerAmount @offerCurrency for price: @offerPrice </div>
 &nbsp
-<div></div>
+<div>@userID</div>
