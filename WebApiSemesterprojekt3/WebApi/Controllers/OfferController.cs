@@ -69,7 +69,7 @@ namespace WebApi.Controllers
         // POST api/<ValuesController>
         [HttpPost("{aspNetUserId}")]
         public IActionResult Post([FromBody]Post inOffer, string aspNetUserId)
-
+        { 
             //TODO: Error handling
             IActionResult result = StatusCode(500);
             Post? isOfferValid = null;
@@ -89,7 +89,6 @@ namespace WebApi.Controllers
             }
 
             return result;
-
         }
 
         // PUT api/<ValuesController>/5
