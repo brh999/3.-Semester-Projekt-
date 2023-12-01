@@ -34,6 +34,10 @@
         public int Id { get { return _id; } set { _id = value; } }
         public string Type { get { return _type; } set { _type = value; } }
 
-
+        public override string? ToString()
+        {
+            string res = $"{_type}: {_amount} {_currency.Type} for {_price} USD each.";
+            return res;
+        }
     }
 }

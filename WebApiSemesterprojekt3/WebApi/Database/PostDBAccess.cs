@@ -50,6 +50,7 @@ namespace WebApi.Database
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
                             Id = (int)reader["id"],
+                            Type = (string)reader["type"],
                         };
                         foundBids.Add(bids);
                     }
@@ -84,6 +85,7 @@ namespace WebApi.Database
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
+                            Type = (string)reader["type"],
                         };
                         foundOffers.Add(offer);
                     }
@@ -143,7 +145,7 @@ namespace WebApi.Database
         /// Insert the Offer into the database
         /// </summary>
         /// <param name="bid"></param>
-        public void InsertOffer(Post offer,string aspNetUserId)
+        public void InsertOffer(Post offer, string aspNetUserId)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
             int res = 0;
@@ -164,8 +166,7 @@ namespace WebApi.Database
                         insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
                         insertCommand.Parameters.AddWithValue("type", "Offer");
                         //TODO: actually add an account
-                        string tempId = "f46e867b-31ae-4004-8613-f5d64886393d";
-                        insertCommand.Parameters.AddWithValue("aspNetId", tempId);
+                        insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
                         insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
                         insertCommand.ExecuteScalar();
                     }
@@ -190,11 +191,13 @@ namespace WebApi.Database
                     while (reader.Read())
                     {
                         Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+
                         Post offer = new Post
                         {
                             Id = (int)reader["id"],
                             Amount = (double)reader["amount"],
                             Price = (double)reader["price"],
+                            Type = (string)reader["type"],
                             Currency = generatedCurrency,
                         };
                         foundPosts.Add(offer);
@@ -206,6 +209,12 @@ namespace WebApi.Database
 
         public IEnumerable<TransactionLine> GetTransactionLines(int id)
         {
+            if (id < 1)
+            {
+                throw new ArgumentException("id cannot be less than 1");
+            }
+            
+
             List<TransactionLine> foundLines = new List<TransactionLine>();
             string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
                 " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @id";
@@ -235,6 +244,27 @@ namespace WebApi.Database
                     }
                     return foundLines;
                 }
+            }
+        }
+
+        public bool DeleteOffer(int id)
+        {
+            bool res = false;
+            int changes = 0;
+            string queryString = "DELETE FROM Posts WHERE id=@id";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand deleteCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                deleteCommand.Parameters.AddWithValue("id", id);
+                changes = deleteCommand.ExecuteNonQuery();
+                if (changes > 0)
+                {
+                    res = true;
+                }
+                return res;
+
             }
         }
     }

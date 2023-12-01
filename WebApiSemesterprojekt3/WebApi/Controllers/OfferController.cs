@@ -25,16 +25,26 @@ namespace WebApi.Controllers
         {
             ActionResult<IEnumerable<TransactionLine>>? foundLines = null;
             List<TransactionLine> res = null;
-            res = _offerLogic.GetRelatedTransactions(id);
 
-            if (res != null)
+            try
             {
-                foundLines = Ok(res);
+                res = _offerLogic.GetRelatedTransactions(id);
+                if (res != null)
+                {
+                    foundLines = Ok(res);
+                }
+                else
+                {
+                    foundLines = NotFound();
+                }
             }
-            else
+            catch (ArgumentException ex)
             {
-                foundLines = NotFound();
+                foundLines = StatusCode(id, ex.Message);
             }
+            
+
+            
             return foundLines;
         }
 
@@ -42,19 +52,20 @@ namespace WebApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Post>> GetAll()
         {
-            ActionResult<IEnumerable<Post>>? foundOffers = null;
-            List<Post> res = null;
-            res = _offerLogic.GetAllOffers();
 
-            if (res != null)
+            IEnumerable<Post> res = new List<Post>();
+            res = _offerLogic.GetAllBids();
+
+            if (res != null && res.Count() > 0)
             {
-                foundOffers = Ok(res);
+                return Ok(res);
             }
-            else
+            else if (res != null && res.Count() <= 0)
             {
-                foundOffers = NotFound();
+                return StatusCode(204); // Success with no content
             }
-            return foundOffers;
+
+            return StatusCode(500);
 
         }
 
@@ -68,8 +79,9 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost("{aspNetUserId}")]
-        public IActionResult Post([FromBody]Post inOffer, string aspNetUserId)
-        { 
+        public IActionResult Post([FromBody] Post inOffer, string aspNetUserId)
+        {
+
             //TODO: Error handling
             IActionResult result = StatusCode(500);
             Post? isOfferValid = null;
@@ -99,8 +111,20 @@ namespace WebApi.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            IActionResult result = StatusCode(500);
+            try
+            {
+                if (_offerLogic.DeleteOffer(id))
+                {
+                    result = Ok();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return result;
         }
 
 

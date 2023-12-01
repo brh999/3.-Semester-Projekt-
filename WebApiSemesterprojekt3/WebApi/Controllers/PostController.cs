@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using WebApi.BuissnessLogiclayer;
 
@@ -19,13 +18,11 @@ namespace WebApi.Controllers
 
         // GET: api/<PostController>
         [HttpGet]
-
-        public ActionResult<List<Post>> getAllPosts()
+        public ActionResult<IEnumerable<Post>> GetAllPosts()
         {
-            ActionResult<List<Post>>? foundReturn;
-
-            foundReturn = _postLogic.GetAllPosts();
-            return foundReturn;
+            IEnumerable<Post> foundResult = new List<Post>();
+            foundResult = _postLogic.GetAllPosts();
+            return Ok(foundResult);
         }
     }
 }
