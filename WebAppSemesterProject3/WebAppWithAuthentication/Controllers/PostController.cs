@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Models;
 
 using Models.DTO;
@@ -218,19 +219,28 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency)
+        public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             ViewData["offerAmount"] = offerAmount;
             ViewData["offerPrice"] = offerPrice;
             ViewData["offerCurrency"] = offerCurrency;
-            ViewData["userID"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewData["offerID"] = offerID;
             return View();
         }
 
         [Authorize]
-        [HttpPost]
-        public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, string userID)
+        public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
+            //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
+           
+            string userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _connection.UseUrl = _connection.BaseUrl + "offer/" + userID;
+            Currency inCurrency = new Currency(offerCurrency);
+            Post inPost = new Post(offerAmount, offerPrice, inCurrency, offerID, "offer");
+            var json = JsonConvert.SerializeObject(inPost);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var serviceResponse = _connection.CallServicePost(content);
+            serviceResponse.Wait();
             return Redirect(_configuration.GetConnectionString("BaseURL"));
         }
 

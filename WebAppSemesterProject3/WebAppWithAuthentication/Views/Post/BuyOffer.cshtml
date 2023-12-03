@@ -5,7 +5,7 @@
     double offerAmount = (double)ViewData["offerAmount"];
     double offerPrice = (double)ViewData["offerPrice"];
     string offerCurrency = (string)ViewData["offerCurrency"];
-    string userID = (string)ViewData["userID"];
+    int offerID = (int)ViewData["offerID"];
 }
 
 
@@ -15,4 +15,4 @@
 &nbsp
 <div> Buy @offerAmount @offerCurrency for price: @offerPrice </div>
 &nbsp
-<div>@Html.ActionLink("Confirm Order", "ConfirmBuyOffer", "Post", new {offerAmount = offerAmount, offerPrice = offerPrice, offerCurrency = offerCurrency, userID = userID}, null)</div>
+<div>@Html.ActionLink("Confirm Order", "ConfirmBuyOffer", "Post", new {offerAmount = offerAmount, offerPrice = offerPrice, offerCurrency = offerCurrency, offerID = offerID}, null)</div>
