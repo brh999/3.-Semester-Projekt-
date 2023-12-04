@@ -1,4 +1,7 @@
 ﻿using Models;
+using Microsoft.AspNetCore.Mvc;
+using Models;
+using System.Security.Cryptography;
 using WebApi.Database;
 
 namespace WebApi.BuissnessLogiclayer
@@ -74,12 +77,24 @@ namespace WebApi.BuissnessLogiclayer
             return (List<TransactionLine>)foundLines;
         }
 
+
         public bool DeleteOffer(int id)
         {
             bool res = false;
             res = _dataAccess.DeleteOffer(id);
             return res;
         }
+
+        public ActionResult<List<Post>>? GetAllOffersById(string aspNetUser)
+        {
+            IEnumerable<Post?> foundPosts;
+
+            foundPosts = _dataAccess.GetOfferPostsById(aspNetUser);
+
+            return (List<Post>)foundPosts;
+
+        }
     }
 }
+
 

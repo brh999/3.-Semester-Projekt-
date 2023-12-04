@@ -220,6 +220,7 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
+
         {
             ViewData["offerAmount"] = offerAmount;
             ViewData["offerPrice"] = offerPrice;
