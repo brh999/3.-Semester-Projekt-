@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Models;
 
 using Models.DTO;
@@ -58,43 +59,43 @@ namespace WebAppWithAuthentication.Controllers
                 var response = _connection.CallServiceGet();
                 response.Wait();
                 var result = response.Result;
-                    if (result != null)
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
                     {
-                        if (result.IsSuccessStatusCode)
-                        {
-                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                            readTask.Wait();
-                            bids = readTask.Result;
-                            ViewData["bids"] = bids;
-                        }
+                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
+                        readTask.Wait();
+                        bids = readTask.Result;
+                        ViewData["bids"] = bids;
                     }
-                    else
-                    {
-                        bids = Enumerable.Empty<Post>();
-                        ModelState.AddModelError(string.Empty, "No bids found");
-                    }
-                    // Get offers:
-                    _connection.UseUrl = _connection.BaseUrl + "offer";
-                    response = _connection.CallServiceGet();
-                    response.Wait();
+                }
+                else
+                {
+                    bids = Enumerable.Empty<Post>();
+                    ModelState.AddModelError(string.Empty, "No bids found");
+                }
+                // Get offers:
+                _connection.UseUrl = _connection.BaseUrl + "offer";
+                response = _connection.CallServiceGet();
+                response.Wait();
 
-                    result = response.Result;
-                    if (result != null)
+                result = response.Result;
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
                     {
-                        if (result.IsSuccessStatusCode)
-                        {
-                            var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                            readTask.Wait();
-                            offers = readTask.Result;
-                            ViewData["offers"] = offers;
-                        }
+                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
+                        readTask.Wait();
+                        offers = readTask.Result;
+                        ViewData["offers"] = offers;
                     }
-                    else
-                    {
-                        offers = Enumerable.Empty<Post>();
-                        ModelState.AddModelError(string.Empty, "No offers found");
-                    }
-                    return View();
+                }
+                else
+                {
+                    offers = Enumerable.Empty<Post>();
+                    ModelState.AddModelError(string.Empty, "No offers found");
+                }
+                return View();
             }
             catch
             {
@@ -132,8 +133,8 @@ namespace WebAppWithAuthentication.Controllers
                 result = View();
 
             }
-            
-            
+
+
 
 
             if (result == null)
@@ -206,7 +207,7 @@ namespace WebAppWithAuthentication.Controllers
 
 
                 ViewData["type"] = "offer";
-                result = View("PostState",inPost);
+                result = View("PostState", inPost);
 
             }
             else
@@ -218,11 +219,29 @@ namespace WebAppWithAuthentication.Controllers
         }
 
         [Authorize]
-        public IActionResult BuyOffer(Offer offer, string userID)
+        public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
-            ViewData["offer"] = offer;
-            ViewData["userID"] = userID;
+            ViewData["offerAmount"] = offerAmount;
+            ViewData["offerPrice"] = offerPrice;
+            ViewData["offerCurrency"] = offerCurrency;
+            ViewData["offerID"] = offerID;
             return View();
+        }
+
+        [Authorize]
+        public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
+        {
+            //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
+           
+            string userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _connection.UseUrl = _connection.BaseUrl + "offer/" + userID;
+            Currency inCurrency = new Currency(offerCurrency);
+            Post inPost = new Post(offerAmount, offerPrice, inCurrency, offerID, "offer");
+            var json = JsonConvert.SerializeObject(inPost);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var serviceResponse = _connection.CallServicePost(content);
+            serviceResponse.Wait();
+            return Redirect(_configuration.GetConnectionString("BaseURL"));
         }
 
         [Authorize]
