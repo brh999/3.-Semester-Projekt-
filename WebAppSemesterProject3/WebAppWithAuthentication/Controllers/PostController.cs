@@ -167,6 +167,7 @@ namespace WebAppWithAuthentication.Controllers
             {
                 inPost.Transactions = new List<TransactionLine>();
             }
+            inPost.Type = "offer";
 
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             ActionResult result = StatusCode(500);
@@ -204,10 +205,14 @@ namespace WebAppWithAuthentication.Controllers
                     //502 Bad Gateway
                     result = StatusCode(502);
                 }
+                else
+                {
+                    ViewData["type"] = "offer";
+                    result = View("PostState", inPost);
+                }
 
 
-                ViewData["type"] = "offer";
-                result = View("PostState", inPost);
+                
 
             }
             else
