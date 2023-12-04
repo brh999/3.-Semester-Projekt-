@@ -17,7 +17,10 @@ namespace WebApi.BuissnessLogiclayer
 
         bool DeleteOffer(int id);
 
+        bool BuyOffer(Post inPost, string aspNetUserId);
+
         ActionResult<List<Post>>? GetAllOffersById(string aspNetUser);
+
 
     }
 }

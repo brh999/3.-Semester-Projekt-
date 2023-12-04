@@ -240,7 +240,7 @@ namespace WebAppWithAuthentication.Controllers
             //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
            
             string userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _connection.UseUrl = _connection.BaseUrl + "offer/" + userID;
+            _connection.UseUrl = _connection.BaseUrl + "offer/" + "buyoffer/" + userID;
             Currency inCurrency = new Currency(offerCurrency);
             Post inPost = new Post(offerAmount, offerPrice, inCurrency, offerID, "offer");
             var json = JsonConvert.SerializeObject(inPost);

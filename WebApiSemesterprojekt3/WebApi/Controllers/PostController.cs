@@ -32,5 +32,6 @@ namespace WebApi.Controllers
             foundReturn = _postLogic.GetAllOffersById(aspNetUser);
             return foundReturn;
         }
+
     }
 }

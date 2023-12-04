@@ -1,6 +1,4 @@
 ﻿using Models;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -215,7 +213,7 @@ namespace WebApi.Database
             {
                 throw new ArgumentException("id cannot be less than 1");
             }
-            
+
 
             List<TransactionLine> foundLines = new List<TransactionLine>();
             string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
@@ -271,6 +269,69 @@ namespace WebApi.Database
             }
         }
 
+
+        public bool BuyOffer(Post inPost, string aspNetUserId)
+        {
+            bool res = false;
+            AccountDBAccess accDB = new(_configuration);
+            Account seller = GetAssociatedAccount(inPost.Id);
+            Account buyer = accDB.GetAccountById(aspNetUserId);
+            bool isComplete = CompletePost(inPost, buyer);
+            if(seller != null && buyer != null)
+            {
+                
+            }
+            if (isComplete)
+            {
+                res = true;
+            }
+            return res;
+        }
+
+        public Account GetAssociatedAccount(int postId)
+        {
+            Account res = null;
+            string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = new(queryString, con))
+            {
+                con.Open();
+
+                cmd.Parameters.AddWithValue("@POSTID", postId);
+
+                var accountId = cmd.ExecuteScalar();
+
+                AccountDBAccess accDB = new(_configuration);
+
+                res = accDB.GetAccountById((string)accountId);
+            }
+
+            return res;
+        }
+
+        private bool CompletePost(Post inPost, Account buyer)
+        {
+            bool res = false;
+            int id = inPost.Id;
+            string query = "update Posts set isComplete = 1, amount = 0, account_id_fk = @buyerID where id = @id";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = query;
+                    cmd.Parameters.AddWithValue("id", id);
+                    cmd.Parameters.AddWithValue("buyerID", buyer.Id);
+                    int row = cmd.ExecuteNonQuery();
+                    if(row != null)
+                    {
+                        res = true;
+                    }
+                }
+            }
+            return res;
+        }
+
         public IEnumerable<Post?> GetOfferPostsById(string aspNetUser)
         {
             CurrencyDBAccess cu = new CurrencyDBAccess(_configuration);
@@ -312,6 +373,7 @@ namespace WebApi.Database
                 return foundPosts;
             }
         }
+
     }
 }
 

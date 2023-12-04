@@ -74,7 +74,7 @@ namespace WebApi.BuissnessLogiclayer
 
         public List<TransactionLine> GetRelatedTransactions(int id)
         {
-            
+
             IEnumerable<TransactionLine>? foundLines;
 
             foundLines = _dataAccess.GetTransactionLines(id);
@@ -90,6 +90,12 @@ namespace WebApi.BuissnessLogiclayer
             return res;
         }
 
+
+        public bool BuyOffer(Post inPost, string aspNetUserId)
+        {
+            return _dataAccess.BuyOffer(inPost, aspNetUserId);
+
+        }
         public ActionResult<List<Post>>? GetAllOffersById(string aspNetUser)
         {
             IEnumerable<Post?> foundPosts;
@@ -98,8 +104,10 @@ namespace WebApi.BuissnessLogiclayer
 
             return (List<Post>)foundPosts;
 
+
         }
     }
 }
+
 
 
