@@ -14,5 +14,7 @@ namespace WebApi.BuissnessLogiclayer
         Post InsertBid(Post bid);
         List<TransactionLine> GetRelatedTransactions(int id);
         bool DeleteOffer(int id);
+
+        bool BuyOffer(Post inPost);
     }
 }

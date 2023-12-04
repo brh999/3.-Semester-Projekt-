@@ -66,7 +66,7 @@ namespace WebApi.BuissnessLogiclayer
 
         public List<TransactionLine> GetRelatedTransactions(int id)
         {
-            
+
             IEnumerable<TransactionLine>? foundLines;
 
             foundLines = _dataAccess.GetTransactionLines(id);
@@ -79,6 +79,11 @@ namespace WebApi.BuissnessLogiclayer
             bool res = false;
             res = _dataAccess.DeleteOffer(id);
             return res;
+        }
+
+        public bool BuyOffer(Post inPost)
+        {
+            return _dataAccess.BuyOffer(inPost);
         }
     }
 }

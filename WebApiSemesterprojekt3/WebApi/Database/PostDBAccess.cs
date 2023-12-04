@@ -1,6 +1,4 @@
 ﻿using Models;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -213,7 +211,7 @@ namespace WebApi.Database
             {
                 throw new ArgumentException("id cannot be less than 1");
             }
-            
+
 
             List<TransactionLine> foundLines = new List<TransactionLine>();
             string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
@@ -267,6 +265,30 @@ namespace WebApi.Database
 
             }
         }
+
+        public bool BuyOffer(Post inPost)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Account GetAssociatedAccount(int postId)
+        {
+            Account res = null;
+            string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
+            SqlConnection con = new SqlConnection(_connectionString);
+            SqlCommand cmd = new(queryString, con);
+
+            cmd.Parameters.AddWithValue("@POSTID", postId);
+
+            var accountId = cmd.ExecuteScalar();
+
+            AccountDBAccess accDB = new(_configuration);
+
+            res = accDB.GetAccountById((string)accountId);
+
+            return res;
+        }
+
     }
 }
 
