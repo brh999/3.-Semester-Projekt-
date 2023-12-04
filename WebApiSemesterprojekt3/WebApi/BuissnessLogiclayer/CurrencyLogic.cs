@@ -24,5 +24,11 @@ namespace WebApi.BuissnessLogiclayer
         {
             return (List<Currency>)_dataAccess.GetCurrencyList();
         }
+
+        public Currency GetCurrencyById(int id)
+        {
+            return _dataAccess.GetCurrencyById(id);
+        }
+
     }
 }
