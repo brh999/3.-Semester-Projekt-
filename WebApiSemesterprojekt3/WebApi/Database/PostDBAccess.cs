@@ -166,8 +166,7 @@ namespace WebApi.Database
                         insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
                         insertCommand.Parameters.AddWithValue("type", "Offer");
                         //TODO: actually add an account
-                        string tempId = "f46e867b-31ae-4004-8613-f5d64886393d";
-                        insertCommand.Parameters.AddWithValue("aspNetId", tempId);
+                        insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
                         insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
                         insertCommand.ExecuteScalar();
                     }
@@ -192,6 +191,7 @@ namespace WebApi.Database
                     while (reader.Read())
                     {
                         Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+
                         Post offer = new Post
                         {
                             Id = (int)reader["id"],
@@ -209,6 +209,12 @@ namespace WebApi.Database
 
         public IEnumerable<TransactionLine> GetTransactionLines(int id)
         {
+            if (id < 1)
+            {
+                throw new ArgumentException("id cannot be less than 1");
+            }
+            
+
             List<TransactionLine> foundLines = new List<TransactionLine>();
             string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
                 " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @id";
