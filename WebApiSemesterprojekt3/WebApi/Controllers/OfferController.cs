@@ -54,7 +54,7 @@ namespace WebApi.Controllers
         {
 
             IEnumerable<Post> res = new List<Post>();
-            res = _offerLogic.GetAllBids();
+            res = _offerLogic.GetAllOffers();
 
             if (res != null && res.Count() > 0)
             {

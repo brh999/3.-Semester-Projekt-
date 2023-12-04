@@ -26,6 +26,7 @@ namespace WebApi.Database
 
         public Account GetAccountById(string AspNetId)
         {
+            PostDBAccess pa = new PostDBAccess(_configuration);
             Account account = null;
 
             string queryStringAccount = "SELECT Accounts.id,email, username, discount FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.Id WHERE Accounts.AspNetUsers_id_fk = @id";
@@ -75,36 +76,10 @@ namespace WebApi.Database
                             CurrencyLine line = new CurrencyLine(amount, currency);
                             wallet.Add(line);
 
-
-                            //    //sets the values for an accounts posts
-
-                            //    double offerAmount = Convert.ToDouble(reader[7]);
-                            //    double offerPrice = (double)reader["price"];
-                            //    //bool offerIsComplete = (bool)reader["isComplete"];
-
-                            //    Currency offerCurr = new Currency("USD");
-
-                            //    //TestTransaction
-                            //    TransactionLine tl = new TransactionLine();
-
-
-
-                            //    Post offerPost = new Offer
-                            //    {
-                            //        Amount = offerAmount,
-                            //        Price = offerPrice,
-                            //        Currency = offerCurr,
-                            //        Transactions = new List<TransactionLine>()  
-
-
-                            //    };
-
-                            //    postList.Add(offerPost);
-
                         }
                     }
-                    PostDBAccess pa = new PostDBAccess(_configuration);
-                    List<Post> po = (List<Post>)pa.GetOfferPosts();
+                    
+                    List<Post> po = (List<Post>)pa.GetOfferPostsById(AspNetId);
 
                     account = new Account(accountId, discount, username, email, wallet, po);
 
