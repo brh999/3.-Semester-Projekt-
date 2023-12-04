@@ -119,7 +119,7 @@ namespace WebAppWithAuthentication.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountDto? account = null;
 
-            //This should find  which account that made the request and not simple account 'c811de3f-ab3c-4445-8d70-612e68d61c93'.
+            
             AccountLogic accountLogic = new(_connection);
             Task<AccountDto?> response = accountLogic.GetAccountById(userId);
             response.Wait();

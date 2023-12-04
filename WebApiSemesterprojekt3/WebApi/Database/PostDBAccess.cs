@@ -145,10 +145,10 @@ namespace WebApi.Database
         /// Insert the Offer into the database
         /// </summary>
         /// <param name="bid"></param>
-        public void InsertOffer(Post offer, string aspNetUserId)
+        public bool InsertOffer(Post offer, string aspNetUserId)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
-            int res = 0;
+            int changes = 0;
             string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, Currencies_id_fk)" +
               "OUTPUT INSERTED.ID VALUES(@amount, @price, @isComplete, @type, (select id from accounts where aspnetusers_id_fk = @aspNetId), (select id from currencies where currencytype = @cType))";
 
@@ -165,15 +165,16 @@ namespace WebApi.Database
                         insertCommand.Parameters.AddWithValue("price", offer.Price);
                         insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
                         insertCommand.Parameters.AddWithValue("type", "Offer");
-                        //TODO: actually add an account
+                        
                         insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
                         insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
-                        insertCommand.ExecuteScalar();
+                        changes = insertCommand.ExecuteNonQuery();
                     }
 
                 }
 
             }
+            return changes > 0;
         }
 
         public IEnumerable<Post> GetAllPosts()

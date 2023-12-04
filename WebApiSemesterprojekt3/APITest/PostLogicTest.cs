@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Models;
 using System;
 using System.Data.SqlClient;
+using System.Security.Principal;
 using WebApi.BuissnessLogiclayer;
 using Xunit.Abstractions;
 
@@ -46,7 +47,7 @@ namespace WebApi.Database.Tests
             int expectedAmount = 0;
             string query = "SELECT COUNT(*) AS 'RowCount' FROM posts";
             //Act
-            posts = _postLogic.GetAllPosts();
+            posts = (List<Post>)_postLogic.GetAllPosts();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -120,10 +121,16 @@ namespace WebApi.Database.Tests
         public void InsertOfferWithInvalidIdShouldFail()
         {
             //Assign
-            string userId = "InvalidId-123-123-123";
+            Currency currency = new("USD");
+            Post offer = new(100, 10, currency, -1, "Offer");
+            Post? result;
+            string userId = "Invalid-id-123-123-123";
             //Act
+            result = _postLogic.InsertOffer(offer, userId);
             //Assert
-            InsertOfferWithUserId(userId);
+
+            Assert.Null(result);
+            
         }
 
         [Fact]
@@ -168,7 +175,7 @@ namespace WebApi.Database.Tests
             //Act
             postId1 += 1;
             //Assert
-            Assert.Throws<OverflowException>(() => GetRelatedTransactionsTest(postId1));
+            Assert.Throws<ArgumentException>(() => GetRelatedTransactionsTest(postId1));
         }
 
         
