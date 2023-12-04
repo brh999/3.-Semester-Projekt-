@@ -10,9 +10,73 @@
 </script>
 
 <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #1a1a1a;
+        color: #ffffff;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #66ccff;
+        margin-bottom: 20px;
+    }
+
+    a {
+        color: #66ccff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
     label {
         font-size: 30px;
         margin-top: 20px;
+        display: block;
+        color: #66ccff;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #1a1a1a;
+        border: 1px solid #666666;
+        border-radius: 5px;
+        color: #ffffff;
+    }
+
+        .table th,
+        .table td {
+            border: 1px solid #666666;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #0d0d0d;
+            color: #66ccff;
+        }
+
+        .table tbody tr:hover {
+            background-color: #333333;
+        }
+
+        .table a {
+            color: #66ccff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .table a:hover {
+                text-decoration: underline;
+            }
+
+    .actions-column {
+        width: 150px;
     }
 </style>
 
@@ -21,7 +85,7 @@
 <p>
     <a asp-action="CreateOffer">Create Offer</a>
 </p>
-&nbsp
+
 <label>Bids:</label>
 <table class="table">
     <thead>
@@ -35,7 +99,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
+            <th class="actions-column">
                 - Actions -
             </th>
         </tr>
@@ -56,14 +120,14 @@
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
                     <td>
-                        
+                        <!-- Add any actions related to bids here -->
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
-&nbsp
+
 <label>Offers:</label>
 <table class="table">
     <thead>
@@ -77,7 +141,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
+            <th class="actions-column">
                 - Actions -
             </th>
         </tr>
@@ -91,18 +155,18 @@
                 {
                     <tr>
                         <td>
-                        @Html.DisplayFor(modelItem => item.Currency.Type)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Amount)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Buy", "BuyOffer", "Post", new {offerAmount = item.Amount, offerPrice = item.Price, offerCurrency = item.Currency.Type, offerID = item.Id}, null)
-                    </td>
-                </tr>
+                            @Html.DisplayFor(modelItem => item.Currency.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Buy", "BuyOffer", "Post", new { offerAmount = item.Amount, offerPrice = item.Price, offerCurrency = item.Currency.Type, offerID = item.Id }, null)
+                        </td>
+                    </tr>
                 }
             }
         }
