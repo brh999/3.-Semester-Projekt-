@@ -9,93 +9,160 @@
     user = ViewData["user"]
 </script>
 
-<style>
-    label {
-        font-size: 30px;
-        margin-top: 20px;
-    }
-</style>
+<!DOCTYPE html>
+<html>
 
-<h1>- Bids & Offers -</h1>
+<head>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
 
-<p>
-    <a asp-action="CreateOffer">Create Offer</a>
-</p>
-&nbsp
-<label>Bids:</label>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Currency)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (ViewData["bids"] != null)
-        {
-            @foreach (var item in ViewData["bids"] as List<Post>)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Currency.Type)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Amount)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        
-                    </td>
-                </tr>
-            }
+        h1 {
+            color: #ff9900;
         }
-    </tbody>
-</table>
-&nbsp
-<label>Offers:</label>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Currency)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (ViewData["offers"] != null)
-        {
-            @foreach (var item in ViewData["offers"] as List<Post>)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Currency.Type)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Amount)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Buy", "BuyOffer", "Post", new {offerAmount = item.Amount, offerPrice = item.Price, offerCurrency = item.Currency.Type, offerID = item.Id}, null)
-                    </td>
-                </tr>
-            }
+
+        a {
+            color: #3498db;
         }
-    </tbody>
-</table>
+
+            a:hover {
+                color: #297fb8;
+            }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #333333;
+            border: 1px solid #555555;
+            border-radius: 5px;
+            color: #ffffff;
+        }
+
+            .table th,
+            .table td {
+                border: 1px solid #555555;
+                padding: 12px;
+                text-align: left;
+            }
+
+            .table th {
+                background-color: #3498db;
+                color: #ffffff;
+            }
+
+            .table tbody tr:hover {
+                background-color: #555555;
+            }
+
+            .table a {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .table a:hover {
+                    text-decoration: underline;
+                }
+
+        label {
+            font-size: 30px;
+            margin-top: 20px;
+            color: #ff9900;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>- Bids & Offers -</h1>
+
+    <p>
+        <a asp-action="CreateOffer">Create Offer</a>
+    </p>
+    &nbsp
+    <label>Bids:</label>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Currency)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewData["bids"] != null)
+            {
+                @foreach (var item in ViewData["bids"] as List<Post>)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Currency.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    &nbsp
+    <label>Offers:</label>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Currency)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewData["offers"] != null)
+            {
+                @foreach (var item in ViewData["offers"] as List<Post>)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Currency.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Buy", "BuyOffer", "Post", new { offerAmount = item.Amount, offerPrice = item.Price, offerCurrency = item.Currency.Type, offerID = item.Id }, null)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</body>
+
+</html>

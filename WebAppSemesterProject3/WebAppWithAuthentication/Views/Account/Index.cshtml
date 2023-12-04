@@ -4,79 +4,149 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<!DOCTYPE html>
+<html>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<h2>Posts</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Currency
-            </th>
-            <th>
-                Price
-            </th>
-            <th>
-                Amount
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var post in Model.Posts)
-        {
-            <tr>
-               
-                <td>
-                    @post.Currency
-                </td>
-                <td>
-                    @post.Price
-                </td>
-                <td>
-                    @post.Amount
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { id = post.Id })
-                </td>
-            </tr>
+<head>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
         }
-    </tbody>
-</table>
 
-<h2>Wallet</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Currency
-            </th>
-            <th>
-                Amount
-            </th>
-            <!-- Add more columns as needed for the CurrencyLine object -->
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var currencyLine in Model.Wallet)
-        {
-            <tr>
-                <td>
-                    @currencyLine.Currency
-                </td>
-                <td>
-                    @currencyLine.Amount
-                </td>
-                <!-- Add more cells as needed for the CurrencyLine object -->
-                <td>
-                    @* Add action links for Wallet operations if needed *@
-                </td>
-            </tr>
+        h1 {
+            color: #ff9900;
         }
-    </tbody>
-</table>
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+            a:hover {
+                color: #2980b9;
+                text-decoration: underline;
+            }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #333333;
+            border: 1px solid #555555;
+            border-radius: 5px;
+            color: #ffffff;
+        }
+
+            .table th,
+            .table td {
+                border: 1px solid #555555;
+                padding: 12px;
+                text-align: left;
+            }
+
+            .table th {
+                background-color: #3498db;
+                color: #ffffff;
+            }
+
+            .table tbody tr:hover {
+                background-color: #555555;
+            }
+
+            .table a {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .table a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+
+<body>
+
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+
+    <h2>Posts</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Currency
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model.Posts)
+            {
+                <tr>
+                    <td>
+                        @post.Currency
+                    </td>
+                    <td>
+                        @post.Price
+                    </td>
+                    <td>
+                        @post.Amount
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = post.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Wallet</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Currency
+                </th>
+                <th>
+                    Amount
+                </th>
+                <!-- Add more columns as needed for the CurrencyLine object -->
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var currencyLine in Model.Wallet)
+            {
+                <tr>
+                    <td>
+                        @currencyLine.Currency
+                    </td>
+                    <td>
+                        @currencyLine.Amount
+                    </td>
+                    <!-- Add more cells as needed for the CurrencyLine object -->
+                    <td>
+                        @* Add action links for Wallet operations if needed *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+
+</html>
