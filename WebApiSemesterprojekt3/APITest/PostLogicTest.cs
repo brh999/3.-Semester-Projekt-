@@ -13,8 +13,6 @@ namespace WebApi.Database.Tests
 
     public class PostLogicTest : IDisposable
     {
-
-
         readonly private IPostDBAccess _postAccess;
         private readonly ITestOutputHelper _extraOutpuit;
         private readonly string aspNetUserIdTestData = "c811de3f-ab3c-4445-8d70-612e68d61c93",
@@ -87,28 +85,46 @@ namespace WebApi.Database.Tests
 
             result = _postLogic.InsertOffer(offer, aspNetUserIdTestData);
 
-
-
-
             //Assert
-
             //This assumes that GetOfferPost() works
             if(result == null)
             {
                 Assert.Fail("Result is null");
             }
             Assert.Equal(result, offer);
+        }
 
 
 
+
+
+        
+        public void InsertOfferWithUserIdShouldFail(string userId)
+        {
+            //Assign
+            Currency currency = new("USD");
+            Post offer = new(100, 10, currency, -1, "Offer");
+            Post? result;
+            //Act
+            result = _postLogic.InsertOffer(offer, userId);
+            //Assert
+
+            if( result == null)
+            {
+                Assert.Fail("Result is null");
+            }
+            Assert.Equal(result, offer);
         }
 
         [Fact]
-        public void InsertOfferWithInvalidUserIdShouldReturnNull()
+        public void InsertOfferWithInvalidIdShouldFail()
         {
-
+            //Assign
+            string userId = "InvalidId-123-123-123";
+            //Act
+            //Assert
+            InsertOfferWithUserId(userId);
         }
-
 
         [Fact]
         public void GetRelatedTransactionsShouldReturnAllRelatedTransactions()
@@ -183,8 +199,8 @@ namespace WebApi.Database.Tests
                 }
             }
 
+            //Assert
             Assert.Equal(relatedTransactions.Count, expectedAmount);
-
         }
     }
 }
