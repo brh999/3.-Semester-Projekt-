@@ -197,6 +197,7 @@ namespace WebApi.Database
                             Price = (double)reader["price"],
                             Type = (string)reader["type"],
                             Currency = generatedCurrency,
+                            
                         };
                         foundPosts.Add(offer);
                     }
@@ -245,6 +246,7 @@ namespace WebApi.Database
             }
         }
 
+
         public bool DeleteOffer(int id)
         {
             bool res = false;
@@ -265,6 +267,7 @@ namespace WebApi.Database
 
             }
         }
+
 
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
@@ -328,8 +331,51 @@ namespace WebApi.Database
             return res;
         }
 
+        public IEnumerable<Post?> GetOfferPostsById(string aspNetUser)
+        {
+            CurrencyDBAccess cu = new CurrencyDBAccess(_configuration);
+            List<Post> foundPosts = new List<Post>();
+            Post post = null;
+            Currency currencyType = new Currency();
+
+            double amount = 0d;
+            double price = 0d;
+            bool isComplete = false;
+
+            string type = null;
+            int postId = 0;
+
+            string queryString = "select * from posts where account_id_fk = (select Accounts.id from Accounts where Accounts.AspNetUsers_id_fk = @aspNetUser)";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+            {
+                conn.Open();
+                readCommand.Parameters.AddWithValue("aspNetUser", aspNetUser);
+
+                using (SqlDataReader reader = readCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+
+                        amount = (double)reader["amount"];
+                        price = (double)reader["price"];
+                        isComplete = (bool)reader["isComplete"];
+                        type = (string)reader["type"];
+                        currencyType = cu.GetCurrencyById((int)reader["currencies_id_fk"]);
+
+                        post = new Post(amount, price, currencyType, postId, type);
+                        foundPosts.Add(post);
+                    }
+                }
+                return foundPosts;
+            }
+        }
+
     }
 }
+
 
 
 

@@ -6,6 +6,8 @@ namespace WebApi.Database
     {
         int GetCurrencyID(Currency item);
 
+        Currency? GetCurrencyById(int currencyID);
+
         IEnumerable<Currency> GetCurrencyList();
     }
 }

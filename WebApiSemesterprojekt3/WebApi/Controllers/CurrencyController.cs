@@ -34,5 +34,25 @@ namespace WebApi.Controllers
             return foundCurrencies;
         }
 
+        public ActionResult<Currency> GetCurrencyById(int id)
+        {
+            ActionResult<Currency> currency = null;
+            Currency res = null;
+
+            res = _currencyLogic.GetCurrencyById(id);
+
+            if (res != null)
+            {
+                currency = Ok(res);
+            }
+            else
+            {
+                currency = NotFound();
+            }
+
+            return currency;
+
+        }
+
     }
 }

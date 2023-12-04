@@ -25,7 +25,13 @@ namespace WebApi.Controllers
             return Ok(foundResult);
         }
 
+        public ActionResult<List<Post>> getPostById(string aspNetUser)
+        {
+            ActionResult<List<Post>>? foundReturn;
 
-     
+            foundReturn = _postLogic.GetAllOffersById(aspNetUser);
+            return foundReturn;
+        }
+
     }
 }

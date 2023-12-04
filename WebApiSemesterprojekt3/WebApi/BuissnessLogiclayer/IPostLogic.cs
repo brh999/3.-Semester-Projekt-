@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace WebApi.BuissnessLogiclayer
 {
@@ -13,8 +14,13 @@ namespace WebApi.BuissnessLogiclayer
 
         Post InsertBid(Post bid);
         List<TransactionLine> GetRelatedTransactions(int id);
+
         bool DeleteOffer(int id);
 
         bool BuyOffer(Post inPost, string aspNetUserId);
+
+        ActionResult<List<Post>>? GetAllOffersById(string aspNetUser);
+
+
     }
 }

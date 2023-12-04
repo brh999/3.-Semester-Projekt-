@@ -16,9 +16,13 @@ namespace WebApi.Database
 
         bool DeleteOffer(int id);
 
+
         Account GetAssociatedAccount(int postId);
 
         bool BuyOffer(Post inPost, string aspNetUserId);
+
+        IEnumerable<Post?> GetOfferPostsById(string aspNetuser);
+
 
     }
 }
