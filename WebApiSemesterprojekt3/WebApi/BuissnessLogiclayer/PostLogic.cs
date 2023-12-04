@@ -55,10 +55,15 @@ namespace WebApi.BuissnessLogiclayer
 
         public Post InsertOffer(Post offer, string aspNetUserId)
         {
-            Post res = offer;
+            Post res = null;
             try
             {
-                _dataAccess.InsertOffer(offer, aspNetUserId);
+                bool succes = _dataAccess.InsertOffer(offer, aspNetUserId);
+
+                if(succes)
+                {
+                    res = offer;
+                }
             }
             catch (Exception ex)
             {
