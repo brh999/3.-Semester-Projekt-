@@ -26,13 +26,6 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpPost]
-        [Route("/buyoffer")]
-        public IActionResult BuyOffer([FromBody] Post inPost)
-        {
-            _postLogic.BuyOffer(inPost);
-
-            return Ok();
-        }
+     
     }
 }

@@ -81,9 +81,9 @@ namespace WebApi.BuissnessLogiclayer
             return res;
         }
 
-        public bool BuyOffer(Post inPost)
+        public bool BuyOffer(Post inPost, string aspNetUserId)
         {
-            return _dataAccess.BuyOffer(inPost);
+            return _dataAccess.BuyOffer(inPost, aspNetUserId);
         }
     }
 }

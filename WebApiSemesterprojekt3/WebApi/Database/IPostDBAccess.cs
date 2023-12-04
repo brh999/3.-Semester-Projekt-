@@ -18,7 +18,7 @@ namespace WebApi.Database
 
         Account GetAssociatedAccount(int postId);
 
-        bool BuyOffer(Post inPost);
+        bool BuyOffer(Post inPost, string aspNetUserId);
 
     }
 }

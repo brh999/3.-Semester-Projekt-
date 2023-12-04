@@ -127,6 +127,14 @@ namespace WebApi.Controllers
             return result;
         }
 
+        [HttpPost]
+        [Route("buyoffer/{aspNetUserId}")]
+        public IActionResult BuyOffer([FromBody] Post inPost, string aspNetUserId)
+        {
+            _offerLogic.BuyOffer(inPost, aspNetUserId);
+
+            return Ok();
+        }
 
     }
 }

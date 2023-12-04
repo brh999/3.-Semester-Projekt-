@@ -15,6 +15,6 @@ namespace WebApi.BuissnessLogiclayer
         List<TransactionLine> GetRelatedTransactions(int id);
         bool DeleteOffer(int id);
 
-        bool BuyOffer(Post inPost);
+        bool BuyOffer(Post inPost, string aspNetUserId);
     }
 }
