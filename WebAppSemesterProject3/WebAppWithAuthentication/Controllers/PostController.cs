@@ -242,7 +242,7 @@ namespace WebAppWithAuthentication.Controllers
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var serviceResponse = _connection.CallServicePost(content);
             serviceResponse.Wait();
-            return Redirect(_configuration.GetConnectionString("BaseURL"));
+            return RedirectToAction("GetAllPosts");
         }
 
         [Authorize]

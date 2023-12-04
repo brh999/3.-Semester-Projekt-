@@ -35,6 +35,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
+            <th>
+                - Actions -
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -74,6 +77,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
+            <th>
+                - Actions -
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -81,8 +87,10 @@
         {
             @foreach (var item in ViewData["offers"] as List<Post>)
             {
-                <tr>
-                    <td>
+                @if (!item.IsComplete)
+                {
+                    <tr>
+                        <td>
                         @Html.DisplayFor(modelItem => item.Currency.Type)
                     </td>
                     <td>
@@ -95,6 +103,7 @@
                         @Html.ActionLink("Buy", "BuyOffer", "Post", new {offerAmount = item.Amount, offerPrice = item.Price, offerCurrency = item.Currency.Type, offerID = item.Id}, null)
                     </td>
                 </tr>
+                }
             }
         }
     </tbody>

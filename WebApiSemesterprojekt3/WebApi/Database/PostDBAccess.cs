@@ -84,6 +84,7 @@ namespace WebApi.Database
                             Price = (double)reader["price"],
                             Currency = generatedCurrency,
                             Type = (string)reader["type"],
+                            IsComplete = (bool)reader["isComplete"],
                         };
                         foundOffers.Add(offer);
                     }
@@ -197,7 +198,7 @@ namespace WebApi.Database
                             Price = (double)reader["price"],
                             Type = (string)reader["type"],
                             Currency = generatedCurrency,
-                            
+                            IsComplete = (bool)reader["isComplete"]
                         };
                         foundPosts.Add(offer);
                     }
@@ -312,7 +313,7 @@ namespace WebApi.Database
         {
             bool res = false;
             int id = inPost.Id;
-            string query = "update Posts set isComplete = 1, amount = 0, account_id_fk = @buyerID where id = @id";
+            string query = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
