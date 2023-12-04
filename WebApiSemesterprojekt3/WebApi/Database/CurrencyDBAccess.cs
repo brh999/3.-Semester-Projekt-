@@ -19,7 +19,7 @@ namespace WebApi.Database
         {
             Currency? res = null;
 
-            string queryString = "select * from Currencies where id = @currencyID";
+            string queryString = "select * from Currencies JOIN Exchanges on Exchanges.id = Currencies.exchange_id_fk WHERE Currencies.id = @currencyID";
 
 
 
@@ -34,10 +34,12 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                         res = new Currency()
+                        double value = (double)reader["value"];
+                        DateTime date = (DateTime)reader["date"];
+                        res = new Currency()
                         {
                             Type = (string)reader["currencytype"],
-                            Exchange = new Exchange(),
+                            Exchange = new Exchange(value, date)
                         };
 
                     }

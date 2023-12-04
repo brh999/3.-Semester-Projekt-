@@ -30,7 +30,7 @@ namespace WebApi.Database
             Account account = null;
 
             string queryStringAccount = "SELECT Accounts.id,email, username, discount FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.Id WHERE Accounts.AspNetUsers_id_fk = @id";
-            string queryStringWallet = "SELECT * FROM CurrencyLines JOIN Currencies ON CurrencyLines.currency_id_fk = Currencies.id JOIN Posts ON CurrencyLines.Account_id_fk = Posts.Account_id_fk WHERE CurrencyLines.Account_id_fk = @accountId;";
+            string queryStringWallet = "SELECT amount,currencytype FROM CurrencyLines JOIN Currencies ON CurrencyLines.currency_id_fk = Currencies.id WHERE CurrencyLines.Account_id_fk = @accountId;";
 
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
