@@ -32,18 +32,11 @@ public class CurrencyService : ICurrencyService
     /// </summary>
     /// <param name="tokenToUse">JWT for Authorization</param>
     /// <returns> A list of all currencies</returns>
-    public async Task<List<Currency>?>? GetCurrencies(string tokenToUse)
+    public async Task<List<Currency>?>? GetCurrencies()
     {
         List<Currency>? res = null;
 
         _currencyService.UseUrl = _currencyService.BaseUrl;
-        // START JWT
-        // Must add Bearer token to request header
-        string bearerTokenValue = authenType + " " + tokenToUse;
-        _currencyService.HttpEnabler.DefaultRequestHeaders.Remove("Authorization");   // To avoid more Authorization headers
-        _currencyService.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
-        // END JWT
-
         _currencyService.UseUrl = _currencyService.BaseUrl + "currency/";
 
         var serviceResponse = await _currencyService.CallServiceGet();
@@ -72,14 +65,9 @@ public class CurrencyService : ICurrencyService
     /// <param name="currencyToSave"> The currency object to be persisted in the database</param>
     /// <returns>The ID of the newly inserted currency</returns>
     /// <exception cref="NotImplementedException"> Not implemented functionality</exception>
-    public async Task<int> SaveCurrency(string tokenToUse, Currency currencyToSave)
+    public async Task<int> SaveCurrency(Currency currencyToSave)
     {
         _currencyService.UseUrl = _currencyService.BaseUrl;
-
-        // Must add Bearer token to request header
-        string bearerTokenValue = authenType + " " + tokenToUse;
-        _currencyService.HttpEnabler.DefaultRequestHeaders.Remove("Authorization");   // To avoid more Authorization headers
-        _currencyService.HttpEnabler.DefaultRequestHeaders.Add("Authorization", bearerTokenValue);
 
         throw new NotImplementedException();
     }

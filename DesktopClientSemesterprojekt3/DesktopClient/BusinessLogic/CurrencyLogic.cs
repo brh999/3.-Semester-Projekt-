@@ -1,7 +1,6 @@
 ﻿using DesktopClient.Security;
 using DesktopClient.Service;
 using Models;
-using System.Net;
 
 namespace DesktopClient.BusinessLogic
 {
@@ -26,32 +25,9 @@ namespace DesktopClient.BusinessLogic
         {
             List<Currency>? foundCurrencies = null;
 
-            // Get token
-            TokenState currentState = TokenState.Valid;        // Presumed state
-            string? tokenValue = await _tokenManager.GetToken();
-            if (tokenValue != null)
-            {
-                foundCurrencies = await _currencyService.GetCurrencies(tokenValue);
-                if (_currencyService.CurrentHttpStatusCode == HttpStatusCode.Unauthorized)
-                {
-                    currentState = TokenState.Invalid;
-                }
-            }
-            else
-            {
-                currentState = TokenState.Invalid;
-            }
-            if (currentState == TokenState.Invalid)
-            {
-                tokenValue = await _tokenManager.GetToken();
-                if (tokenValue != null)
-                {
-                    foundCurrencies = await _currencyService.GetCurrencies(tokenValue);
-                }
-            }
+            foundCurrencies = await _currencyService.GetCurrencies();
+
             return foundCurrencies;
-
-
         }
     }
 }
