@@ -71,7 +71,7 @@ namespace DesktopClient.Security
 
             // Access a new Token from service (Web API)
             TokenService tokenServiceAccess = new TokenService();
-            foundToken = await tokenServiceAccess.GetNewToken(accounddata);
+            foundToken = tokenServiceAccess.GetNewToken(accounddata).Result;
 
             if (foundToken != null)
             {

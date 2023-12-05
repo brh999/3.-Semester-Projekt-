@@ -44,7 +44,7 @@ namespace DesktopClient.Service
 
             try
             {
-                var response = await _httpClient.PostAsync(uriToUse, appAdminLogin);
+                var response = await _httpClient.PostAsync(uriToUse, appAdminLogin).ConfigureAwait(false);
                 response?.EnsureSuccessStatusCode();
                 if (response != null)
                 {
