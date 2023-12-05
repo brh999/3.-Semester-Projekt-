@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.IdentityModel.Tokens.Jwt;
+using WebAppWithAuthentication.Security;
 
 namespace WebAppWithAuthentication.Service
 {
     public class TokenServiceAccess : ITokenServiceAccess
     {
-
         private HttpClient _httpClient;
         private Uri _uri;
         private readonly NameValueCollection _apiUrl;
         readonly String _serviceBaseUrl;
+
         public TokenServiceAccess()
         {
             _apiUrl = System.Configuration.ConfigurationManager.AppSettings;

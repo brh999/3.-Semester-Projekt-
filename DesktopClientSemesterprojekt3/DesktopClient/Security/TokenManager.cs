@@ -13,15 +13,11 @@ namespace DesktopClient.Security
         {
             _tokenAdminValues = ConfigurationManager.AppSettings;
         }
-        /// <summary>
-        /// Used to fetch a JWT token
-        /// </summary>
-        /// <param name="currentState">determines if a new Token needs to be
-        /// created and returned or if we can reuse the newest token</param>
-        /// <returns> the JWT token new or old</returns>
-        public async Task<string?> GetToken(TokenState currentState)
+
+        public async Task<string?> GetToken()
         {
             string? foundToken = null;
+            TokenState currentState = GetJWTState();
             if (currentState == TokenState.Valid)
             {
                 foundToken = GetTokenExisting();
@@ -31,6 +27,23 @@ namespace DesktopClient.Security
                 foundToken = await GetTokenNew();
             }
             return foundToken;
+        }
+
+        private TokenState GetJWTState()
+        {
+            JWT.TokenState = TokenState.Invalid;
+            string? currentJWT = JWT.CurrentJWT;
+            if (currentJWT != null)
+            {
+                TokenService tSA = new TokenService();
+                bool hasTokenExpired = tSA.HasTokenExpired(currentJWT);
+
+                if (!hasTokenExpired)
+                {
+                    JWT.TokenState = TokenState.Valid;
+                }
+            }
+            return JWT.TokenState;
         }
 
         /// <summary>
@@ -85,16 +98,7 @@ namespace DesktopClient.Security
                 foundData.GrantType = _tokenAdminValues.Get("GrantType");
             }
 
-
             return foundData;
         }
-
-        // Get the process (project) assembly name (applied as application username) 
-        private string? GetApplicationAssemblyName()
-        {
-            string? assemblyName = System.Reflection.Assembly.GetCallingAssembly().GetName().Name;
-            return assemblyName;
-        }
     }
-
 }

@@ -84,12 +84,5 @@ namespace WebAppWithAuthentication.Security
 
             return foundData;
         }
-
-        private string? GetApplicationAssemblyName()
-        {
-            string? assemblyName = System.Reflection.Assembly.GetCallingAssembly().GetName().Name;
-            return assemblyName;
-        }
-
     }
 }

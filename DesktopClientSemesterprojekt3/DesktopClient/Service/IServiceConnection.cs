@@ -4,7 +4,7 @@
     {
         public string? BaseUrl { get; init; }
         public string? UseUrl { get; set; }
-        public HttpClient HttpEnabler { get; init; }
+        public HttpClient HttpEnabler { get; set; }
 
         Task<HttpResponseMessage?> CallServiceGet();
         Task<HttpResponseMessage?> CallServicePost(StringContent postJson);

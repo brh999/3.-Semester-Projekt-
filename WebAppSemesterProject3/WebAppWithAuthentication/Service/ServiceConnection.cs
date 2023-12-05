@@ -1,7 +1,9 @@
 using WebAppWithAuthentication.Security;
 
-namespace WebAppWithAuthentication.Service {
-    public class ServiceConnection : IServiceConnection {
+namespace WebAppWithAuthentication.Service
+{
+    public class ServiceConnection : IServiceConnection
+    {
         public string? BaseUrl { get; init; }
         public string? UseUrl { get; set; }
         public HttpClient HttpEnabler { get; set; }
@@ -71,9 +73,9 @@ namespace WebAppWithAuthentication.Service {
         private async Task<bool> SetupHttpRequest()
         {
             bool result = false;
-            string tokenValue = await GetToken();
+            string? tokenValue = await GetToken();
 
-            if(!String.IsNullOrEmpty(tokenValue))
+            if (!String.IsNullOrEmpty(tokenValue))
             {
                 string bearerTokenValue = "Bearer" + " " + tokenValue;
                 HttpEnabler.DefaultRequestHeaders.Remove("Authorization");
@@ -84,6 +86,6 @@ namespace WebAppWithAuthentication.Service {
             return result;
         }
 
-    
+
     }
 }
