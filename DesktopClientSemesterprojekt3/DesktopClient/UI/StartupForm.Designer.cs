@@ -207,6 +207,7 @@
             // 
             txtBoxTotal.Location = new Point(517, 236);
             txtBoxTotal.Name = "txtBoxTotal";
+            txtBoxTotal.ReadOnly = true;
             txtBoxTotal.Size = new Size(125, 27);
             txtBoxTotal.TabIndex = 7;
             // 
