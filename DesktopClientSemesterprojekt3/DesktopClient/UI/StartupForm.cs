@@ -1,14 +1,5 @@
 ﻿using DesktopClient.BusinessLogic;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DesktopClient.UI
 {
@@ -39,7 +30,7 @@ namespace DesktopClient.UI
             if (isValid)
             {
                 bool isSuccess = await _currencyLogic.CreateCurrency(name, value);
-                if(!isSuccess)
+                if (!isSuccess)
                 {
                     MessageBox.Show("Could not create currency");
                 }
@@ -140,7 +131,7 @@ namespace DesktopClient.UI
 
         private void txtCurrencyValue_KeyPress(object sender, KeyPressEventArgs e)
         {
-            
+
             if (char.IsControl(e.KeyChar))
             {
                 e.Handled = false; // Allow Backspace and delete
@@ -168,7 +159,7 @@ namespace DesktopClient.UI
                 e.Handled = false; // Allow Backspace and delete
                 return;
             }
-            
+
             if (!char.IsLetter(e.KeyChar))
             {
                 e.Handled = true; // Block non-letter characters

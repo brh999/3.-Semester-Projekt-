@@ -63,9 +63,8 @@ namespace WebApi.Database
         /// <returns></returns>
         public IEnumerable<Post> GetOfferPosts()
         {
-
             List<Post> foundOffers = new List<Post>();
-            string queryString = "SELECT * FROM posts JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'offer'";
+            string queryString = "SELECT * FROM Posts JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.id = currencies.id WHERE posts.type = 'offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -163,7 +162,7 @@ namespace WebApi.Database
                         insertCommand.Parameters.AddWithValue("price", offer.Price);
                         insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
                         insertCommand.Parameters.AddWithValue("type", "Offer");
-                        
+
                         insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
                         insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
                         changes = insertCommand.ExecuteNonQuery();
@@ -277,9 +276,9 @@ namespace WebApi.Database
             Account seller = GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
             bool isComplete = CompletePost(inPost, buyer);
-            if(seller != null && buyer != null)
+            if (seller != null && buyer != null)
             {
-                
+
             }
             if (isComplete)
             {
@@ -323,7 +322,7 @@ namespace WebApi.Database
                     cmd.Parameters.AddWithValue("id", id);
                     cmd.Parameters.AddWithValue("buyerID", buyer.Id);
                     int row = cmd.ExecuteNonQuery();
-                    if(row != null)
+                    if (row != null)
                     {
                         res = true;
                     }

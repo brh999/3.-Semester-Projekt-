@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Models;
+﻿using Models;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -107,53 +106,54 @@ namespace WebApi.Database
         public bool InsertCurrency(Currency currency)
         {
             bool isSuccess = false;
-            string insertCurrency = "INSERT INTO Currencies VALUES(@type,@exchange_id)";
+            string insertCurrency = "INSERT INTO Currencies OUTPUT INSERTED.id VALUES(@type)";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                
+
                 conn.Open();
-                
+
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     insertCommand.CommandText = insertCurrency;
-                    int exchangeid = createExchange(currency, conn);
                     insertCommand.Parameters.AddWithValue("type", currency.Type);
-                    insertCommand.Parameters.AddWithValue("exchange_id", exchangeid);
-                    int modified = insertCommand.ExecuteNonQuery();
-                    if(modified > 0)
+
+                    int returnedId = Convert.ToInt32(insertCommand.ExecuteScalar());
+
+                    if (returnedId > 0)
                     {
-                        isSuccess = true;
+                        isSuccess = CreateExchange(currency, returnedId, conn);
                     }
                 }
             }
             return isSuccess;
         }
 
-        private int createExchange(Currency currency,SqlConnection conn)
+        private bool CreateExchange(Currency currency, int currencyId, SqlConnection conn)
         {
-            int id = 0;
-            string insertExchange = "INSERT INTO Exchanges OUTPUT INSERTED.id VALUES(@value, @date)";
+            bool res = false;
+            string insertExchange = "INSERT INTO Exchanges VALUES(@value, @date, @currencies_fk)";
             using (SqlCommand insertCommand = conn.CreateCommand())
             {
                 insertCommand.CommandText = insertExchange;
                 insertCommand.Parameters.AddWithValue("value", currency.Exchange.Value);
                 insertCommand.Parameters.AddWithValue("date", currency.Exchange.Date);
-                var res = insertCommand.ExecuteScalar();
-                if(res != null)
+                insertCommand.Parameters.AddWithValue("currencies_fk", currencyId);
+
+                int rowsAffected = insertCommand.ExecuteNonQuery();
+                if (rowsAffected > 0)
                 {
-                    id = Convert.ToInt32(res);
+                    res = true;
                 }
             }
-            return id;
-             
+            return res;
         }
 
         private Exchange GetExchangesForCurrency(string currencyType)
         {
             Exchange res = null;
 
-            string queryString = " SELECT * FROM Exchanges INNER JOIN Currencies ON Exchanges.ID = Currencies.Exchange_id_fk WHERE currencytype = @type";
+            string queryString = "SELECT * FROM Currencies JOIN Exchanges ON currencies.id = exchanges.currencies_id_fk WHERE currencytype = @type";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
