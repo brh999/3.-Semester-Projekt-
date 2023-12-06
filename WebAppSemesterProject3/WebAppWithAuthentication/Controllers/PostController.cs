@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Security.Claims;
 using System.Text;
-using WebAppWithAuthentication.BusinessLogic;
 using WebAppWithAuthentication.Models;
 using WebAppWithAuthentication.Service;
 
@@ -120,7 +119,7 @@ namespace WebAppWithAuthentication.Controllers
             AccountDto? account = null;
 
             
-            AccountLogic accountLogic = new(_connection);
+            AccountService accountLogic = new(_connection);
             Task<AccountDto?> response = accountLogic.GetAccountById(userId);
             response.Wait();
 
