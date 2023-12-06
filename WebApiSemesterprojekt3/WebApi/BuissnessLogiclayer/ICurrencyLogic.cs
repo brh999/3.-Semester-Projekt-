@@ -10,5 +10,7 @@ namespace WebApi.BuissnessLogiclayer
         List<Currency> GetCurrencyList();
 
         Currency GetCurrencyById(int id); 
+
+        bool InsertCurrency(Currency currency);
     }
 }

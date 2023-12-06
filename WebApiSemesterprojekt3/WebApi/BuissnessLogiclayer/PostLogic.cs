@@ -55,26 +55,33 @@ namespace WebApi.BuissnessLogiclayer
 
         public Post InsertOffer(Post offer, string aspNetUserId)
         {
-            Post res = null;
-            try
+            Post res = new();
+            //Validate Post
+            bool isValid = ValidatePost(offer);
+
+            if (isValid)
             {
                 bool succes = _dataAccess.InsertOffer(offer, aspNetUserId);
 
-                if(succes)
+                if (succes)
                 {
                     res = offer;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                res = null;
+                throw new ArgumentException("Offer does not property constraints");
             }
+
             return res;
         }
 
         public List<TransactionLine> GetRelatedTransactions(int id)
         {
-
+            if (id <= 0)
+            {
+                throw new ArgumentException("Id cannot be less than or equal to 0");
+            }
             IEnumerable<TransactionLine>? foundLines;
 
             foundLines = _dataAccess.GetTransactionLines(id);
@@ -85,6 +92,11 @@ namespace WebApi.BuissnessLogiclayer
 
         public bool DeleteOffer(int id)
         {
+            if(id <= 0)
+            {
+                throw new ArgumentException("Id cannot be less than or equal to 0");
+            }
+
             bool res = false;
             res = _dataAccess.DeleteOffer(id);
             return res;
@@ -96,6 +108,7 @@ namespace WebApi.BuissnessLogiclayer
             return _dataAccess.BuyOffer(inPost, aspNetUserId);
 
         }
+
         public ActionResult<List<Post>>? GetAllOffersById(string aspNetUser)
         {
             IEnumerable<Post?> foundPosts;
@@ -106,6 +119,38 @@ namespace WebApi.BuissnessLogiclayer
 
 
         }
+
+        private bool ValidatePost(Post post)
+        {
+            bool isValid = true;
+
+            if (post != null)
+            {
+
+
+                isValid = post.Amount >= 0;
+                if (isValid)
+                {
+                    isValid = post.Price >= 0;
+                }
+                if (isValid)
+                {
+                    isValid = post.Id >= 0;
+                }
+                if (isValid)
+                {
+                    isValid = !post.IsComplete;
+                }
+
+
+                //This should also verify that the more complex properties valid.
+                //But for know this is sufficient
+            }
+
+            return isValid;
+        }
+
+
     }
 }
 

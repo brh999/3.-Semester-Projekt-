@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Net;
+using System.Text;
 
 namespace DesktopClient.Service;
 public class CurrencyService : ICurrencyService
@@ -64,11 +65,24 @@ public class CurrencyService : ICurrencyService
     /// <param name="tokenToUse"> JWT token for Authorization</param>
     /// <param name="currencyToSave"> The currency object to be persisted in the database</param>
     /// <returns>The ID of the newly inserted currency</returns>
-    /// <exception cref="NotImplementedException"> Not implemented functionality</exception>
-    public async Task<int> SaveCurrency(Currency currencyToSave)
+    public async Task<bool> SaveCurrency(Currency currency)
     {
+        bool success = false;
+        //Create the use url to the call.
         _currencyService.UseUrl = _currencyService.BaseUrl;
+        _currencyService.UseUrl = _currencyService.BaseUrl + "currency/";
 
-        throw new NotImplementedException();
+
+        //Serialize the currency object
+        var json = JsonConvert.SerializeObject(currency);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var serviceResponse = await _currencyService.CallServicePost(content);
+
+        //Check response
+        if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
+        {
+            success = true;
+        }
+        return success;
     }
 }

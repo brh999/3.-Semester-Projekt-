@@ -1,10 +1,5 @@
-﻿using Dapper;
+﻿using Models;
 using System.Data.SqlClient;
-using Models;
-using Microsoft.AspNetCore.Http;
-using Models.DTO;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System;
 
 namespace WebApi.Database
 {
@@ -78,7 +73,7 @@ namespace WebApi.Database
 
                         }
                     }
-                    
+
                     List<Post> po = (List<Post>)pa.GetOfferPostsById(AspNetId);
 
                     account = new Account(accountId, discount, username, email, wallet, po);
@@ -132,7 +127,7 @@ namespace WebApi.Database
         {
             List<CurrencyLine> found = new List<CurrencyLine>();
             string queryString = "SELECT CurrencyLines.amount,Currencies.currencyType,Exchanges.value FROM CurrencyLines JOIN Currencies ON " +
-                "CurrencyLines.currency_id_fk = Currencies.id JOIN Exchanges ON Currencies.exchange_id_fk = Exchanges.id WHERE account_id_fk = @id";
+                "CurrencyLines.currency_id_fk = Currencies.id JOIN Exchanges ON Currencies.id = Exchanges.currencies_id_fk WHERE account_id_fk = @id";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
             {

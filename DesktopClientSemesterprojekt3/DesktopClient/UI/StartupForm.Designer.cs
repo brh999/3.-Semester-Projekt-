@@ -1,6 +1,6 @@
 ﻿namespace DesktopClient.UI
 {
-    partial class StartupForm
+    partial class Client
     {
         /// <summary>
         /// Required designer variable.
@@ -32,6 +32,8 @@
             ListBoxCurrencies = new ListBox();
             tabController = new TabControl();
             tab_Currencies = new TabPage();
+            label2 = new Label();
+            txtCurrencyValue = new TextBox();
             label1 = new Label();
             txtCurrencyName = new TextBox();
             tabPosts = new TabPage();
@@ -86,6 +88,8 @@
             // 
             // tab_Currencies
             // 
+            tab_Currencies.Controls.Add(label2);
+            tab_Currencies.Controls.Add(txtCurrencyValue);
             tab_Currencies.Controls.Add(label1);
             tab_Currencies.Controls.Add(txtCurrencyName);
             tab_Currencies.Controls.Add(btnCreateCurrency);
@@ -97,6 +101,23 @@
             tab_Currencies.TabIndex = 0;
             tab_Currencies.Text = "Currencies";
             tab_Currencies.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(6, 150);
+            label2.Name = "label2";
+            label2.Size = new Size(109, 20);
+            label2.TabIndex = 7;
+            label2.Text = "Currency Value:";
+            // 
+            // txtCurrencyValue
+            // 
+            txtCurrencyValue.Location = new Point(6, 173);
+            txtCurrencyValue.Name = "txtCurrencyValue";
+            txtCurrencyValue.Size = new Size(203, 27);
+            txtCurrencyValue.TabIndex = 6;
+            txtCurrencyValue.KeyPress += txtCurrencyValue_KeyPress;
             // 
             // label1
             // 
@@ -113,6 +134,7 @@
             txtCurrencyName.Name = "txtCurrencyName";
             txtCurrencyName.Size = new Size(203, 27);
             txtCurrencyName.TabIndex = 4;
+            txtCurrencyName.KeyPress += txtCurrencyName_KeyPress;
             // 
             // tabPosts
             // 
@@ -241,14 +263,14 @@
             listBoxAccounts.TabIndex = 3;
             listBoxAccounts.SelectedIndexChanged += listBoxAccounts_SelectedIndexChanged;
             // 
-            // StartupForm
+            // Client
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(tabController);
-            Name = "StartupForm";
-            Text = "StartupForm";
+            Name = "Client";
+            Text = "Edge Børs v0.8";
             tabController.ResumeLayout(false);
             tab_Currencies.ResumeLayout(false);
             tab_Currencies.PerformLayout();
@@ -279,5 +301,7 @@
         private Label lblTotalAmount;
         private TextBox txtBoxTotal;
         private Button btnDeletePost;
+        private Label label2;
+        private TextBox txtCurrencyValue;
     }
 }

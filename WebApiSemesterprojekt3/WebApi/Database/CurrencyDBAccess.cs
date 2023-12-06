@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Models;
+﻿using Models;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -104,12 +103,57 @@ namespace WebApi.Database
             return currencies;
         }
 
+        public bool InsertCurrency(Currency currency)
+        {
+            bool isSuccess = false;
+            string insertCurrency = "INSERT INTO Currencies OUTPUT INSERTED.id VALUES(@type)";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                conn.Open();
+
+                using (SqlCommand insertCommand = conn.CreateCommand())
+                {
+                    insertCommand.CommandText = insertCurrency;
+                    insertCommand.Parameters.AddWithValue("type", currency.Type);
+
+                    int returnedId = Convert.ToInt32(insertCommand.ExecuteScalar());
+
+                    if (returnedId > 0)
+                    {
+                        isSuccess = CreateExchange(currency, returnedId, conn);
+                    }
+                }
+            }
+            return isSuccess;
+        }
+
+        private bool CreateExchange(Currency currency, int currencyId, SqlConnection conn)
+        {
+            bool res = false;
+            string insertExchange = "INSERT INTO Exchanges VALUES(@value, @date, @currencies_fk)";
+            using (SqlCommand insertCommand = conn.CreateCommand())
+            {
+                insertCommand.CommandText = insertExchange;
+                insertCommand.Parameters.AddWithValue("value", currency.Exchange.Value);
+                insertCommand.Parameters.AddWithValue("date", currency.Exchange.Date);
+                insertCommand.Parameters.AddWithValue("currencies_fk", currencyId);
+
+                int rowsAffected = insertCommand.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    res = true;
+                }
+            }
+            return res;
+        }
 
         private Exchange GetExchangesForCurrency(string currencyType)
         {
             Exchange res = null;
 
-            string queryString = " SELECT * FROM Exchanges INNER JOIN Currencies ON Exchanges.ID = Currencies.Exchange_id_fk WHERE currencytype = @type";
+            string queryString = "SELECT * FROM Currencies JOIN Exchanges ON currencies.id = exchanges.currencies_id_fk WHERE currencytype = @type";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand selectCommand = new SqlCommand(queryString, conn))

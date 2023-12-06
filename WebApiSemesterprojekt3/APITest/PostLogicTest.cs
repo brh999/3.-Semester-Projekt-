@@ -45,7 +45,7 @@ namespace WebApi.Database.Tests
             //Assign
             List<Post> posts;
             int expectedAmount = 0;
-            string query = "SELECT COUNT(*) AS 'RowCount' FROM posts";
+            string query = "SELECT COUNT(*) AS 'RowCount' FROM posts WHERE posts.type = 'Offer'";
             //Act
             posts = (List<Post>)_postLogic.GetAllPosts();
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -58,7 +58,7 @@ namespace WebApi.Database.Tests
                     {
                         while (reader.Read())
                         {
-                            expectedAmount += (int)reader["RowCount"];
+                            expectedAmount = (int)reader["RowCount"];
                         }
                     }
                 }
@@ -77,10 +77,10 @@ namespace WebApi.Database.Tests
         public void InsertValidOfferShouldReturnTheSameOffer()
         {
             //Assign
-            AccountDBAccess accountDB = new(TestConfigHelper.GetConfigurationRoot());
+            
             List<Post> list;
             Currency currency = new("USD");
-            Post offer = new(100, 10, currency, -1, "Offer");
+            Post offer = new(100, 10, currency, 1000, "Offer");
             Post? result;
             //Act
 
@@ -123,13 +123,12 @@ namespace WebApi.Database.Tests
             //Assign
             Currency currency = new("USD");
             Post offer = new(100, 10, currency, -1, "Offer");
-            Post? result;
+            
             string userId = "Invalid-id-123-123-123";
             //Act
-            result = _postLogic.InsertOffer(offer, userId);
             //Assert
 
-            Assert.Null(result);
+            Assert.Throws<ArgumentException>(() => _postLogic.InsertOffer(offer, userId));
             
         }
 
