@@ -151,28 +151,35 @@ namespace WebApi.Database
             string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, Currencies_id_fk)" +
               "OUTPUT INSERTED.ID VALUES(@amount, @price, @isComplete, @type, (select id from accounts where aspnetusers_id_fk = @aspNetId), (select id from currencies where currencytype = @cType))";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            try
             {
-                conn.Open();
-
-                using (SqlCommand insertCommand = conn.CreateCommand())
+                using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
+                    conn.Open();
+
+                    using (SqlCommand insertCommand = conn.CreateCommand())
                     {
-                        //Parameter binding
-                        insertCommand.CommandText = queryString;
-                        insertCommand.Parameters.AddWithValue("amount", offer.Amount);
-                        insertCommand.Parameters.AddWithValue("price", offer.Price);
-                        insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
-                        insertCommand.Parameters.AddWithValue("type", "Offer");
-                        
-                        insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
-                        insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
-                        changes = insertCommand.ExecuteNonQuery();
+                        {
+                            //Parameter binding
+                            insertCommand.CommandText = queryString;
+                            insertCommand.Parameters.AddWithValue("amount", offer.Amount);
+                            insertCommand.Parameters.AddWithValue("price", offer.Price);
+                            insertCommand.Parameters.AddWithValue("isComplete", offer.IsComplete);
+                            insertCommand.Parameters.AddWithValue("type", "Offer");
+                            insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
+                            insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
+                            changes = insertCommand.ExecuteNonQuery();
+                        }
+
                     }
 
                 }
-
             }
+            catch (SqlException ex)
+            {
+                throw new DatabaseException("Offer could not be inserted");
+            }
+
             return changes > 0;
         }
 
@@ -210,42 +217,48 @@ namespace WebApi.Database
 
         public IEnumerable<TransactionLine> GetTransactionLines(int id)
         {
-            if (id < 1)
-            {
-                throw new ArgumentException("id cannot be less than 1");
-            }
+            
 
 
             List<TransactionLine> foundLines = new List<TransactionLine>();
             string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
                 " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @id";
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+            try
             {
-                conn.Open();
-                readCommand.Parameters.AddWithValue("id", id);
-
-                using (SqlDataReader reader = readCommand.ExecuteReader())
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand readCommand = new SqlCommand(queryString, conn))
                 {
-                    while (reader.Read())
-                    {
-                        int buyerId = (int)reader["post_bid_id_fk"];
-                        TransactionLine line = new TransactionLine
-                        {
-                            Date = (DateTime)reader["date"],
-                            Amount = (double)reader["amount"],
-                            Buyer = new Post()
-                            {
-                                Id = buyerId,
-                            },
-                            Seller = null,
+                    conn.Open();
+                    readCommand.Parameters.AddWithValue("id", id);
 
-                        };
-                        foundLines.Add(line);
+                    using (SqlDataReader reader = readCommand.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int buyerId = (int)reader["post_bid_id_fk"];
+                            TransactionLine line = new TransactionLine
+                            {
+                                Date = (DateTime)reader["date"],
+                                Amount = (double)reader["amount"],
+                                Buyer = new Post()
+                                {
+                                    Id = buyerId,
+                                },
+                                Seller = null,
+
+                            };
+                            foundLines.Add(line);
+                        }
+                        
                     }
-                    return foundLines;
                 }
             }
+            catch(SqlException ex)
+            {
+                throw new DatabaseException("Could not find any transactionsLines");
+            }
+
+            return foundLines;
         }
 
 
@@ -255,19 +268,28 @@ namespace WebApi.Database
             int changes = 0;
             string queryString = "DELETE FROM Posts WHERE id=@id";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            using (SqlCommand deleteCommand = new SqlCommand(queryString, conn))
+            try
             {
-                conn.Open();
-                deleteCommand.Parameters.AddWithValue("id", id);
-                changes = deleteCommand.ExecuteNonQuery();
-                if (changes > 0)
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand deleteCommand = new SqlCommand(queryString, conn))
                 {
-                    res = true;
-                }
-                return res;
+                    conn.Open();
+                    deleteCommand.Parameters.AddWithValue("id", id);
+                    changes = deleteCommand.ExecuteNonQuery();
+                    if (changes > 0)
+                    {
+                        res = true;
+                    }
+                    
 
+                }
             }
+            catch(SqlException ex)
+            {
+                throw new DatabaseException("Could not delete the offer");
+            }
+            return res;
+
         }
 
 

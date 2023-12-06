@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using WebApi.BuissnessLogiclayer;
+using WebApi.Database;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -41,6 +42,9 @@ namespace WebApi.Controllers
             catch (ArgumentException ex)
             {
                 foundLines = StatusCode(id, ex.Message);
+            }catch(DatabaseException ex)
+            {
+                foundLines = StatusCode(500, ex.Message);
             }
             
 
@@ -81,23 +85,23 @@ namespace WebApi.Controllers
         [HttpPost("{aspNetUserId}")]
         public IActionResult Post([FromBody] Post inOffer, string aspNetUserId)
         {
-
-            //TODO: Error handling
+            
             IActionResult result = StatusCode(500);
-            Post? isOfferValid = null;
+           
             try
             {
-                isOfferValid = _offerLogic.InsertOffer(inOffer, aspNetUserId);
-            }
-            catch (Exception)
-            {
-                return result;
-            }
+                Post returnedOffer = _offerLogic.InsertOffer(inOffer, aspNetUserId);
 
-            // Checks if offer is saved into the database
-            if (isOfferValid != null)
+                if (returnedOffer.Equals(inOffer)){
+                    result = Ok(returnedOffer);
+                }
+            }
+            catch (DatabaseException)
             {
-                result = Ok();
+
+            }catch (ArgumentException ex)
+            {
+                result = BadRequest(ex.Message);
             }
 
             return result;
@@ -121,8 +125,12 @@ namespace WebApi.Controllers
                     result = Ok();
                 }
             }
-            catch (Exception)
+            catch (DatabaseException)
             {
+
+            }catch(ArgumentException ex)
+            {
+                result = BadRequest(ex.Message);
             }
             return result;
         }
