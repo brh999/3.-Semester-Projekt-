@@ -15,8 +15,7 @@ namespace DesktopClient.UI
             _postLogic = new PostLogic();
             _accountLogic = new AccountLogic();
             UpdateCurrencies();
-            UpdatePosts();
-            UpdateAccounts();
+
         }
 
 
@@ -163,6 +162,28 @@ namespace DesktopClient.UI
             if (!char.IsLetter(e.KeyChar))
             {
                 e.Handled = true; // Block non-letter characters
+            }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            UpdateCurrencies();
+        }
+
+        private void tabController_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = tabController.SelectedIndex;
+            switch (selectedIndex)
+            {
+                case 0:
+                    UpdateCurrencies();
+                    break;
+                case 1:
+                    UpdatePosts();
+                    break;
+                case 2:
+                    UpdateAccounts();
+                    break;
             }
         }
     }

@@ -22,7 +22,7 @@
 
         public override string? ToString()
         {
-            return $"Value: {Value}";
+            return $"{Value}";
         }
     }
 }

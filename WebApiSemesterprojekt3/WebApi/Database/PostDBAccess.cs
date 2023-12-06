@@ -64,7 +64,7 @@ namespace WebApi.Database
         public IEnumerable<Post> GetOfferPosts()
         {
             List<Post> foundOffers = new List<Post>();
-            string queryString = "SELECT * FROM Posts JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.id = currencies.id WHERE posts.type = 'offer'";
+            string queryString = "SELECT * FROM Posts JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.currencies_id_fk = currencies.id WHERE posts.type = 'Offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))

@@ -32,6 +32,7 @@
             ListBoxCurrencies = new ListBox();
             tabController = new TabControl();
             tab_Currencies = new TabPage();
+            btnRefresh = new Button();
             label2 = new Label();
             txtCurrencyValue = new TextBox();
             label1 = new Label();
@@ -85,9 +86,11 @@
             tabController.SelectedIndex = 0;
             tabController.Size = new Size(776, 417);
             tabController.TabIndex = 2;
+            tabController.SelectedIndexChanged += tabController_SelectedIndexChanged;
             // 
             // tab_Currencies
             // 
+            tab_Currencies.Controls.Add(btnRefresh);
             tab_Currencies.Controls.Add(label2);
             tab_Currencies.Controls.Add(txtCurrencyValue);
             tab_Currencies.Controls.Add(label1);
@@ -101,6 +104,16 @@
             tab_Currencies.TabIndex = 0;
             tab_Currencies.Text = "Currencies";
             tab_Currencies.UseVisualStyleBackColor = true;
+            // 
+            // btnRefresh
+            // 
+            btnRefresh.Location = new Point(545, 334);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(171, 29);
+            btnRefresh.TabIndex = 8;
+            btnRefresh.Text = "Refresh";
+            btnRefresh.UseVisualStyleBackColor = true;
+            btnRefresh.Click += btnRefresh_Click;
             // 
             // label2
             // 
@@ -303,5 +316,6 @@
         private Button btnDeletePost;
         private Label label2;
         private TextBox txtCurrencyValue;
+        private Button btnRefresh;
     }
 }

@@ -28,7 +28,7 @@
 
         public override string? ToString()
         {
-            return $"Currency Type: {Type}      {Exchange}";
+            return $"{Type}      {Exchange} USD per unit.";
         }
     }
 }
