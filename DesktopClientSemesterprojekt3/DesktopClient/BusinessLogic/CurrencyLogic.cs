@@ -13,9 +13,19 @@ namespace DesktopClient.BusinessLogic
             _tokenManager = new();
             _currencyService = new();
         }
-        public bool CreateCurrency(string name)
+        public async Task<bool> CreateCurrency(string name, double value)
         {
-            throw new NotImplementedException();
+            Currency currency = new Currency
+            {
+                Type = name,
+                Exchange = new Exchange
+                {
+                    Value = value,
+                    Date = DateTime.UtcNow,
+                }
+            };
+            bool success = await _currencyService.SaveCurrency(currency); 
+            return success;
         }
         /// <summary>
         /// Used to fetch a list of all currencies from the database

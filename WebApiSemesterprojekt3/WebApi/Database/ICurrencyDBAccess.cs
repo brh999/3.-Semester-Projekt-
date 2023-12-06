@@ -9,5 +9,7 @@ namespace WebApi.Database
         Currency? GetCurrencyById(int currencyID);
 
         IEnumerable<Currency> GetCurrencyList();
+
+        bool InsertCurrency(Currency currency);
     }
 }

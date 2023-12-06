@@ -4,9 +4,9 @@ namespace DesktopClient.BusinessLogic
 {
     internal interface ICurrencyLogic
     {
-        bool CreateCurrency(string name);
+        Task<bool> CreateCurrency(string name, double value);
 
-        public Task<IEnumerable<Currency>> GetAllCurrencies();
+        Task<IEnumerable<Currency>> GetAllCurrencies();
 
 
     }

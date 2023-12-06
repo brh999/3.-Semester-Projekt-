@@ -74,14 +74,14 @@ namespace WebApi.Controllers
         }
 
 
-        // GET api/<ValuesController>/5
+        // GET api/<OfferController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<ValuesController>
+        // POST api/<OfferController>
         [HttpPost("{aspNetUserId}")]
         public IActionResult Post([FromBody] Post inOffer, string aspNetUserId)
         {

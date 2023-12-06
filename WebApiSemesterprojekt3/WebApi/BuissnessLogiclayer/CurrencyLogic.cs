@@ -30,5 +30,18 @@ namespace WebApi.BuissnessLogiclayer
             return _dataAccess.GetCurrencyById(id);
         }
 
+        public bool InsertCurrency(Currency currency)
+        {
+            try 
+            {
+                bool success = _dataAccess.InsertCurrency(currency);
+                return success;
+            }
+            catch (Exception ex) 
+            {
+                throw;
+
+            }
+        }
     }
 }
