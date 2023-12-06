@@ -95,6 +95,10 @@ namespace WebAppWithAuthentication.Controllers
                     offers = Enumerable.Empty<Post>();
                     ModelState.AddModelError(string.Empty, "No offers found");
                 }
+                if (TempData["message"] != null)
+                {
+                    ViewData["message"] = TempData["message"];
+                }
                 return View();
             }
             catch
@@ -247,6 +251,8 @@ namespace WebAppWithAuthentication.Controllers
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var serviceResponse = _connection.CallServicePost(content);
             serviceResponse.Wait();
+            var successful = serviceResponse.Result;
+            TempData["message"] = 1;
             return RedirectToAction("GetAllPosts");
         }
 

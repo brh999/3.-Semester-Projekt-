@@ -1,4 +1,5 @@
 ﻿using Models;
+using System;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -273,7 +274,6 @@ namespace WebApi.Database
 
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
-            bool res = false;
             AccountDBAccess accDB = new(_configuration);
             Account seller = GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
@@ -282,11 +282,7 @@ namespace WebApi.Database
             {
                 
             }
-            if (isComplete)
-            {
-                res = true;
-            }
-            return res;
+            return isComplete;
         }
 
         public Account GetAssociatedAccount(int postId)
@@ -314,7 +310,34 @@ namespace WebApi.Database
         {
             bool res = false;
             int id = inPost.Id;
-            string query = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
+            bool isComplete = IsOfferComplete(id);
+            if (!isComplete)
+            {
+                string query = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = query;
+                        cmd.Parameters.AddWithValue("id", id);
+                        cmd.Parameters.AddWithValue("buyerID", buyer.Id);
+                        int row = cmd.ExecuteNonQuery();
+                        if (row != null)
+                        {
+                            res = true;
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
+
+        public bool IsOfferComplete(int id)
+        {
+            bool res = false;
+            string query = "select isComplete from Posts where id = @id";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -322,17 +345,25 @@ namespace WebApi.Database
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue("id", id);
-                    cmd.Parameters.AddWithValue("buyerID", buyer.Id);
-                    int row = cmd.ExecuteNonQuery();
-                    if(row != null)
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        res = true;
+                        while (reader.Read())
+                        {
+                            bool isComplete = (bool)reader["isComplete"];
+                            if (isComplete)
+                            {
+                                res = true;
+                                break;
+                            }
+                        }
                     }
                 }
+                return res;
             }
-            return res;
         }
 
+
+        // Get offers by account/aspnetuser ID
         public IEnumerable<Post?> GetOfferPostsById(string aspNetUser)
         {
             CurrencyDBAccess cu = new CurrencyDBAccess(_configuration);
