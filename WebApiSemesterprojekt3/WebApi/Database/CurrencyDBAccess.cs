@@ -18,7 +18,7 @@ namespace WebApi.Database
         {
             Currency? res = null;
 
-            string queryString = "select * from Currencies JOIN Exchanges on Exchanges.id = Currencies.exchange_id_fk WHERE Currencies.id = @currencyID";
+            string queryString = "select * from Currencies JOIN Exchanges on Exchanges.id = Exchanges.currencies_id_fk WHERE Currencies.id = @currencyID";
 
 
 

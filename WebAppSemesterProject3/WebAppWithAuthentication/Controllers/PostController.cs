@@ -254,7 +254,7 @@ namespace WebAppWithAuthentication.Controllers
             if (serviceResponse.Result.IsSuccessStatusCode)
             {
                 var apiResponse = serviceResponse.Result.Content.ReadAsAsync<dynamic>().Result;
-                var isComplete = apiResponse.IsComplete;
+                bool isComplete = (bool)apiResponse.successful;
                 if (isComplete)
                 {
                     TempData["message"] = 1;

@@ -141,7 +141,7 @@ namespace WebApi.Controllers
         {
             bool success = _offerLogic.BuyOffer(inPost, aspNetUserId);
             
-            return Ok(new {IsComplete = success});
+            return Ok(new {successful = success});
         }
 
     }
