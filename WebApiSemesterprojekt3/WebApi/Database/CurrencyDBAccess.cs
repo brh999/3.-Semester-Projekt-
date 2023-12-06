@@ -133,7 +133,7 @@ namespace WebApi.Database
         private int createExchange(Currency currency,SqlConnection conn)
         {
             int id = 0;
-            string insertExchange = "INSERT INTO Exchanges VALUES(@value, @date)";
+            string insertExchange = "INSERT INTO Exchanges OUTPUT INSERTED.id VALUES(@value, @date)";
             using (SqlCommand insertCommand = conn.CreateCommand())
             {
                 insertCommand.CommandText = insertExchange;

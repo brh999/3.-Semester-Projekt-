@@ -287,26 +287,15 @@ fontsize=10
     <additional_attributes>40.0;90.0;10.0;90.0;10.0;30.0;310.0;30.0;310.0;10.0</additional_attributes>
   </element>
   <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1067</x>
-      <y>330</y>
-      <w>121</w>
-      <h>33</h>
-    </coordinates>
-    <panel_attributes>exchange_id_fk</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>Relation</id>
     <coordinates>
-      <x>825</x>
+      <x>902</x>
       <y>352</y>
-      <w>319</w>
-      <h>121</h>
+      <w>352</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>40.0;90.0;10.0;90.0;10.0;40.0;270.0;40.0;270.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0;300.0;40.0;300.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -667,6 +656,17 @@ omvendt??</panel_attributes>
       <h>33</h>
     </coordinates>
     <panel_attributes>AspNetUser_id_fk</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1166</x>
+      <y>440</y>
+      <w>121</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>currency_id_fk</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
