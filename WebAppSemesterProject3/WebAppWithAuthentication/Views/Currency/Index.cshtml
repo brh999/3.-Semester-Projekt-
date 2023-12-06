@@ -3,6 +3,11 @@
 
 @{
     ViewData["Title"] = "Index";
+    List<Currency> currencies = null;
+    if (ViewData["Currencies"] != null)
+    {
+        currencies = (List<Currency>)ViewData["Currencies"];
+    }
 }
 
 <!DOCTYPE html>
@@ -74,17 +79,23 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in ViewData["currencies"] as List<Currency>)
+            @if (currencies != null)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Type)
-                        @Html.DisplayFor(modelItem => item.Exchange)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
+                if (currencies[0] != null)
+                {
+                    @foreach (var item in currencies)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Type)
+                                @Html.DisplayFor(modelItem => item.Exchange)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+                }
             }
         </tbody>
     </table>

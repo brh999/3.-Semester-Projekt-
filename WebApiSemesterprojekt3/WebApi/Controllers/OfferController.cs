@@ -139,9 +139,9 @@ namespace WebApi.Controllers
         [Route("buyoffer/{aspNetUserId}")]
         public IActionResult BuyOffer([FromBody] Post inPost, string aspNetUserId)
         {
-            _offerLogic.BuyOffer(inPost, aspNetUserId);
-
-            return Ok();
+            bool success = _offerLogic.BuyOffer(inPost, aspNetUserId);
+            
+            return Ok(new {successful = success});
         }
 
     }

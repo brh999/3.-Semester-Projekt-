@@ -1,5 +1,9 @@
 ﻿using Models;
+using System;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Transactions;
+using System.Data;
 
 namespace WebApi.Database
 {
@@ -30,7 +34,7 @@ namespace WebApi.Database
         public IEnumerable<Post> GetBidPosts()
         {
             List<Post> foundBids = new List<Post>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'bid'";
+            string queryString = "SELECT * FROM posts INNER JOIN exchanges ON posts.currencies_id_fk = exchanges.currencies_id_fk WHERE posts.type = 'bid'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -64,8 +68,8 @@ namespace WebApi.Database
         public IEnumerable<Post> GetOfferPosts()
         {
             List<Post> foundOffers = new List<Post>();
-            string queryString = "SELECT * FROM Posts JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.currencies_id_fk = currencies.id WHERE posts.type = 'Offer'";
 
+            string queryString = "SELECT * FROM Posts INNER JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.currencies_id_fk = currencies.id WHERE posts.type = 'offer'";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
             {
@@ -215,7 +219,7 @@ namespace WebApi.Database
 
         public IEnumerable<TransactionLine> GetTransactionLines(int id)
         {
-            
+
 
 
             List<TransactionLine> foundLines = new List<TransactionLine>();
@@ -247,11 +251,11 @@ namespace WebApi.Database
                             };
                             foundLines.Add(line);
                         }
-                        
+
                     }
                 }
             }
-            catch(SqlException ex)
+            catch (SqlException ex)
             {
                 throw new DatabaseException("Could not find any transactionsLines");
             }
@@ -278,11 +282,11 @@ namespace WebApi.Database
                     {
                         res = true;
                     }
-                    
+
 
                 }
             }
-            catch(SqlException ex)
+            catch (SqlException ex)
             {
                 throw new DatabaseException("Could not delete the offer");
             }
@@ -293,7 +297,6 @@ namespace WebApi.Database
 
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
-            bool res = false;
             AccountDBAccess accDB = new(_configuration);
             Account seller = GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
@@ -302,11 +305,7 @@ namespace WebApi.Database
             {
 
             }
-            if (isComplete)
-            {
-                res = true;
-            }
-            return res;
+            return isComplete;
         }
 
         public Account GetAssociatedAccount(int postId)
@@ -330,29 +329,97 @@ namespace WebApi.Database
             return res;
         }
 
+        //private bool CompletePost(Post inPost, Account buyer)
+        //{
+        //    bool res = false;
+        //    int id = inPost.Id;
+        //    bool isComplete = IsOfferComplete(id);
+        //    if (!isComplete)
+        //    {
+        //        string query = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
+        //        using (SqlConnection conn = new SqlConnection(_connectionString))
+        //        {
+        //            conn.Open();
+        //            using (SqlCommand cmd = conn.CreateCommand())
+        //            {
+        //                cmd.CommandText = query;
+        //                cmd.Parameters.AddWithValue("id", id);
+        //                cmd.Parameters.AddWithValue("buyerID", buyer.Id);
+        //                int row = cmd.ExecuteNonQuery();
+        //                if (row != null)
+        //                {
+        //                    res = true;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return res;
+        //}
+
         private bool CompletePost(Post inPost, Account buyer)
         {
             bool res = false;
             int id = inPost.Id;
-            string query = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
+            string updatePosts = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
+                using (SqlTransaction transaction = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead)) 
+                using (SqlCommand insertCommand = conn.CreateCommand())
                 {
-                    cmd.CommandText = query;
-                    cmd.Parameters.AddWithValue("id", id);
-                    cmd.Parameters.AddWithValue("buyerID", buyer.Id);
-                    int row = cmd.ExecuteNonQuery();
-                    if (row != null)
                     {
-                        res = true;
+                        insertCommand.Transaction = transaction;
+                        insertCommand.CommandText = updatePosts;
+                        insertCommand.Parameters.AddWithValue("buyerID", buyer.Id);
+                        insertCommand.Parameters.AddWithValue("id", id);
+                        bool result = IsOfferComplete(id, conn, transaction);
+                        if (!result)
+                        {
+                            insertCommand.ExecuteNonQuery();
+                            transaction.Commit();
+                            res = true;
+                        }
+                        else
+                        {
+                            transaction.Rollback();
+                        }
+
                     }
+
                 }
+
             }
             return res;
         }
 
+        public bool IsOfferComplete(int id, SqlConnection con, SqlTransaction t)
+        {
+            bool res = false;
+            string query = "select isComplete from Posts where id = @id";
+            using (SqlCommand cmd = con.CreateCommand())
+            {
+                cmd.Transaction = t;
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("id", id);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    
+                    while (reader.Read())
+                    {
+                        bool isComplete = (bool)reader["isComplete"];
+                        if (isComplete)
+                        {
+                            res = true;
+                            break;
+                        }
+                    }
+                }
+                return res;
+            }
+        }
+
+
+        // Get offers by account/aspnetuser ID
         public IEnumerable<Post?> GetOfferPostsById(string aspNetUser)
         {
             CurrencyDBAccess cu = new CurrencyDBAccess(_configuration);

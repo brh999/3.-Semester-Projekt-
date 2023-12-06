@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var message = ViewData["message"];
 }
 <script>
     user = ViewData["user"]
@@ -80,7 +81,28 @@
     }
 </style>
 
+
 <h1>- Bids & Offers -</h1>
+
+
+<!-- Message system for telling the user whether they have successfully bought an offer or not.
+     Each number represents a message
+-->
+<div>
+@if (message != null)
+{
+    switch (message)
+    {
+        case 1:
+                <label>Successfully bought offer!</label>
+            break;
+
+        case 2:
+                <label>Offer was already bought..</label>
+            break;
+    }
+}
+</div>
 
 <p>
     <a asp-action="CreateOffer">Create Offer</a>
