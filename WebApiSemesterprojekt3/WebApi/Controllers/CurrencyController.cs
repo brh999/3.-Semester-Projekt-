@@ -54,6 +54,27 @@ namespace WebApi.Controllers
             return currency;
 
         }
+        // Post api/<CurrencyController>
+        [HttpPost]
+        public IActionResult Post([FromBody] Currency currency)
+        {
+            IActionResult result = StatusCode(500);
+            try
+            {
+                bool success = _currencyLogic.InsertCurrency(currency);
+                if (success)
+                {
+                    result = Ok();
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return result;
+            }
+
+
+        }
 
     }
 }

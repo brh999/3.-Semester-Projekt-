@@ -108,7 +108,6 @@ namespace WebApi.Database
         public void InsertBid(Post bid)
         {
             CurrencyDBAccess currencyDBaccess = new(this._configuration);
-            int res = 0;
             string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
                 "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @account_id_fk, @currency_id_fk);";
 
