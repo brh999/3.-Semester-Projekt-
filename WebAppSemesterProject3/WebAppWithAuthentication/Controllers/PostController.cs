@@ -251,8 +251,20 @@ namespace WebAppWithAuthentication.Controllers
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var serviceResponse = _connection.CallServicePost(content);
             serviceResponse.Wait();
-            var successful = serviceResponse.Result;
-            TempData["message"] = 1;
+            if (serviceResponse.Result.IsSuccessStatusCode)
+            {
+                var apiResponse = serviceResponse.Result.Content.ReadAsAsync<dynamic>().Result;
+                var isComplete = apiResponse.IsComplete;
+                if (isComplete)
+                {
+                    TempData["message"] = 1;
+                } 
+                else
+                {
+                    TempData["message"] = 2;
+                }
+
+            }
             return RedirectToAction("GetAllPosts");
         }
 
