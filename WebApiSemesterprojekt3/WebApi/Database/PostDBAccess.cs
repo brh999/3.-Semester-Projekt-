@@ -1,9 +1,5 @@
 ﻿using Models;
-using System;
 using System.Data.SqlClient;
-using System.Security.Cryptography;
-using System.Transactions;
-using System.Data;
 
 namespace WebApi.Database
 {
@@ -11,7 +7,6 @@ namespace WebApi.Database
     {
         private readonly IConfiguration _configuration;
         private string? _connectionString;
-
 
         public PostDBAccess(IConfiguration configuration)
         {
@@ -24,11 +19,7 @@ namespace WebApi.Database
         /// Get all bid Post
         /// </summary>
         /// <returns></returns>
-
-        public PostDBAccess()
-        {
-
-        }
+        public PostDBAccess() { }
 
 
         public IEnumerable<Post> GetBidPosts()
@@ -70,6 +61,7 @@ namespace WebApi.Database
             List<Post> foundOffers = new List<Post>();
 
             string queryString = "SELECT * FROM Posts INNER JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.currencies_id_fk = currencies.id WHERE posts.type = 'offer'";
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
             {
@@ -110,7 +102,7 @@ namespace WebApi.Database
         //TODO contiue implementing this!!
         public void InsertBid(Post bid)
         {
-            CurrencyDBAccess currencyDBaccess = new(this._configuration);
+            CurrencyDBAccess currencyDB = new(_configuration);
             string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
                 "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @account_id_fk, @currency_id_fk);";
 
@@ -123,7 +115,7 @@ namespace WebApi.Database
                     {
                         insertCommand.Transaction = transaction;
 
-                        int currencyType = currencyDBaccess.GetCurrencyID(bid.Currency);
+                        int currencyType = currencyDB.GetCurrencyID(bid.Currency);
                         insertCommand.CommandText = queryString;
                         insertCommand.Parameters.AddWithValue("amount", bid.Amount);
                         insertCommand.Parameters.AddWithValue("price", bid.Price);
@@ -172,9 +164,7 @@ namespace WebApi.Database
                             insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
                             changes = insertCommand.ExecuteNonQuery();
                         }
-
                     }
-
                 }
             }
             catch (SqlException ex)
@@ -219,12 +209,10 @@ namespace WebApi.Database
 
         public IEnumerable<TransactionLine> GetTransactionLines(int id)
         {
-
-
-
             List<TransactionLine> foundLines = new List<TransactionLine>();
             string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
                 " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @id";
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -247,11 +235,10 @@ namespace WebApi.Database
                                     Id = buyerId,
                                 },
                                 Seller = null,
-
                             };
+
                             foundLines.Add(line);
                         }
-
                     }
                 }
             }
@@ -311,7 +298,9 @@ namespace WebApi.Database
         public Account GetAssociatedAccount(int postId)
         {
             Account res = null;
+
             string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
+
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new(queryString, con))
             {
@@ -364,7 +353,7 @@ namespace WebApi.Database
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                using (SqlTransaction transaction = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead)) 
+                using (SqlTransaction transaction = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     {
@@ -403,7 +392,7 @@ namespace WebApi.Database
                 cmd.Parameters.AddWithValue("id", id);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    
+
                     while (reader.Read())
                     {
                         bool isComplete = (bool)reader["isComplete"];
