@@ -30,7 +30,7 @@ namespace WebApi.Database
         public IEnumerable<Post> GetBidPosts()
         {
             List<Post> foundBids = new List<Post>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk WHERE posts.type = 'bid'";
+            string queryString = "SELECT * FROM Posts JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.currencies_id_fk = currencies.id WHERE posts.type = 'Bid'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
