@@ -157,5 +157,33 @@ namespace WebApi.Database
                 }
             }
         }
+
+        /// <summary>
+        /// Queries the Database for an account associated with a post on the given id
+        /// </summary>
+        /// <param name="postId">The ID for the post you want to get the account for</param>
+        /// <returns>The account associated with the post</returns>
+        public Account GetAssociatedAccount(int postId)
+        {
+            Account res = null;
+
+            string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = new(queryString, con))
+            {
+                con.Open();
+
+                cmd.Parameters.AddWithValue("@POSTID", postId);
+
+                var accountId = cmd.ExecuteScalar();
+
+                AccountDBAccess accDB = new(_configuration);
+
+                res = accDB.GetAccountById((string)accountId);
+            }
+            return res;
+        }
+
     }
 }

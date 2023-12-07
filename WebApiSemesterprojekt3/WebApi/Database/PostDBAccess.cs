@@ -14,14 +14,13 @@ namespace WebApi.Database
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
+        public PostDBAccess() { }
+
 
         /// <summary>
         /// Get all bid Post
         /// </summary>
         /// <returns></returns>
-        public PostDBAccess() { }
-
-
         public IEnumerable<Post> GetBidPosts()
         {
             List<Post> foundBids = new List<Post>();
@@ -36,7 +35,8 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+                        Currency generatedCurrency = new((string)reader["currencytype"]);
+
                         Post bids = new Post
                         {
                             Amount = (double)reader["amount"],
@@ -71,7 +71,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+                        Currency generatedCurrency = new((string)reader["currencytype"]);
                         Post offer = new Post
                         {
                             Id = (int)reader["id"],
@@ -88,18 +88,12 @@ namespace WebApi.Database
             }
         }
 
-        private Currency CreateCurrency(string inType)
-        {
-            Currency res = new Currency(new Exchange(), inType);
 
-            return res;
-
-        }
         /// <summary>
         /// Insert the Bid into the database
         /// </summary>
         /// <param name="bid"></param>
-        //TODO contiue implementing this!!
+        //TODO continue implementing this!!
         public void InsertBid(Post bid)
         {
             CurrencyDBAccess currencyDB = new(_configuration);
@@ -126,11 +120,8 @@ namespace WebApi.Database
                         insertCommand.Parameters.AddWithValue("currency_id_fk", currencyType);
                         insertCommand.ExecuteNonQuery();
                         transaction.Commit();
-
                     }
-
                 }
-
             }
         }
 
@@ -178,7 +169,7 @@ namespace WebApi.Database
         public IEnumerable<Post> GetAllPosts()
         {
             List<Post> foundPosts = new List<Post>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk";
+            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.id";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -189,7 +180,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+                        Currency generatedCurrency = new((string)reader["currencytype"]);
 
                         Post offer = new Post
                         {
@@ -205,49 +196,6 @@ namespace WebApi.Database
                 }
                 return foundPosts;
             }
-        }
-
-        public IEnumerable<TransactionLine> GetTransactionLines(int id)
-        {
-            List<TransactionLine> foundLines = new List<TransactionLine>();
-            string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
-                " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @id";
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
-                using (SqlCommand readCommand = new SqlCommand(queryString, conn))
-                {
-                    conn.Open();
-                    readCommand.Parameters.AddWithValue("id", id);
-
-                    using (SqlDataReader reader = readCommand.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            int buyerId = (int)reader["post_bid_id_fk"];
-                            TransactionLine line = new TransactionLine
-                            {
-                                Date = (DateTime)reader["date"],
-                                Amount = (double)reader["amount"],
-                                Buyer = new Post()
-                                {
-                                    Id = buyerId,
-                                },
-                                Seller = null,
-                            };
-
-                            foundLines.Add(line);
-                        }
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                throw new DatabaseException("Could not find any transactionsLines");
-            }
-
-            return foundLines;
         }
 
 
@@ -285,7 +233,7 @@ namespace WebApi.Database
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
             AccountDBAccess accDB = new(_configuration);
-            Account seller = GetAssociatedAccount(inPost.Id);
+            Account seller = accDB.GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
             bool isComplete = CompletePost(inPost, buyer);
             if (seller != null && buyer != null)
@@ -295,27 +243,7 @@ namespace WebApi.Database
             return isComplete;
         }
 
-        public Account GetAssociatedAccount(int postId)
-        {
-            Account res = null;
 
-            string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
-
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand cmd = new(queryString, con))
-            {
-                con.Open();
-
-                cmd.Parameters.AddWithValue("@POSTID", postId);
-
-                var accountId = cmd.ExecuteScalar();
-
-                AccountDBAccess accDB = new(_configuration);
-
-                res = accDB.GetAccountById((string)accountId);
-            }
-            return res;
-        }
 
         //private bool CompletePost(Post inPost, Account buyer)
         //{
