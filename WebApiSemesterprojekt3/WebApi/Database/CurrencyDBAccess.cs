@@ -20,8 +20,6 @@ namespace WebApi.Database
 
             string queryString = "select * from Currencies JOIN Exchanges on Exchanges.id = Exchanges.currencies_id_fk WHERE Currencies.id = @currencyID";
 
-
-
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
             {
@@ -40,9 +38,7 @@ namespace WebApi.Database
                             Type = (string)reader["currencytype"],
                             Exchange = new Exchange(value, date)
                         };
-
                     }
-
                 }
             }
             return res;

@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models;
-using Microsoft.AspNetCore.Authorization;
-using WebApi.BuissnessLogiclayer;
 using Models.DTO;
+using WebApi.BuissnessLogiclayer;
 
 
 
@@ -35,11 +33,11 @@ namespace WebApi.Controllers
 
         [HttpGet, Route("api/[Controller]/{id}")]
 
-        public ActionResult<AccountDto> GetAccount(string id)
+        public ActionResult<AccountDto> GetAccount(string aspDotNetId)
 
         {
             AccountDto? accountDto = null;
-            Account account = _accountLogic.GetAccountById(id);
+            Account account = _accountLogic.GetAccountById(aspDotNetId);
             if (!string.IsNullOrEmpty(account.Email) && !string.IsNullOrEmpty(account.Username))
             {
                 accountDto = new AccountDto(account);
@@ -56,7 +54,7 @@ namespace WebApi.Controllers
             List<CurrencyLine> res = null;
             res = _accountLogic.GetRelatedCurrencyLines(id);
 
-            if(res != null)
+            if (res != null)
             {
                 foundLines = Ok(res);
             }

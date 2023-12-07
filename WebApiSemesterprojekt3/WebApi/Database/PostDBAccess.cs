@@ -9,25 +9,19 @@ namespace WebApi.Database
         private readonly IConfiguration _configuration;
         private string? _connectionString;
 
-
         public PostDBAccess(IConfiguration configuration)
         {
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
+        public PostDBAccess() { }
+
 
         /// <summary>
         /// Get all bid Post
         /// </summary>
         /// <returns></returns>
-
-        public PostDBAccess()
-        {
-
-        }
-
-
         public IEnumerable<Post> GetBidPosts()
         {
             List<Post> foundBids = new List<Post>();
@@ -42,7 +36,8 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+                        Currency generatedCurrency = new((string)reader["currencytype"]);
+
                         Post bids = new Post
                         {
                             Amount = (double)reader["amount"],
@@ -67,6 +62,7 @@ namespace WebApi.Database
             List<Post> foundOffers = new List<Post>();
 
             string queryString = "SELECT * FROM Posts INNER JOIN currencies ON Posts.currencies_id_fk = currencies.id JOIN Exchanges ON Exchanges.currencies_id_fk = currencies.id WHERE posts.type = 'offer'";
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
             {
@@ -76,7 +72,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+                        Currency generatedCurrency = new((string)reader["currencytype"]);
                         Post offer = new Post
                         {
                             Id = (int)reader["id"],
@@ -93,13 +89,7 @@ namespace WebApi.Database
             }
         }
 
-        private Currency CreateCurrency(string inType)
-        {
-            Currency res = new Currency(new Exchange(), inType);
 
-            return res;
-
-        }
         /// <summary>
         /// Insert the Bid into the database
         /// </summary>
@@ -174,9 +164,7 @@ namespace WebApi.Database
                             insertCommand.Parameters.AddWithValue("cType", offer.Currency.Type);
                             changes = insertCommand.ExecuteNonQuery();
                         }
-
                     }
-
                 }
             }
             catch (SqlException ex)
@@ -190,7 +178,7 @@ namespace WebApi.Database
         public IEnumerable<Post> GetAllPosts()
         {
             List<Post> foundPosts = new List<Post>();
-            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.exchange_id_fk";
+            string queryString = "SELECT * FROM posts INNER JOIN currencies ON posts.currencies_id_fk = currencies.id";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -201,7 +189,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        Currency generatedCurrency = CreateCurrency((string)reader["currencytype"]);
+                        Currency generatedCurrency = new((string)reader["currencytype"]);
 
                         Post offer = new Post
                         {
@@ -298,7 +286,7 @@ namespace WebApi.Database
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
             AccountDBAccess accDB = new(_configuration);
-            Account seller = GetAssociatedAccount(inPost.Id);
+            Account seller = accDB.GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
             bool isComplete = CompleteOffer(inPost, buyer);
             if (seller != null && buyer != null)
@@ -344,7 +332,7 @@ namespace WebApi.Database
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-
+                using (SqlTransaction transaction = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     try
@@ -402,7 +390,6 @@ namespace WebApi.Database
                 {
                     transactionScope.Complete();
                 }
-
             }
             return res;
         }
@@ -419,6 +406,7 @@ namespace WebApi.Database
                 cmd.Parameters.AddWithValue("id", id);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
+
                     while (reader.Read())
                     {
                         bool isComplete = (bool)reader["isComplete"];
@@ -462,8 +450,6 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-
-
                         amount = (double)reader["amount"];
                         price = (double)reader["price"];
                         isComplete = (bool)reader["isComplete"];

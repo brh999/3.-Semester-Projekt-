@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
+using WebAppWithAuthentication.Service;
 
 namespace WebAppSemesterProject.Controllers
 {
@@ -28,33 +29,32 @@ namespace WebAppSemesterProject.Controllers
         //[Route,("{controller}/getallcurrencies")]
         public IActionResult Index()
         {
-            IEnumerable<Currency> currencies = null;
+            List<Currency> currencies = null;
 
-            using (var client = new HttpClient())
+            ServiceConnection sc = new(_url.ToString());
+
+            sc.UseUrl = sc.BaseUrl + "api/currency/";
+
+            var responseTask = sc.CallServiceGet();
+            responseTask.Wait();
+
+            var result = responseTask.Result;
+
+            if (result.IsSuccessStatusCode)
             {
-                client.BaseAddress = _url;
+                var readTask = result.Content.ReadAsAsync<List<Currency>>();
+                readTask.Wait();
 
-                var responseTask = client.GetAsync("api/currency");
-                responseTask.Wait();
-
-                var result = responseTask.Result;
-
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<List<Currency>>();
-                    readTask.Wait();
-
-                    currencies = readTask.Result;
-                }
-                else
-                {
-                    // Handle the error if needed
-                    currencies = Array.Empty<Currency>();
-                }
+                currencies = readTask.Result;
+            }
+            else
+            {
+                // Handle the error if needed
+                currencies = new List<Currency>();
             }
 
-            ViewData["currencies"] = currencies;
-            return View();
+            //ViewData["currencies"] = currencies;
+            return View(currencies);
         }
 
         // GET: CurrencyController1/Details/5
