@@ -7,5 +7,7 @@ namespace WebApi.BuissnessLogiclayer
         List<Account> GetAllAccounts();
         Account GetAccountById(string id);
         List<CurrencyLine> GetRelatedCurrencyLines(int id);
+
+        bool UpdateCurrencyLine(string aspDotNetId,CurrencyLine currencyLine);
     }
 }

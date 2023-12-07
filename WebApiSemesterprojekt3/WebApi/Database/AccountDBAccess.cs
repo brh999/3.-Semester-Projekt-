@@ -213,5 +213,14 @@ namespace WebApi.Database
 
             return res;
         }
+
+        public bool UpdateCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
+        {
+            bool res = false;
+            string queryString = "UPDATE CurrencyLines SET amount = 999 WHERE account_id_fk = (SELECT Accounts.id FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.id WHERE AspNetUsers.Id = @id";
+
+
+
+        }
     }
 }

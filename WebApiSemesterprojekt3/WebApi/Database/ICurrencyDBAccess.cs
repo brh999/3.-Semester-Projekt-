@@ -11,5 +11,7 @@ namespace WebApi.Database
         IEnumerable<Currency> GetCurrencyList();
 
         bool InsertCurrency(Currency currency);
+
+        bool UpdateAllCurencyValues();
     }
 }
