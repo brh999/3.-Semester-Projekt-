@@ -2,6 +2,8 @@
 using Models;
 using System.Security.Claims;
 using WebAppWithAuthentication.DTO;
+using WebAppWithAuthentication.BusinessLogic;
+
 
 using WebAppWithAuthentication.Service;
 
@@ -19,7 +21,7 @@ namespace WebAppWithAuthentication.Controllers
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
-                _connection = new ServiceConnection(url+"api/");
+                _connection = new ServiceConnection(url + "api/");
 
             }
             else
@@ -29,26 +31,24 @@ namespace WebAppWithAuthentication.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            
-                try
-                {
+            try
+            {
                 //gets the currently logged in users AspNetUser.id (string)
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 IAccountService al = new AccountService(_connection);
 
-                    var accountDto = await al.GetAccountById(userId);
+                var accountDto = await al.GetAccountById(userId);
 
-                    if (accountDto == null)
-                    {
-                        return NotFound();
-                    }
-                    return View(accountDto);
-                }
-                catch (Exception ex)
+                if (accountDto == null)
                 {
-                    return View();
+                    return NotFound();
                 }
-            
+                return View(accountDto);
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
 
 

@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet, Route("api/[Controller]/{id}")]
+        [HttpGet, Route("api/[Controller]/{aspDotNetId}")]
 
         public ActionResult<AccountDto> GetAccount(string aspDotNetId)
 
