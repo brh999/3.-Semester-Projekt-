@@ -1,7 +1,5 @@
 ﻿using Models;
-using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
-using System.Transactions;
 
 namespace WebApi.Database
 {
@@ -22,7 +20,7 @@ namespace WebApi.Database
         /// <param name="inOffer"></param>
         /// <param name="inBid"></param>
         /// <returns></returns>
-        public bool InsertTransactionLine(TransactionLine transactionLine)
+        public bool InsertTransactionLine(TransactionLine transactionLine, SqlTransaction? transaction = null)
         {
             bool res = false;
             string query = "insert into Transactions values(@date, @offerID, @bidID, @amount)";
@@ -35,10 +33,11 @@ namespace WebApi.Database
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue("@date", DateTime.Now);
                     cmd.Parameters.AddWithValue("@offerID", transactionLine.Seller.Id);
-                    cmd.Parameters.AddWithValue("@bidID", transactionLine.Buyer.Id); 
+                    cmd.Parameters.AddWithValue("@bidID", transactionLine.Buyer.Id);
                     cmd.Parameters.AddWithValue("@amount", transactionLine.Seller.Amount);
                     var scalarResult = cmd.ExecuteScalar();
-                    if (scalarResult != null) {
+                    if (scalarResult != null)
+                    {
                         res = true;
                     }
                 }

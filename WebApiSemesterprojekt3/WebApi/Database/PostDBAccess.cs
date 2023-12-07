@@ -1,9 +1,6 @@
 ﻿using Models;
-using System;
 using System.Data.SqlClient;
-using System.Security.Cryptography;
 using System.Transactions;
-using System.Data;
 
 namespace WebApi.Database
 {
@@ -340,21 +337,21 @@ namespace WebApi.Database
             bool res = false;
             int id = inOffer.Id;
             string updatePosts = "update Posts set isComplete = 1 where id = @id";
-            
+
 
             //Using TransactionScope
             using (var transactionScope = new TransactionScope())
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                
+
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     try
                     {
 
                         insertCommand.CommandText = updatePosts;
-                        
+
                         insertCommand.Parameters.AddWithValue("id", id);
                         bool isOfferComplete = IsOfferComplete(id);
                         if (!isOfferComplete)
@@ -410,7 +407,7 @@ namespace WebApi.Database
             return res;
         }
 
-        public bool IsOfferComplete(int id)
+        private bool IsOfferComplete(int id)
         {
             bool res = false;
             string query = "select isComplete from Posts where id = @id";
