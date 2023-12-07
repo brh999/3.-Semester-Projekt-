@@ -296,26 +296,7 @@ namespace WebApi.Database
             return isComplete;
         }
 
-        public Account GetAssociatedAccount(int postId)
-        {
-            Account res = null;
-            string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand cmd = new(queryString, con))
-            {
-                con.Open();
 
-                cmd.Parameters.AddWithValue("@POSTID", postId);
-
-                var accountId = cmd.ExecuteScalar();
-
-                AccountDBAccess accDB = new(_configuration);
-
-                res = accDB.GetAccountById((string)accountId);
-            }
-
-            return res;
-        }
 
 
 
