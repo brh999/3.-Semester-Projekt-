@@ -2,7 +2,6 @@
 using Models;
 using System.Security.Claims;
 using WebAppWithAuthentication.DTO;
-using WebAppWithAuthentication.BusinessLogic;
 
 
 using WebAppWithAuthentication.Service;
