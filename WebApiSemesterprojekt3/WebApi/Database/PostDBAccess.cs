@@ -1,5 +1,6 @@
 ﻿using Models;
 using System.Data.SqlClient;
+using System.Transactions;
 
 namespace WebApi.Database
 {
@@ -93,36 +94,44 @@ namespace WebApi.Database
         /// Insert the Bid into the database
         /// </summary>
         /// <param name="bid"></param>
-        //TODO continue implementing this!!
-        public void InsertBid(Post bid)
+        //TODO contiue implementing this!!
+        public bool InsertBid(Post bid, string aspNetUserId)
         {
-            CurrencyDBAccess currencyDB = new(_configuration);
-            string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, currency_id_fk) " +
-                "OUTPUT INSERTED.ID VALUES (@amount, @price, @isComplete, @type, @account_id_fk, @currency_id_fk);";
+            CurrencyDBAccess currencyDBaccess = new(this._configuration);
+            int changes = 0;
+            string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, Currencies_id_fk)" +
+              "OUTPUT INSERTED.ID VALUES(@amount, @price, @isComplete, @type, (select id from accounts where aspnetusers_id_fk = @aspNetId), (select id from currencies where currencytype = @cType))";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            try
             {
-                conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
-                using (SqlCommand insertCommand = conn.CreateCommand())
+                using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    {
-                        insertCommand.Transaction = transaction;
+                    conn.Open();
 
-                        int currencyType = currencyDB.GetCurrencyID(bid.Currency);
-                        insertCommand.CommandText = queryString;
-                        insertCommand.Parameters.AddWithValue("amount", bid.Amount);
-                        insertCommand.Parameters.AddWithValue("price", bid.Price);
-                        insertCommand.Parameters.AddWithValue("isComplete", bid.IsComplete);
-                        insertCommand.Parameters.AddWithValue("type", "Bid");
-                        //TODO: actually add an account
-                        insertCommand.Parameters.AddWithValue("account_id_fk", "1");
-                        insertCommand.Parameters.AddWithValue("currency_id_fk", currencyType);
-                        insertCommand.ExecuteNonQuery();
-                        transaction.Commit();
+                    using (SqlCommand insertCommand = conn.CreateCommand())
+                    {
+                        {
+                            //Parameter binding
+                            insertCommand.CommandText = queryString;
+                            insertCommand.Parameters.AddWithValue("amount", bid.Amount);
+                            insertCommand.Parameters.AddWithValue("price", bid.Price);
+                            insertCommand.Parameters.AddWithValue("isComplete", bid.IsComplete);
+                            insertCommand.Parameters.AddWithValue("type", "Offer");
+                            insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
+                            insertCommand.Parameters.AddWithValue("cType", bid.Currency.Type);
+                            changes = insertCommand.ExecuteNonQuery();
+                        }
+
                     }
+
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new DatabaseException("Offer could not be inserted");
+            }
+
+            return changes > 0;
         }
 
         /// <summary>
@@ -198,6 +207,50 @@ namespace WebApi.Database
             }
         }
 
+        public IEnumerable<TransactionLine> GetTransactionLines(int id)
+        {
+
+            List<TransactionLine> foundLines = new List<TransactionLine>();
+            string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
+                " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @id";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+                {
+                    conn.Open();
+                    readCommand.Parameters.AddWithValue("id", id);
+
+                    using (SqlDataReader reader = readCommand.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int buyerId = (int)reader["post_bid_id_fk"];
+                            TransactionLine line = new TransactionLine
+                            {
+                                Date = (DateTime)reader["date"],
+                                Amount = (double)reader["amount"],
+                                Buyer = new Post()
+                                {
+                                    Id = buyerId,
+                                },
+                                Seller = null,
+
+                            };
+                            foundLines.Add(line);
+                        }
+
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DatabaseException("Could not find any transactionsLines");
+            }
+
+            return foundLines;
+        }
+
 
         public bool DeleteOffer(int id)
         {
@@ -235,7 +288,7 @@ namespace WebApi.Database
             AccountDBAccess accDB = new(_configuration);
             Account seller = accDB.GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
-            bool isComplete = CompletePost(inPost, buyer);
+            bool isComplete = CompleteOffer(inPost, buyer);
             if (seller != null && buyer != null)
             {
 
@@ -245,73 +298,91 @@ namespace WebApi.Database
 
 
 
-        //private bool CompletePost(Post inPost, Account buyer)
-        //{
-        //    bool res = false;
-        //    int id = inPost.Id;
-        //    bool isComplete = IsOfferComplete(id);
-        //    if (!isComplete)
-        //    {
-        //        string query = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
-        //        using (SqlConnection conn = new SqlConnection(_connectionString))
-        //        {
-        //            conn.Open();
-        //            using (SqlCommand cmd = conn.CreateCommand())
-        //            {
-        //                cmd.CommandText = query;
-        //                cmd.Parameters.AddWithValue("id", id);
-        //                cmd.Parameters.AddWithValue("buyerID", buyer.Id);
-        //                int row = cmd.ExecuteNonQuery();
-        //                if (row != null)
-        //                {
-        //                    res = true;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return res;
-        //}
 
-        private bool CompletePost(Post inPost, Account buyer)
+
+        private bool CompleteOffer(Post inOffer, Account buyer)
         {
+
             bool res = false;
-            int id = inPost.Id;
-            string updatePosts = "update Posts set isComplete = 1, account_id_fk = @buyerID where id = @id";
+            int id = inOffer.Id;
+            string updatePosts = "update Posts set isComplete = 1 where id = @id";
+
+
+            //Using TransactionScope
+            using (var transactionScope = new TransactionScope())
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 using (SqlTransaction transaction = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
+                    try
                     {
-                        insertCommand.Transaction = transaction;
+
                         insertCommand.CommandText = updatePosts;
-                        insertCommand.Parameters.AddWithValue("buyerID", buyer.Id);
+
                         insertCommand.Parameters.AddWithValue("id", id);
-                        bool result = IsOfferComplete(id, conn, transaction);
-                        if (!result)
+                        bool isOfferComplete = IsOfferComplete(id);
+                        if (!isOfferComplete)
                         {
                             insertCommand.ExecuteNonQuery();
-                            transaction.Commit();
-                            res = true;
+
+                            //Create and persist bid
+                            Post bid = inOffer;
+                            bid.Id = 0; //garbage value
+                            bid.IsComplete = true;
+                            bid.Type = "Bid";
+
+                            AccountDBAccess accountDBAccess = new(_configuration);
+                            string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id);
+
+
+                            res = InsertBid(bid, aspnetUserId);
+
+                            //Create and persist transactionLine
+                            TransactionLine transactionLine = new TransactionLine(DateTime.Now, inOffer.Amount, bid, inOffer);
+                            TransactionDBAccess transactionDBAccess = new(_configuration);
+
+                            if (res)
+                            {
+                                res = transactionDBAccess.InsertTransactionLine(transactionLine);
+                            }
+
+
+
                         }
                         else
                         {
-                            transaction.Rollback();
+                            res = false;
                         }
                     }
+                    catch (SqlException ex)
+                    {
+                        throw new DatabaseException(ex, "Could not complete post");
+                    }
+                    catch (DatabaseException ex)
+                    {
+                        throw new DatabaseException(ex, "Could not complete post");
+                    }
+                }
+                //If everthing went well, transactionScope.Complete is called.
+                // And therefore the Transaction is comitted 
+                if (res)
+                {
+                    transactionScope.Complete();
                 }
             }
             return res;
         }
 
-        public bool IsOfferComplete(int id, SqlConnection con, SqlTransaction t)
+        private bool IsOfferComplete(int id)
         {
             bool res = false;
             string query = "select isComplete from Posts where id = @id";
-            using (SqlCommand cmd = con.CreateCommand())
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.Transaction = t;
+                conn.Open();
                 cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("id", id);
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -327,8 +398,9 @@ namespace WebApi.Database
                         }
                     }
                 }
-                return res;
+
             }
+            return res;
         }
 
 

@@ -39,12 +39,12 @@ namespace WebApi.BuissnessLogiclayer
             return offers;
         }
 
-        public Post InsertBid(Post bid)
+        public Post InsertBid(Post bid, string aspNetUserId)
         {
             Post res = bid;
             try
             {
-                _dataAccess.InsertBid(bid);
+                _dataAccess.InsertBid(bid, aspNetUserId);
             }
             catch (Exception ex)
             {

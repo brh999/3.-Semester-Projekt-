@@ -14,11 +14,17 @@ namespace WebApi.Database
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
-        // Create transaction for offers
-        public bool CreateTransaction(Post inPost)
+        /// <summary>
+        /// Create a business transaction.
+        /// </summary>
+        /// <param name="inOffer"></param>
+        /// <param name="inBid"></param>
+        /// <returns></returns>
+        public bool InsertTransactionLine(TransactionLine transactionLine, SqlTransaction? transaction = null)
         {
             bool res = false;
-            string query = "insert into Transactions values(@date, @offerID, @bidID, @amount, @exchangeID)";
+            string query = "insert into Transactions values(@date, @offerID, @bidID, @amount)";
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -26,10 +32,9 @@ namespace WebApi.Database
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue("@date", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@offerID", inPost.Id);
-                    cmd.Parameters.AddWithValue("@bidID", 1); // Hardcoding bid ID
-                    cmd.Parameters.AddWithValue("@amount", inPost.Amount);
-                    cmd.Parameters.AddWithValue("@exchangeID", 1); // Hardcoding exchange ID
+                    cmd.Parameters.AddWithValue("@offerID", transactionLine.Seller.Id);
+                    cmd.Parameters.AddWithValue("@bidID", transactionLine.Buyer.Id);
+                    cmd.Parameters.AddWithValue("@amount", transactionLine.Seller.Amount);
                     var scalarResult = cmd.ExecuteScalar();
                     if (scalarResult != null)
                     {

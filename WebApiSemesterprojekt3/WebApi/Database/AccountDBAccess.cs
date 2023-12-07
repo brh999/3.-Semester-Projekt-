@@ -158,17 +158,45 @@ namespace WebApi.Database
             }
         }
 
-        /// <summary>
-        /// Queries the Database for an account associated with a post on the given id
-        /// </summary>
-        /// <param name="postId">The ID for the post you want to get the account for</param>
-        /// <returns>The account associated with the post</returns>
+        internal string GetAspnetUserId(int id)
+        {
+            string query = "SELECT AspNetUsers_id_fk FROM accounts WHERE id = @id";
+            string aspnetUserId = "NOTFOUND";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = query;
+                        cmd.Parameters.AddWithValue("id", id);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                aspnetUserId = (string)reader["AspNetUsers_id_fk"];
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (SqlException)
+            {
+                throw new DatabaseException("Could not find aspnetuser id with the given input");
+            }
+
+            return aspnetUserId;
+        }
+
         public Account GetAssociatedAccount(int postId)
         {
             Account res = null;
-
             string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
-
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new(queryString, con))
             {
@@ -182,8 +210,8 @@ namespace WebApi.Database
 
                 res = accDB.GetAccountById((string)accountId);
             }
+
             return res;
         }
-
     }
 }
