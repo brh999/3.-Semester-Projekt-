@@ -12,7 +12,7 @@ namespace WebApi.BuissnessLogiclayer
 
         Post InsertOffer(Post offer, string aspNetUserId);
 
-        Post InsertBid(Post bid);
+        Post InsertBid(Post bid, string aspNetUserId);
         List<TransactionLine> GetRelatedTransactions(int id);
 
         bool DeleteOffer(int id);

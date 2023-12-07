@@ -14,7 +14,7 @@ namespace WebApi.Database
         bool InsertOffer(Post offer,string aspNetUserId);
 
 
-        void InsertBid(Post bid);
+        bool InsertBid(Post bid, string aspNetUserId);
 
         bool DeleteOffer(int id);
 

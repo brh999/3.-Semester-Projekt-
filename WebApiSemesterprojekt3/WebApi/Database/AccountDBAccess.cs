@@ -157,5 +157,39 @@ namespace WebApi.Database
                 }
             }
         }
+
+        internal string GetAspnetUserId(int id)
+        {
+            string query = "SELECT AspNetUsers_id_fk FROM accounts WHERE id = @id";
+            string aspnetUserId = "NOTFOUND";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = query;
+                        cmd.Parameters.AddWithValue("id", id);
+
+                        using(SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                aspnetUserId = (string)reader["AspNetUsers_id_fk"];
+                            }
+                        }
+                    }
+                }
+
+            }catch(SqlException)
+            {
+                throw new DatabaseException("Could not find aspnetuser id with the given input");
+            }
+
+            return aspnetUserId;
+        }
     }
 }
