@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Models.Currency>
+﻿@model List<Models.Currency>
 @using Models
 
-@{
+@* @{
     ViewData["Title"] = "Index";
     List<Currency> currencies = null;
     if (ViewData["Currencies"] != null)
@@ -9,7 +9,7 @@
         currencies = (List<Currency>)ViewData["Currencies"];
     }
 }
-
+ *@
 <!DOCTYPE html>
 <html>
 
@@ -73,17 +73,17 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Type)
+                    @Html.DisplayNameFor(Model => Model)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @if (currencies != null)
+            @if (Model != null)
             {
-                if (currencies[0] != null)
+                if (Model[0] != null)
                 {
-                    @foreach (var item in currencies)
+                    @foreach (var item in Model)
                     {
                         <tr>
                             <td>
