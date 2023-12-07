@@ -52,14 +52,7 @@ namespace WebApi.Controllers
         [HttpPost, Route("insert")]
         public void InsertBid(Post bid)
         {
-            try
-            {
-                _bidLogic.InsertBid(bid);
-            }
-            catch
-            {
-
-            }
+            throw new NotImplementedException();
         }
 
         // PUT api/<ValuesController>/5

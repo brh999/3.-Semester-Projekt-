@@ -1,10 +1,15 @@
-﻿@model IEnumerable<Models.Currency>
+﻿@model List<Models.Currency>
 @using Models
 
-@{
+@* @{
     ViewData["Title"] = "Index";
+    List<Currency> currencies = null;
+    if (ViewData["Currencies"] != null)
+    {
+        currencies = (List<Currency>)ViewData["Currencies"];
+    }
 }
-
+ *@
 <!DOCTYPE html>
 <html>
 
@@ -68,23 +73,29 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Type)
+                    @Html.DisplayNameFor(Model => Model)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in ViewData["currencies"] as List<Currency>)
+            @if (Model != null)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Type)
-                        @Html.DisplayFor(modelItem => item.Exchange)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
+                if (Model[0] != null)
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Type)
+                                @Html.DisplayFor(modelItem => item.Exchange)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+                }
             }
         </tbody>
     </table>

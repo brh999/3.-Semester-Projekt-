@@ -1,9 +1,7 @@
 ﻿using APITest;
 using Microsoft.Extensions.Configuration;
 using Models;
-using System;
 using System.Data.SqlClient;
-using System.Security.Principal;
 using WebApi.BuissnessLogiclayer;
 using Xunit.Abstractions;
 
@@ -26,7 +24,7 @@ namespace WebApi.Database.Tests
             IConfiguration inConfig = TestConfigHelper.GetConfigurationRoot();
             _postAccess = new PostDBAccess(inConfig);
             _connectionString = inConfig.GetConnectionString("hildur_prod");
-            _postLogic = new(_postAccess);
+            _postLogic = new(_postAccess, inConfig);
 
         }
 
@@ -37,7 +35,7 @@ namespace WebApi.Database.Tests
 
 
 
-       
+
 
         [Fact]
         public void GetAllPostsShouldReturnAllPost()
@@ -77,7 +75,7 @@ namespace WebApi.Database.Tests
         public void InsertValidOfferShouldReturnTheSameOffer()
         {
             //Assign
-            
+
             List<Post> list;
             Currency currency = new("USD");
             Post offer = new(100, 10, currency, 1000, "Offer");
@@ -88,7 +86,7 @@ namespace WebApi.Database.Tests
 
             //Assert
             //This assumes that GetOfferPost() works
-            if(result == null)
+            if (result == null)
             {
                 Assert.Fail("Result is null");
             }
@@ -99,7 +97,7 @@ namespace WebApi.Database.Tests
 
 
 
-        
+
         public void InsertOfferWithUserIdShouldFail(string userId)
         {
             //Assign
@@ -110,7 +108,7 @@ namespace WebApi.Database.Tests
             result = _postLogic.InsertOffer(offer, userId);
             //Assert
 
-            if( result == null)
+            if (result == null)
             {
                 Assert.Fail("Result is null");
             }
@@ -123,13 +121,13 @@ namespace WebApi.Database.Tests
             //Assign
             Currency currency = new("USD");
             Post offer = new(100, 10, currency, -1, "Offer");
-            
+
             string userId = "Invalid-id-123-123-123";
             //Act
             //Assert
 
             Assert.Throws<ArgumentException>(() => _postLogic.InsertOffer(offer, userId));
-            
+
         }
 
         [Fact]
@@ -177,7 +175,7 @@ namespace WebApi.Database.Tests
             Assert.Throws<ArgumentException>(() => GetRelatedTransactionsTest(postId1));
         }
 
-        
+
         public void GetRelatedTransactionsTest(int postId)
         {
             //Assign

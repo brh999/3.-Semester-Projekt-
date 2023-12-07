@@ -1,5 +1,4 @@
 ﻿using Models;
-using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 
 namespace WebApi.Database
@@ -15,11 +14,17 @@ namespace WebApi.Database
             _connectionString = _configuration.GetConnectionString("hildur_prod");
         }
 
-        // Create transaction for offers
-        public bool CreateTransaction(Post inPost)
+        /// <summary>
+        /// Create a business transaction.
+        /// </summary>
+        /// <param name="inOffer"></param>
+        /// <param name="inBid"></param>
+        /// <returns></returns>
+        public bool InsertTransactionLine(TransactionLine transactionLine, SqlTransaction? transaction = null)
         {
             bool res = false;
-            string query = "insert into Transactions values(@date, @offerID, @bidID, @amount, @exchangeID)";
+            string query = "insert into Transactions values(@date, @offerID, @bidID, @amount)";
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -27,17 +32,60 @@ namespace WebApi.Database
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue("@date", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@offerID", inPost.Id);
-                    cmd.Parameters.AddWithValue("@bidID", 1); // Hardcoding bid ID
-                    cmd.Parameters.AddWithValue("@amount", inPost.Amount);
-                    cmd.Parameters.AddWithValue("@exchangeID", 1); // Hardcoding exchange ID
+                    cmd.Parameters.AddWithValue("@offerID", transactionLine.Seller.Id);
+                    cmd.Parameters.AddWithValue("@bidID", transactionLine.Buyer.Id);
+                    cmd.Parameters.AddWithValue("@amount", transactionLine.Seller.Amount);
                     var scalarResult = cmd.ExecuteScalar();
-                    if (scalarResult != null) {
+                    if (scalarResult != null)
+                    {
                         res = true;
                     }
                 }
             }
             return res;
+        }
+
+        public IEnumerable<TransactionLine> GetTransactionLines(int postId)
+        {
+            List<TransactionLine> foundLines = new List<TransactionLine>();
+            string queryString = "SELECT Transactions.amount,price,date,post_bid_id_fk FROM Transactions" +
+                " JOIN Posts ON Transactions.Post_offer_id_fk = Posts.id WHERE Transactions.Post_offer_id_fk = @postId";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand readCommand = new SqlCommand(queryString, conn))
+                {
+                    conn.Open();
+                    readCommand.Parameters.AddWithValue("postId", postId);
+
+                    using (SqlDataReader reader = readCommand.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int buyerId = (int)reader["post_bid_id_fk"];
+                            TransactionLine line = new TransactionLine
+                            {
+                                Date = (DateTime)reader["date"],
+                                Amount = (double)reader["amount"],
+                                Buyer = new Post()
+                                {
+                                    Id = buyerId,
+                                },
+                                Seller = null,
+                            };
+
+                            foundLines.Add(line);
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DatabaseException("Could not find any transactionsLines");
+            }
+
+            return foundLines;
         }
 
     }

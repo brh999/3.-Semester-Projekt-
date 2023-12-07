@@ -1,7 +1,5 @@
-﻿using Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Security.Cryptography;
 using WebApi.Database;
 
 namespace WebApi.BuissnessLogiclayer
@@ -9,10 +7,12 @@ namespace WebApi.BuissnessLogiclayer
     public class PostLogic : IPostLogic
     {
         private readonly IPostDBAccess _dataAccess;
+        private readonly IConfiguration _configuration;
 
-        public PostLogic(IPostDBAccess inDataAccess)
+        public PostLogic(IPostDBAccess inDataAccess, IConfiguration configuration)
         {
             _dataAccess = inDataAccess;
+            _configuration = configuration;
         }
         public IEnumerable<Post> GetAllPosts()
         {
@@ -39,12 +39,12 @@ namespace WebApi.BuissnessLogiclayer
             return offers;
         }
 
-        public Post InsertBid(Post bid)
+        public Post InsertBid(Post bid, string aspNetUserId)
         {
             Post res = bid;
             try
             {
-                _dataAccess.InsertBid(bid);
+                _dataAccess.InsertBid(bid, aspNetUserId);
             }
             catch (Exception ex)
             {
@@ -84,7 +84,9 @@ namespace WebApi.BuissnessLogiclayer
             }
             IEnumerable<TransactionLine>? foundLines;
 
-            foundLines = _dataAccess.GetTransactionLines(id);
+            TransactionDBAccess tba = new(_configuration);
+
+            foundLines = tba.GetTransactionLines(id);
 
             return (List<TransactionLine>)foundLines;
         }
@@ -92,7 +94,7 @@ namespace WebApi.BuissnessLogiclayer
 
         public bool DeleteOffer(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 throw new ArgumentException("Id cannot be less than or equal to 0");
             }

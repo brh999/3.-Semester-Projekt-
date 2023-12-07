@@ -14,5 +14,12 @@ namespace WebApi.Database
         {
 
         }
+
+        public DatabaseException(Exception innerException,string message) : base(message, innerException)
+        {
+
+        }
+
+
     }
 }

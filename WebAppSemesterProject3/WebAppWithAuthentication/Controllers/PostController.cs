@@ -94,6 +94,10 @@ namespace WebAppWithAuthentication.Controllers
                     offers = Enumerable.Empty<Post>();
                     ModelState.AddModelError(string.Empty, "No offers found");
                 }
+                if (TempData["message"] != null)
+                {
+                    ViewData["message"] = TempData["message"];
+                }
                 return View();
             }
             catch
@@ -246,6 +250,20 @@ namespace WebAppWithAuthentication.Controllers
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var serviceResponse = _connection.CallServicePost(content);
             serviceResponse.Wait();
+            if (serviceResponse.Result.IsSuccessStatusCode)
+            {
+                var apiResponse = serviceResponse.Result.Content.ReadAsAsync<dynamic>().Result;
+                bool isComplete = (bool)apiResponse.successful;
+                if (isComplete)
+                {
+                    TempData["message"] = 1;
+                } 
+                else
+                {
+                    TempData["message"] = 2;
+                }
+
+            }
             return RedirectToAction("GetAllPosts");
         }
 

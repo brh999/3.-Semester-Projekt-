@@ -157,5 +157,61 @@ namespace WebApi.Database
                 }
             }
         }
+
+        internal string GetAspnetUserId(int id)
+        {
+            string query = "SELECT AspNetUsers_id_fk FROM accounts WHERE id = @id";
+            string aspnetUserId = "NOTFOUND";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = query;
+                        cmd.Parameters.AddWithValue("id", id);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                aspnetUserId = (string)reader["AspNetUsers_id_fk"];
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (SqlException)
+            {
+                throw new DatabaseException("Could not find aspnetuser id with the given input");
+            }
+
+            return aspnetUserId;
+        }
+
+        public Account GetAssociatedAccount(int postId)
+        {
+            Account res = null;
+            string queryString = "SELECT Accounts.AspNetUsers_id_fk FROM Posts INNER JOIN Accounts ON Posts.account_id_fk=accounts.id WHERE Posts.id = @POSTID";
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = new(queryString, con))
+            {
+                con.Open();
+
+                cmd.Parameters.AddWithValue("@POSTID", postId);
+
+                var accountId = cmd.ExecuteScalar();
+
+                AccountDBAccess accDB = new(_configuration);
+
+                res = accDB.GetAccountById((string)accountId);
+            }
+
+            return res;
+        }
     }
 }
