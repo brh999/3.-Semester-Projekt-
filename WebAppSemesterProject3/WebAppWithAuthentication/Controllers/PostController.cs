@@ -45,18 +45,17 @@ namespace WebAppWithAuthentication.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllPosts()
         {
-            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-
+            List<Post> bidRes = new();
+            List<Post> offerRes = new();
 
             try
             {
-                var bidRes = await _postServiceAccess.GetAllBids();
+                bidRes = (List<Post>)await _postServiceAccess.GetAllBids();
                 ViewData["bids"] = bidRes;
 
-                var offerRes = await _postServiceAccess.GetAllOffers();
-                ViewData["offers"] = offers;
+                offerRes = (List<Post>)await _postServiceAccess.GetAllOffers();
+                ViewData["offers"] = offerRes;
 
-                offers = Enumerable.Empty<Post>();
                 ModelState.AddModelError(string.Empty, "No offers found");
 
                 if (TempData["message"] != null)
