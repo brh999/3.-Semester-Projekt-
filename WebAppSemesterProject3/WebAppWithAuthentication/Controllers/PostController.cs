@@ -19,18 +19,17 @@ namespace WebAppWithAuthentication.Controllers
         private Uri _url;
         private readonly IConfiguration _configuration;
         private ServiceConnection _connection;
-        public PostController(IConfiguration configuration)
+        private readonly IPostServiceAccess _postServiceAccess;
+        public PostController(IConfiguration configuration, IPostServiceAccess postServiceAccess)
         {
             _configuration = configuration;
+            _postServiceAccess = postServiceAccess;
 
             //Configure the base API url
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
-
                 _connection = new ServiceConnection(url + "Api/");
-                _connection = new ServiceConnection(url + "Api/");
-
             }
             else
             {
@@ -47,51 +46,19 @@ namespace WebAppWithAuthentication.Controllers
         public async Task<IActionResult> GetAllPosts()
         {
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-            IEnumerable<Post> bids = null;
-            IEnumerable<Post> offers = null;
+
+
             try
             {
-                // Get bids:
-                _connection.UseUrl = _connection.BaseUrl + "bid";
-                var response = _connection.CallServiceGet();
-                response.Wait();
-                var result = response.Result;
-                if (result != null)
-                {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                        readTask.Wait();
-                        bids = readTask.Result;
-                        ViewData["bids"] = bids;
-                    }
-                }
-                else
-                {
-                    bids = Enumerable.Empty<Post>();
-                    ModelState.AddModelError(string.Empty, "No bids found");
-                }
-                // Get offers:
-                _connection.UseUrl = _connection.BaseUrl + "offer";
-                response = _connection.CallServiceGet();
-                response.Wait();
+                var bidRes = await _postServiceAccess.GetAllBids();
+                ViewData["bids"] = bidRes;
 
-                result = response.Result;
-                if (result != null)
-                {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                        readTask.Wait();
-                        offers = readTask.Result;
-                        ViewData["offers"] = offers;
-                    }
-                }
-                else
-                {
-                    offers = Enumerable.Empty<Post>();
-                    ModelState.AddModelError(string.Empty, "No offers found");
-                }
+                var offerRes = await _postServiceAccess.GetAllOffers();
+                ViewData["offers"] = offers;
+
+                offers = Enumerable.Empty<Post>();
+                ModelState.AddModelError(string.Empty, "No offers found");
+
                 if (TempData["message"] != null)
                 {
                     ViewData["message"] = TempData["message"];
@@ -113,13 +80,11 @@ namespace WebAppWithAuthentication.Controllers
 
         public IActionResult CreateOffer()
         {
-
             ActionResult result = null;
 
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountDto? account = null;
-
 
             AccountLogic accountLogic = new(_connection);
             Task<AccountDto?> response = accountLogic.GetAccountById(userId);
@@ -127,16 +92,12 @@ namespace WebAppWithAuthentication.Controllers
 
             account = response.Result;
 
-
             if (account != null)
             {
                 ViewData.Add("account", account);
                 result = View();
 
             }
-
-
-
 
             if (result == null)
             {
@@ -193,7 +154,6 @@ namespace WebAppWithAuthentication.Controllers
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 _connection.UseUrl = _connection.BaseUrl + "offer/" + userId;
 
-
                 //Serialize the offer object
                 var json = JsonConvert.SerializeObject(inPost);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -211,22 +171,16 @@ namespace WebAppWithAuthentication.Controllers
                     ViewData["type"] = "offer";
                     result = View("PostState", inPost);
                 }
-
-
-
-
             }
             else
             {
                 result = StatusCode(404);
             }
-
             return result;
         }
 
         [Authorize]
         public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
-
         {
             ViewData["offerAmount"] = offerAmount;
             ViewData["offerPrice"] = offerPrice;
