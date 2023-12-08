@@ -125,59 +125,83 @@ namespace WebApi.Database
             return isSuccess;
         }
 
-        private bool CreateExchange(Currency currency, int currencyId, SqlConnection conn)
+        public bool UpdateAllCurencyValues()
         {
             bool res = false;
-            string insertExchange = "INSERT INTO Exchanges VALUES(@value, @date, @currencies_fk)";
-            using (SqlCommand insertCommand = conn.CreateCommand())
+            string updateExchanges = "INSERT INTO Exchanges (value,date,currencies_id_fk) SELECT P.currencies_id_fk, GETDATE() AS Date, AVG(P.price)" +
+                " AS value FROM Posts AS P WHERE P.isComplete = 1 GROUP BY P.currencies_id_fk";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand updateCommand = conn.CreateCommand())
             {
-                insertCommand.CommandText = insertExchange;
-                insertCommand.Parameters.AddWithValue("value", currency.Exchange.Value);
-                insertCommand.Parameters.AddWithValue("date", currency.Exchange.Date);
-                insertCommand.Parameters.AddWithValue("currencies_fk", currencyId);
+                conn.Open();
+                updateCommand.CommandText = updateExchanges;
 
-                int rowsAffected = insertCommand.ExecuteNonQuery();
-                if (rowsAffected > 0)
+                int returnedId = Convert.ToInt32(updateCommand.ExecuteScalar());
+                if (returnedId > 0)
                 {
                     res = true;
                 }
             }
             return res;
+
+
         }
 
-        private Exchange GetExchangesForCurrency(string currencyType)
+    
+
+    private bool CreateExchange(Currency currency, int currencyId, SqlConnection conn)
+    {
+        bool res = false;
+        string insertExchange = "INSERT INTO Exchanges VALUES(@value, @date, @currencies_fk)";
+        using (SqlCommand insertCommand = conn.CreateCommand())
         {
-            Exchange res = null;
+            insertCommand.CommandText = insertExchange;
+            insertCommand.Parameters.AddWithValue("value", currency.Exchange.Value);
+            insertCommand.Parameters.AddWithValue("date", currency.Exchange.Date);
+            insertCommand.Parameters.AddWithValue("currencies_fk", currencyId);
 
-            string queryString = "SELECT * FROM Currencies JOIN Exchanges ON currencies.id = exchanges.currencies_id_fk WHERE currencytype = @type";
-
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
+            int rowsAffected = insertCommand.ExecuteNonQuery();
+            if (rowsAffected > 0)
             {
-                conn.Open();
-                selectCommand.Parameters.AddWithValue("type", currencyType);
-
-                using (SqlDataReader reader = selectCommand.ExecuteReader())
-                {
-
-                    while (reader.Read())
-                    {
-                        Exchange exchange = new Exchange()
-                        {
-                            Value = (double)reader["value"],
-                            Date = (DateTime)reader["date"],
-
-                        };
-                        res = exchange;
-                    }
-                }
-                return res;
+                res = true;
             }
-
-
         }
+        return res;
+    }
+
+    private Exchange GetExchangesForCurrency(string currencyType)
+    {
+        Exchange res = null;
+
+        string queryString = "SELECT * FROM Currencies JOIN Exchanges ON currencies.id = exchanges.currencies_id_fk WHERE currencytype = @type";
+
+        using (SqlConnection conn = new SqlConnection(_connectionString))
+        using (SqlCommand selectCommand = new SqlCommand(queryString, conn))
+        {
+            conn.Open();
+            selectCommand.Parameters.AddWithValue("type", currencyType);
+
+            using (SqlDataReader reader = selectCommand.ExecuteReader())
+            {
+
+                while (reader.Read())
+                {
+                    Exchange exchange = new Exchange()
+                    {
+                        Value = (double)reader["value"],
+                        Date = (DateTime)reader["date"],
+
+                    };
+                    res = exchange;
+                }
+            }
+            return res;
+        }
+
 
     }
+
+}
 }
 
 

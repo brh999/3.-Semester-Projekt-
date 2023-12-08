@@ -37,6 +37,10 @@ namespace DesktopClient.BusinessLogic
 
             foundCurrencies = await _currencyService.GetCurrencies();
 
+            if(foundCurrencies == null)
+            {
+                foundCurrencies = new List<Currency>();
+            }
             return foundCurrencies;
         }
     }
