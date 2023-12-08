@@ -113,7 +113,6 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-
         public IActionResult CreateOffer()
         {
 
@@ -214,10 +213,6 @@ namespace WebAppWithAuthentication.Controllers
                     ViewData["type"] = "offer";
                     result = View("PostState", inPost);
                 }
-
-
-                
-
             }
             else
             {

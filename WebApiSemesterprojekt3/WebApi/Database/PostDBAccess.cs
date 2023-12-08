@@ -1,5 +1,7 @@
-﻿using Models;
+﻿using Microsoft.AspNetCore.Http;
+using Models;
 using System.Data.SqlClient;
+using System.Threading.Channels;
 using System.Transactions;
 
 namespace WebApi.Database
@@ -97,41 +99,73 @@ namespace WebApi.Database
         //TODO contiue implementing this!!
         public bool InsertBid(Post bid, string aspNetUserId)
         {
-            CurrencyDBAccess currencyDBaccess = new(this._configuration);
-            int changes = 0;
-            string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, Currencies_id_fk)" +
-              "OUTPUT INSERTED.ID VALUES(@amount, @price, @isComplete, @type, (select id from accounts where aspnetusers_id_fk = @aspNetId), (select id from currencies where currencytype = @cType))";
-
-            try
+            bool result = false;
+            using(SqlConnection conn = new SqlConnection(_connectionString))
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                conn.Open();
+                using(SqlCommand insertCommand = conn.CreateCommand())
                 {
-                    conn.Open();
-
-                    using (SqlCommand insertCommand = conn.CreateCommand())
-                    {
-                        {
-                            //Parameter binding
-                            insertCommand.CommandText = queryString;
-                            insertCommand.Parameters.AddWithValue("amount", bid.Amount);
-                            insertCommand.Parameters.AddWithValue("price", bid.Price);
-                            insertCommand.Parameters.AddWithValue("isComplete", bid.IsComplete);
-                            insertCommand.Parameters.AddWithValue("type", "Offer");
-                            insertCommand.Parameters.AddWithValue("aspNetId", aspNetUserId);
-                            insertCommand.Parameters.AddWithValue("cType", bid.Currency.Type);
-                            changes = insertCommand.ExecuteNonQuery();
-                        }
-
-                    }
-
+                    result =  0 < InsertBidAux(insertCommand, bid, aspNetUserId);
                 }
             }
-            catch (SqlException ex)
+            return result;
+        }
+        /// <summary>
+        /// The takes an sqlconnection and creates a SqlCommand.
+        /// The SqlCommand uses the current transaction from the connection,
+        /// to insert the bid into the database.
+        /// </summary>
+        /// <param name="post"></param>
+        /// <param name="aspNetUserId"></param>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        public int InsertBidReturnBidId(Post post, string aspNetUserId, SqlConnection conn, SqlTransaction tran)
+        {
+            int result = 0;
+            using(SqlCommand insertCommand = conn.CreateCommand())
             {
-                throw new DatabaseException("Offer could not be inserted");
+
+                insertCommand.Transaction = tran;
+                result = InsertBidAux(insertCommand,post, aspNetUserId);
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// This method inserts the given bid, into the database using the gives sqlCommand.
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="bid"></param>
+        /// <param name="aspNetUserID"></param>
+        /// <returns></returns>
+        /// <exception cref="DatabaseException"></exception>
+        private int InsertBidAux(SqlCommand cmd, Post bid, string aspNetUserID)
+        {
+            string queryString = "INSERT INTO POSTS(amount, price, isComplete, type, account_id_fk, Currencies_id_fk)" +
+              "OUTPUT INSERTED.ID VALUES(@amount, @price, @isComplete, @type, (select id from accounts where aspnetusers_id_fk = @aspNetId), (select id from currencies where currencytype = @cType))";
+            int result = 0;
+            try
+            {
+                cmd.CommandText = queryString;
+                cmd.Parameters.AddWithValue("amount", bid.Amount);
+                cmd.Parameters.AddWithValue("price", bid.Price);
+                cmd.Parameters.AddWithValue("isComplete", bid.IsComplete);
+                cmd.Parameters.AddWithValue("type", "Offer");
+                cmd.Parameters.AddWithValue("aspNetId", aspNetUserID);
+                cmd.Parameters.AddWithValue("cType", bid.Currency.Type);
+                object obj = cmd.ExecuteScalar();
+                result = Convert.ToInt32(obj);
+            }
+            catch (SqlException)
+            {
+                throw new DatabaseException("Could not insert bid");
+            }catch (Exception ex)
+            {
+                throw new DatabaseException(ex,"Could not convert id");
             }
 
-            return changes > 0;
+            return result;
         }
 
         /// <summary>
@@ -306,88 +340,94 @@ namespace WebApi.Database
             bool res = false;
             int id = inOffer.Id;
             string updatePosts = "update Posts set isComplete = 1 where id = @id";
-
-
-            //Using TransactionScope
-            using (var transactionScope = new TransactionScope())
+            
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                using (SqlTransaction transaction = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
+                using(SqlTransaction tran = conn.BeginTransaction())
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     try
                     {
-
                         insertCommand.CommandText = updatePosts;
-
+                        insertCommand.Transaction = tran;
                         insertCommand.Parameters.AddWithValue("id", id);
-                        bool isOfferComplete = IsOfferComplete(id);
-                        if (!isOfferComplete)
+                        bool error = IsOfferComplete(id,conn,tran);
+                        if (!error)
                         {
-                            insertCommand.ExecuteNonQuery();
-
-                            //Create and persist bid
-                            Post bid = inOffer;
-                            bid.Id = 0; //garbage value
-                            bid.IsComplete = true;
-                            bid.Type = "Bid";
-
-                            AccountDBAccess accountDBAccess = new(_configuration);
-                            string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id);
+                            int changes = insertCommand.ExecuteNonQuery();
+                            error = changes <= 0;
+                        }
 
 
-                            res = InsertBid(bid, aspnetUserId);
+                        AccountDBAccess accountDBAccess = new(_configuration);
 
+                        int postId = 0; //garbage value
+                        double amount = inOffer.Amount,
+                                price = inOffer.Price;
+                        Currency currency = inOffer.Currency;
+
+                        Post bid = new Post(amount,price,currency,postId,"Bid");
+
+                        string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id,conn, tran);
+
+                        if (!error)
+                        {
+                            int bidId = InsertBidReturnBidId(bid, aspnetUserId, conn, tran);
+                            error = !(bidId > 0);
+                            bid.Id = bidId;
+                        }
+
+                        
+
+                        
+
+                        if (!error)
+                        {
                             //Create and persist transactionLine
                             TransactionLine transactionLine = new TransactionLine(DateTime.Now, inOffer.Amount, bid, inOffer);
                             TransactionDBAccess transactionDBAccess = new(_configuration);
-
-                            if (res)
-                            {
-                                res = transactionDBAccess.InsertTransactionLine(transactionLine);
-                            }
-
-
-
+                            error = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
                         }
-                        else
-                        {
-                            res = false;
-                        }
+
+
+                        res = !error;
                     }
                     catch (SqlException ex)
                     {
+                        tran.Rollback();
                         throw new DatabaseException(ex, "Could not complete post");
                     }
                     catch (DatabaseException ex)
                     {
+                        tran.Rollback();    
                         throw new DatabaseException(ex, "Could not complete post");
                     }
+                    
+                    
+
+                    if(res)
+                    {
+                        tran.Commit();
+                    }
                 }
-                //If everthing went well, transactionScope.Complete is called.
-                // And therefore the Transaction is comitted 
-                if (res)
-                {
-                    transactionScope.Complete();
-                }
+                
             }
             return res;
         }
 
-        private bool IsOfferComplete(int id)
+        private bool IsOfferComplete(int id, SqlConnection conn, SqlTransaction tran)
         {
             bool res = false;
             string query = "select isComplete from Posts where id = @id";
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                conn.Open();
+                cmd.Transaction = tran;
                 cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("id", id);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-
                     while (reader.Read())
                     {
                         bool isComplete = (bool)reader["isComplete"];
