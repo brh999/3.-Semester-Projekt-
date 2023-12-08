@@ -338,16 +338,18 @@ namespace WebApi.Database
 
             bool res = false;
             int id = inOffer.Id;
-            string updatePosts = "update Posts set isComplete = 1 where id = @id";
+            string updatePosts = "UPDATE Posts SET isComplete = 1 WHERE id = @id";
             
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                using(SqlTransaction tran = conn.BeginTransaction())
+                
+                using(SqlTransaction tran = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
                 using (SqlCommand insertCommand = conn.CreateCommand())
                 {
                     try
                     {
+                        
                         insertCommand.CommandText = updatePosts;
                         insertCommand.Transaction = tran;
                         insertCommand.Parameters.AddWithValue("id", id);
@@ -367,19 +369,16 @@ namespace WebApi.Database
                         Currency currency = inOffer.Currency;
 
                         Post bid = new Post(amount,price,currency,postId,"Bid");
+                        bid.IsComplete = true;
 
                         string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id,conn, tran);
 
                         if (!error)
                         {
                             int bidId = InsertBidReturnBidId(bid, aspnetUserId, conn, tran);
-                            error = !(bidId > 0);
+                            error = bidId <= 0;
                             bid.Id = bidId;
                         }
-
-                        
-
-                        
 
                         if (!error)
                         {
@@ -388,7 +387,6 @@ namespace WebApi.Database
                             TransactionDBAccess transactionDBAccess = new(_configuration);
                             error = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
                         }
-
 
                         res = !error;
                     }
