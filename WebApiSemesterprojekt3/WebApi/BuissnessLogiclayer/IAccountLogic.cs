@@ -8,6 +8,6 @@ namespace WebApi.BuissnessLogiclayer
         Account GetAccountById(string id);
         List<CurrencyLine> GetRelatedCurrencyLines(int id);
 
-        bool UpdateCurrencyLine(string aspDotNetId,CurrencyLine currencyLine);
+        bool InsertCurrencyLine(string aspDotNetId,CurrencyLine currencyLine);
     }
 }

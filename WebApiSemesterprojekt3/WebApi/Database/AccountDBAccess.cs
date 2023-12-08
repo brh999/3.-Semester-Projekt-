@@ -213,14 +213,78 @@ namespace WebApi.Database
 
             return res;
         }
-
+        /// <summary>
+        /// Uses a composite SQL query that updates 
+        /// </summary>
+        /// <param name="aspDotNetId"></param>
+        /// <param name="currencyLine"></param>
+        /// <returns> true if any rows are updated in the database</returns>
         public bool UpdateCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
         {
             bool res = false;
-            string queryString = "UPDATE CurrencyLines SET amount = 999 WHERE account_id_fk = (SELECT Accounts.id FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.id WHERE AspNetUsers.Id = @id";
+            string queryString = "UPDATE CurrencyLines SET amount = @amount WHERE account_id_fk = (SELECT Accounts.id FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.id WHERE AspNetUsers.Id = @id";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand updateCommand = new(queryString, conn))
+            {
 
+                conn.Open();
+                double amount = currencyLine.Amount;
+                updateCommand.Parameters.AddWithValue("amount" ,amount);
+                updateCommand.Parameters.AddWithValue("id", aspDotNetId);
+                int affected = updateCommand.ExecuteNonQuery();
+                if (affected > 0)
+                {
+                    res = true;
+                }
+            }
+            return res;
 
+        }
 
+        public bool CheckCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
+        {
+            bool res = false;
+            string checkCurrency = currencyLine.Currency.Type;
+            string queryString = "SELECT currencytype FROM CurrencyLines JOIN Currencies ON currency_id_fk = " +
+                "Currencies.id WHERE account_id_fk = (SELECT Id from Accounts WHERE AspNetUsers_id_fk = @id AND currencytype = @type)";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand checkCommand = new(queryString, conn))
+            {
+                conn.Open();
+                checkCommand.Parameters.AddWithValue("id", aspDotNetId);
+                checkCommand.Parameters.AddWithValue("type", checkCurrency);
+                int affected = (int)checkCommand.ExecuteScalar();
+
+                if (affected > 0)
+                {
+                    res = true;
+                }
+            }
+            return res;
+        }
+
+        public bool InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
+        {
+            bool res = false;
+            ICurrencyDBAccess c = new CurrencyDBAccess(_configuration);
+            Currency currentCurrency = currencyLine.Currency;
+            string queryString = "INSERT INTO currencyLines(currency_id_fk,amount,account_id_fk)" +
+                "SELECT @currency_id,@amount, Id AS account_id_fk FROM Accounts WHERE AspNetUsers_id_fk =@aspDotNetId";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand insertCommand = new(queryString, conn))
+            {
+                conn.Open();
+                int currencyId = c.GetCurrencyID(currentCurrency);
+                insertCommand.Parameters.AddWithValue("currency_id", currencyId);
+                insertCommand.Parameters.AddWithValue("amount", currencyLine.Amount);
+                insertCommand.Parameters.AddWithValue("account_id", aspDotNetId);
+                int affected = insertCommand.ExecuteNonQuery();
+                if (affected > 0)
+                {
+                    res = true;
+                }
+            }
+            return res;
         }
     }
 }

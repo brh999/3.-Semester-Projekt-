@@ -66,11 +66,11 @@ namespace WebApi.Controllers
         }
 
         // UPDATE: api/<AccountController>
-        [HttpPut, Route("api/[Controller]/{id}/wallet")]
-        public ActionResult UpdateCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
+        [HttpPost, Route("api/[Controller]/{id}/wallet")]
+        public ActionResult InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
         {
             ActionResult res = StatusCode(500);
-           bool success = _accountLogic.UpdateCurrencyLine(aspDotNetId, currencyLine);
+           bool success = _accountLogic.InsertCurrencyLine(aspDotNetId, currencyLine);
 
             if (success)
             {
