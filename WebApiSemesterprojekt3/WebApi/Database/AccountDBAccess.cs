@@ -160,38 +160,56 @@ namespace WebApi.Database
 
         internal string GetAspnetUserId(int id)
         {
+            string aspnetUserId = "";
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                using(SqlCommand cmd = conn.CreateCommand())
+                {
+                    aspnetUserId = GetAspnetUserIdAux(id, cmd);
+                }
+            }
+
+            return aspnetUserId;
+        }
+
+        internal string GetAspnetUserId(int id,SqlConnection conn,SqlTransaction tran)
+        {
+            string aspNetUserId = "";
+            using(SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.Transaction = tran;
+                aspNetUserId = GetAspnetUserIdAux(id,cmd);
+            }
+
+            return aspNetUserId;
+        }
+
+        private string GetAspnetUserIdAux(int accountId, SqlCommand cmd)
+        {
             string query = "SELECT AspNetUsers_id_fk FROM accounts WHERE id = @id";
             string aspnetUserId = "NOTFOUND";
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("id", accountId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    conn.Open();
-
-                    using (SqlCommand cmd = conn.CreateCommand())
+                    while (reader.Read())
                     {
-                        cmd.CommandText = query;
-                        cmd.Parameters.AddWithValue("id", id);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                aspnetUserId = (string)reader["AspNetUsers_id_fk"];
-                            }
-                        }
+                        aspnetUserId = (string)reader["AspNetUsers_id_fk"];
                     }
                 }
-
-            }
-            catch (SqlException)
+            }catch (SqlException)
             {
                 throw new DatabaseException("Could not find aspnetuser id with the given input");
             }
 
             return aspnetUserId;
         }
+
+    
 
         public Account GetAssociatedAccount(int postId)
         {
