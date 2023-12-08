@@ -13,5 +13,9 @@ namespace WebApi.Database
         bool UpdateAccountById(int id);
 
         IEnumerable<CurrencyLine> GetCurrencyLines(int id);
+
+        bool CheckCurrencyLine(string aspDotNetId, CurrencyLine currencyLine);
+        bool UpdateCurrencyLine(string aspDotNetId, CurrencyLine currencyLine);
+        bool InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine);
     }
 }

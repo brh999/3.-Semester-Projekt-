@@ -38,5 +38,18 @@ namespace WebApi.BuissnessLogiclayer
 
             return (List<CurrencyLine>)foundCurrencyLines;
         }
+
+        public bool InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
+        {
+            bool res = false;
+            bool exists = false;
+            exists = _dataAccess.CheckCurrencyLine(aspDotNetId, currencyLine);
+            if (exists)
+            {
+                res = _dataAccess.UpdateCurrencyLine(aspDotNetId, currencyLine);
+            }
+            res = _dataAccess.InsertCurrencyLine(aspDotNetId, currencyLine);
+            return res;
+        }
     }
 }

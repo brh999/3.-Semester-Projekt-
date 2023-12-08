@@ -5,7 +5,6 @@ using Models.DTO;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
-using WebAppWithAuthentication.BusinessLogic;
 using WebAppWithAuthentication.Models;
 using WebAppWithAuthentication.Service;
 
@@ -85,7 +84,8 @@ namespace WebAppWithAuthentication.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountDto? account = null;
 
-            AccountLogic accountLogic = new(_connection);
+            
+            AccountService accountLogic = new(_connection);
             Task<AccountDto?> response = accountLogic.GetAccountById(userId);
             response.Wait();
 

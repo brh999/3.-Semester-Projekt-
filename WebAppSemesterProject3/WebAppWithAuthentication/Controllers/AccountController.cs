@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Security.Claims;
-using WebAppWithAuthentication.BusinessLogic;
+using WebAppWithAuthentication.DTO;
+
 
 using WebAppWithAuthentication.Service;
 
@@ -32,7 +33,7 @@ namespace WebAppWithAuthentication.Controllers
             {
                 //gets the currently logged in users AspNetUser.id (string)
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                AccountLogic al = new(_connection);
+                IAccountService al = new AccountService(_connection);
 
                 var accountDto = await al.GetAccountById(userId);
 

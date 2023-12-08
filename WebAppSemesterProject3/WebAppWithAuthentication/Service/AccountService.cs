@@ -1,15 +1,15 @@
 ﻿using Models;
 using Models.DTO;
-using WebAppWithAuthentication.Service;
 
-namespace WebAppWithAuthentication.BusinessLogic
+namespace WebAppWithAuthentication.Service
 {
-    
-    public class AccountLogic
+
+    public class AccountService : IAccountService
     {
 
         IServiceConnection _connection;
-        public AccountLogic(IServiceConnection connection) {
+        public AccountService(IServiceConnection connection)
+        {
             _connection = connection;
         }
 
@@ -22,11 +22,11 @@ namespace WebAppWithAuthentication.BusinessLogic
             {
                 _connection.UseUrl = _connection.BaseUrl + "account/" + aspNetId;
                 var httpResponse = await _connection.CallServiceGet();
-                if (httpResponse != null && httpResponse.IsSuccessStatusCode) 
+                if (httpResponse != null && httpResponse.IsSuccessStatusCode)
                 {
                     var content = await httpResponse.Content.ReadAsAsync<AccountDto>();
-                    
-                    if(content != null)
+
+                    if (content != null)
                     {
                         account = content;
                     }
