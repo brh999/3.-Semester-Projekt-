@@ -150,7 +150,7 @@ namespace WebApi.Database
                 cmd.Parameters.AddWithValue("amount", bid.Amount);
                 cmd.Parameters.AddWithValue("price", bid.Price);
                 cmd.Parameters.AddWithValue("isComplete", bid.IsComplete);
-                cmd.Parameters.AddWithValue("type", "Offer");
+                cmd.Parameters.AddWithValue("type", bid.Type);
                 cmd.Parameters.AddWithValue("aspNetId", aspNetUserID);
                 cmd.Parameters.AddWithValue("cType", bid.Currency.Type);
                 object obj = cmd.ExecuteScalar();
