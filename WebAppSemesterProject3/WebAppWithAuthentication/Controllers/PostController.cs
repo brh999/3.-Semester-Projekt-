@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Models;
-
 using Models.DTO;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Security.Claims;
 using System.Text;
 using WebAppWithAuthentication.BusinessLogic;
@@ -123,7 +120,7 @@ namespace WebAppWithAuthentication.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountDto? account = null;
 
-            
+
             AccountLogic accountLogic = new(_connection);
             Task<AccountDto?> response = accountLogic.GetAccountById(userId);
             response.Wait();
@@ -216,7 +213,7 @@ namespace WebAppWithAuthentication.Controllers
                 }
 
 
-                
+
 
             }
             else
@@ -242,7 +239,7 @@ namespace WebAppWithAuthentication.Controllers
         public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
-           
+
             string userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _connection.UseUrl = _connection.BaseUrl + "offer/" + "buyoffer/" + userID;
             Currency inCurrency = new Currency(offerCurrency);
@@ -258,7 +255,7 @@ namespace WebAppWithAuthentication.Controllers
                 if (isComplete)
                 {
                     TempData["message"] = 1;
-                } 
+                }
                 else
                 {
                     TempData["message"] = 2;
