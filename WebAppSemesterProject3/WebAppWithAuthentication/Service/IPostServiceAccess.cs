@@ -7,5 +7,7 @@ namespace WebAppWithAuthentication.Service
         public Task<IEnumerable<Post>> GetAllOffers();
 
         public Task<IEnumerable<Post>> GetAllBids();
+
+        public bool CreateOffer(Post inPost, string aspNetId);
     }
 }

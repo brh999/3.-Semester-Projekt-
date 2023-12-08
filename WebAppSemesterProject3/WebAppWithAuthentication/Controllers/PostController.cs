@@ -55,7 +55,7 @@ namespace WebAppWithAuthentication.Controllers
                 offerRes = (List<Post>)await _postServiceAccess.GetAllOffers();
                 ViewData["offers"] = offerRes;
 
-                ModelState.AddModelError(string.Empty, "No offers found");
+                //ModelState.AddModelError(string.Empty, "No posts found");
 
                 if (TempData["message"] != null)
                 {
@@ -75,18 +75,15 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-
         public IActionResult CreateOffer()
         {
             ActionResult result = null;
 
-            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountDto? account = null;
 
-            
-            AccountService accountLogic = new(_connection);
-            Task<AccountDto?> response = accountLogic.GetAccountById(userId);
+            AccountService accountService = new(_connection);
+            Task<AccountDto?> response = accountService.GetAccountById(userId);
             response.Wait();
 
             account = response.Result;
@@ -116,65 +113,19 @@ namespace WebAppWithAuthentication.Controllers
         [HttpPost]
         public IActionResult CreateOffer(Post inPost)
         {
-            //Quick fix, at this point offer dont need to have an exchange or any transaction.
-            //But the API do not comprehend that these values could be null
-            //therefore we create 'Empty' instances of objects.
-            // TODO refractor this in a later sprint.
-            if (inPost.Currency.Exchange == null)
-            {
-                inPost.Currency.Exchange = new Exchange();
-            }
-            if (inPost.Transactions == null)
-            {
-                inPost.Transactions = new List<TransactionLine>();
-            }
-            inPost.Type = "offer";
-
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             ActionResult result = StatusCode(500);
+            string aspUserId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Gets the asp user id from the currently logged in user
 
-            //Validate input
-            //TODO: create error handling if the input is not valid.
-            //Either at the browser level or Control
-            bool goOn = true;
-            if (!(inPost.Amount > 0) || !(inPost.Price > 0))
+            // Api Call
+            bool response = _postServiceAccess.CreateOffer(inPost, aspUserId);
+
+            if (response)
             {
-                goOn = false;
+                ViewData["type"] = "offer";
+                result = View("PostState", inPost);
             }
 
-            if (String.IsNullOrEmpty(inPost.Currency.Type))
-            {
-                goOn = false;
-            }
-
-            if (goOn)
-            {
-                //Create the use url to this call.
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                _connection.UseUrl = _connection.BaseUrl + "offer/" + userId;
-
-                //Serialize the offer object
-                var json = JsonConvert.SerializeObject(inPost);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var serviceResponse = _connection.CallServicePost(content);
-                serviceResponse.Wait();
-
-                //Check response from API
-                if (serviceResponse == null || !serviceResponse.Result.IsSuccessStatusCode)
-                {
-                    //502 Bad Gateway
-                    result = StatusCode(502);
-                }
-                else
-                {
-                    ViewData["type"] = "offer";
-                    result = View("PostState", inPost);
-                }
-            }
-            else
-            {
-                result = StatusCode(404);
-            }
             return result;
         }
 
