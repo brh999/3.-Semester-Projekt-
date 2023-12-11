@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.DTO;
+using DTO;
 using WebApi.BuissnessLogiclayer;
 
 

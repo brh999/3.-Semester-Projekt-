@@ -47,7 +47,7 @@ namespace DesktopClient.Service
             List<Account> res = new List<Account>();
             foreach(AccountDto aD in accounts)
             {
-                res.Add(new Account(aD));
+                res.Add(new Account() { Discount = aD.Discount, Email = aD.Email, Id = aD.Id, Posts = aD.Posts, Username = aD.Name, Wallet = aD.Wallet});
             }
             return res;
         }

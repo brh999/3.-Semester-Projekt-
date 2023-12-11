@@ -1,6 +1,6 @@
 ﻿using WebApi.Database;
 using Models;
-using Models.DTO;
+using DTO;
 
 namespace WebApi.BuissnessLogiclayer
 {

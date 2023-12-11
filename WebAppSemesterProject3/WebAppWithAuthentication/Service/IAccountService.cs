@@ -1,9 +1,9 @@
-﻿using Models.DTO;
+﻿using Models;
 
 namespace WebAppWithAuthentication.Service
 {
     public interface IAccountService
     {
-        Task<AccountDto?> GetAccountById(string aspNetId);
+        Task<Account?> GetAccountById(string aspNetId);
     }
 }
