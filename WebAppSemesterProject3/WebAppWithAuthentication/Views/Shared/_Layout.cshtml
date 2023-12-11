@@ -1,18 +1,93 @@
 ﻿<!DOCTYPE html>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #5c4e51 !important;
+        color: #5c4e51;
+        padding: 10px;
+    }
+
+    h1 {
+        color: #dbad16;
+        margin-bottom: 20px;
+        background-color: #5c4e51;
+        padding: 5px;
+    }
+
+    a {
+        color: #007bff !important;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    label {
+        font-size: 18px;
+        margin-top: 20px;
+        display: block;
+        color: #007bff;
+    }
+
+    .table {
+        width: 30% !important;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #dbad16;
+        color: #333333;
+        border-radius: 10px;
+    }
+
+    .btn-action {
+        background-color: #007bff! important; 
+    }
+
+        tr {
+            width: calc(10px - 30px) !important; 
+            border-bottom: 1px solid #333 !important;
+        }
+    .navbar-collapse {
+        background-color: #373031 !important;
+        color: #db8c16 !important;
+        outline-color: #5c4e51;
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+
+    .navbar-brand {
+        background-color: #5c4e51 !important;
+        outline-color: #5c4e51;
+        font-weight: bold;
+    }
+    .table tbody tr:hover {
+        background-color: #db8c16;
+    }
+
+    .table a:hover {
+            text-decoration: underline;
+    }
+
+    .actions-column {
+        width: 120px;
+    }
+
+</style>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebAppWithAuthentication</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebAppWithAuthentication.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebAppWithAuthentication</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Edge Boers</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,16 +95,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link " asp-area="" asp-controller="Account" asp-action="Index">My Page</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index">Accounts</a>
+                            <a class="nav-link " asp-area="" asp-controller="Currency" asp-action="Index">Currencies</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Currency" asp-action="Index">Currencies</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Post" asp-action="GetAllPosts">Bids & Offers</a>
+                            <a class="nav-link " asp-area="" asp-controller="Post" asp-action="GetAllPosts">Bids & Offers</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -45,7 +117,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - WebAppWithAuthentication - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Edge Boers version 0.8 - <a asp-area="" asp-controller="Home" asp-action="Index">Front Page</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -3,85 +3,12 @@
 @using Models
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "All Posts";
     var message = ViewData["message"];
 }
 <script>
     user = ViewData["user"]
 </script>
-
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #1a1a1a;
-        color: #ffffff;
-        padding: 20px;
-    }
-
-    h1 {
-        color: #66ccff;
-        margin-bottom: 20px;
-    }
-
-    a {
-        color: #66ccff;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-    label {
-        font-size: 30px;
-        margin-top: 20px;
-        display: block;
-        color: #66ccff;
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        background-color: #1a1a1a;
-        border: 1px solid #666666;
-        border-radius: 5px;
-        color: #ffffff;
-    }
-
-        .table th,
-        .table td {
-            border: 1px solid #666666;
-            padding: 12px;
-            text-align: left;
-        }
-
-        .table th {
-            background-color: #0d0d0d;
-            color: #66ccff;
-        }
-
-        .table tbody tr:hover {
-            background-color: #333333;
-        }
-
-        .table a {
-            color: #66ccff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-            .table a:hover {
-                text-decoration: underline;
-            }
-
-    .actions-column {
-        width: 150px;
-    }
-</style>
-
-
 <h1>- Bids & Offers -</h1>
 
 
@@ -94,7 +21,7 @@
     switch (message)
     {
         case 1:
-                <label>Successfully bought offer!</label>
+                <label>Successfully bought Offer!</label>
             break;
 
         case 2:
@@ -105,7 +32,7 @@
 </div>
 
 <p>
-    <a asp-action="CreateOffer">Create Offer</a>
+    <a asp-action="CreateOffer">New Offer</a>
 </p>
 
 <label>Bids:</label>
@@ -120,9 +47,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th class="actions-column">
-                - Actions -
             </th>
         </tr>
     </thead>
@@ -141,9 +65,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
-                    <td>
-                        <!-- Add any actions related to bids here -->
-                    </td>
                 </tr>
             }
         }
@@ -155,7 +76,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Currency)
+                @Html.DisplayNameFor(model => model.Currency.Type)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Amount)
@@ -164,7 +85,7 @@
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th class="actions-column">
-                - Actions -
+                - Buy-
             </th>
         </tr>
     </thead>

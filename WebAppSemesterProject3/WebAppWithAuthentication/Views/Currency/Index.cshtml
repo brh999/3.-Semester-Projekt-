@@ -1,73 +1,15 @@
 ﻿@model List<Models.Currency>
 @using Models
 
-@* @{
-    ViewData["Title"] = "Index";
-    List<Currency> currencies = null;
-    if (ViewData["Currencies"] != null)
-    {
-        currencies = (List<Currency>)ViewData["Currencies"];
-    }
+@{
+    ViewData["Title"] = "Currencies";
 }
- *@
-<!DOCTYPE html>
-<html>
 
-<head>
-    <style>
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
 
-        h1 {
-            color: #ff9900;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            background-color: #333333;
-            border: 1px solid #555555;
-            border-radius: 5px;
-            color: #ffffff;
-        }
-
-            .table th,
-            .table td {
-                border: 1px solid #555555;
-                padding: 12px;
-                text-align: left;
-            }
-
-            .table th {
-                background-color: #3498db;
-                color: #ffffff;
-            }
-
-            .table tbody tr:hover {
-                background-color: #555555;
-            }
-
-            .table a {
-                color: #3498db;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-                .table a:hover {
-                    text-decoration: underline;
-                }
-    </style>
-</head>
 
 <body>
 
-    <h1>Currencies</h1>
+    <h1>- Currencies -</h1>
 
     <table class="table">
         <thead>
@@ -91,7 +33,7 @@
                                 @Html.DisplayFor(modelItem => item.Exchange)
                             </td>
                             <td>
-                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                                <!--Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })-->
                             </td>
                         </tr>
                     }
