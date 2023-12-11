@@ -470,6 +470,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
+                        
                         amount = (double)reader["amount"];
                         price = (double)reader["price"];
                         isComplete = (bool)reader["isComplete"];

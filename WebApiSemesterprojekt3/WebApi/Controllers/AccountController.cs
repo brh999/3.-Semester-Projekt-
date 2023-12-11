@@ -22,9 +22,9 @@ namespace WebApi.Controllers
 
         // GET: api/account
         [HttpGet, Route("api/[Controller]")]
-        public ActionResult<List<Account>> GetAllAccounts()
+        public ActionResult<List<AccountDto>> GetAllAccounts()
         {
-            ActionResult<List<Account>>? foundReturn = null;
+            ActionResult<List<AccountDto>>? foundReturn = null;
 
             foundReturn = _accountLogic.GetAllAccounts();
             return foundReturn;
@@ -36,13 +36,8 @@ namespace WebApi.Controllers
         public ActionResult<AccountDto> GetAccount(string aspDotNetId)
 
         {
-            AccountDto? accountDto = null;
-            Account account = _accountLogic.GetAccountById(aspDotNetId);
-            if (!string.IsNullOrEmpty(account.Email) && !string.IsNullOrEmpty(account.Username))
-            {
-                accountDto = new AccountDto(account);
-            }
-
+            AccountDto? accountDto = _accountLogic.GetAccountById(aspDotNetId);
+            
             return accountDto;
         }
 

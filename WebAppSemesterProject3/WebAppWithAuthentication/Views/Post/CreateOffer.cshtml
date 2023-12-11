@@ -3,7 +3,7 @@
 
 
 @{
-    ViewData["Title"] = "CreateOffer";
+    ViewData["Title"] = "New Post";
     Models.DTO.AccountDto? account = ViewData["account"] as Models.DTO.AccountDto;
     List<SelectListItem> listItems = new List<SelectListItem>();
 
@@ -63,7 +63,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="GetAllPosts">Back to List</a>
 </div>
 
 @section Scripts {

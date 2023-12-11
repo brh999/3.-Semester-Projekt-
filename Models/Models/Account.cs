@@ -1,4 +1,5 @@
 ﻿
+using Models.DTO;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Models
@@ -32,6 +33,16 @@ namespace Models
             _email = email;
             _wallet = new List<CurrencyLine>();
             _posts = new List<Post>();
+        }
+
+        public Account(AccountDto aD)
+        {
+            _discount = aD.Discount;
+            _username = aD.Name;
+            _email = aD.Email;
+            _id = aD.Id;
+            _wallet = aD.Wallet;
+            _posts = aD.Posts;
         }
 
         public void AddCurrencyLine(CurrencyLine line)

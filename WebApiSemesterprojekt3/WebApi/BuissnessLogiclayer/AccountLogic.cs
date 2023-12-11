@@ -1,5 +1,6 @@
 ﻿using WebApi.Database;
 using Models;
+using Models.DTO;
 
 namespace WebApi.BuissnessLogiclayer
 {
@@ -11,23 +12,31 @@ namespace WebApi.BuissnessLogiclayer
             _dataAccess = inDataAccess;
         }
 
-        public Account? GetAccountById(string id)
+        public AccountDto? GetAccountById(string id)
         {
             Account? account = null;
-
+            AccountDto? result = null;
             account = _dataAccess.GetAccountById(id);
-
-            return account;
-
+            if(account != null)
+            {
+                result = new AccountDto(account);
+            }
+            return result;
         }
 
-        public List<Account> GetAllAccounts()
+        public List<AccountDto> GetAllAccounts()
         {
             List<Account> foundAccounts;
-
+            List<AccountDto> accounts = new List<AccountDto>();
             foundAccounts = _dataAccess.GetAllAccounts();
-
-            return foundAccounts;
+            foreach (Account a in foundAccounts)
+            {
+                if (a != null) {
+                    AccountDto aD = new AccountDto(a);
+                    accounts.Add(aD);
+                }
+            }
+            return accounts;
         }
 
         public List<CurrencyLine> GetRelatedCurrencyLines(int id)
