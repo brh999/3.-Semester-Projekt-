@@ -318,6 +318,7 @@ namespace WebApi.Database
 
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
+           
             AccountDBAccess accDB = new(_configuration);
             Account seller = accDB.GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
@@ -335,6 +336,7 @@ namespace WebApi.Database
 
         private bool CompleteOffer(Post inOffer, Account buyer)
         {
+            
 
             bool res = false;
             int id = inOffer.Id;
@@ -345,18 +347,18 @@ namespace WebApi.Database
                 conn.Open();
                 
                 using(SqlTransaction tran = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
-                using (SqlCommand insertCommand = conn.CreateCommand())
+                using (SqlCommand updateCommand = conn.CreateCommand())
                 {
                     try
                     {
                         
-                        insertCommand.CommandText = updatePosts;
-                        insertCommand.Transaction = tran;
-                        insertCommand.Parameters.AddWithValue("id", id);
+                        updateCommand.CommandText = updatePosts;
+                        updateCommand.Transaction = tran;
+                        updateCommand.Parameters.AddWithValue("id", id);
                         bool error = IsOfferComplete(id,conn,tran);
                         if (!error)
                         {
-                            int changes = insertCommand.ExecuteNonQuery();
+                            int changes = updateCommand.ExecuteNonQuery();
                             error = changes <= 0;
                         }
 
