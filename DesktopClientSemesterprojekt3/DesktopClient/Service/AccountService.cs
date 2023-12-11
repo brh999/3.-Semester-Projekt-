@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.DTO;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,8 @@ namespace DesktopClient.Service
         }
         public async Task<List<Account>?>? GetAccounts()
         {
-            List<Account>? res = null;
+            List<AccountDto>? accounts = null;
+
             _accountService.UseUrl = _accountService.BaseUrl + "account/";
 
             var serviceResponse = await _accountService.CallServiceGet();
@@ -39,7 +41,13 @@ namespace DesktopClient.Service
             if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
             {
                 var responseAccounts = await serviceResponse.Content.ReadAsStringAsync();
-                res = JsonConvert.DeserializeObject<List<Account>>(responseAccounts);
+                accounts = JsonConvert.DeserializeObject<List<AccountDto>>(responseAccounts);
+            }
+
+            List<Account> res = new List<Account>();
+            foreach(AccountDto aD in accounts)
+            {
+                res.Add(new Account(aD));
             }
             return res;
         }
