@@ -206,15 +206,14 @@ namespace WebApi.Database.Tests
         }
 
         //Concurrency Test
-        [Theory]
-        [InlineData(null)]
+        [Fact]
 
-        public void BuyOfferTest(Post offer = null, int delay = 0)
+        public void BuyOfferTest()
         {
             //Assign
             List<Post> posts;
             bool isBought = false;
-            
+            Post offer = null;
 
             bool isCompleteOffer = false,
                 isCompleteBid = false;
@@ -382,21 +381,9 @@ namespace WebApi.Database.Tests
             {
                 Assert.Fail(ex.Message);
             }
-            
-
             // Assert
-
             Assert.True(t1Result != t2Result);
 
         }
-
-
-
-
-
-
-
-
-
     }
 }

@@ -402,15 +402,16 @@ namespace WebApi.Database
                         tran.Rollback();    
                         throw new DatabaseException(ex, "Could not complete post");
                     }
-                    
-                    
 
                     if(res)
                     {
                         tran.Commit();
                     }
-                }
-                
+                    else
+                    {
+                        tran.Rollback();
+                    }
+                } 
             }
             return res;
         }
