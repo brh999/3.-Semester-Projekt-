@@ -325,7 +325,7 @@ namespace WebApi.Database
             bool isComplete = CompleteOffer(inPost, buyer);
             if (seller != null && buyer != null)
             {
-
+                //TODO update wallet for seller & buyer
             }
             return isComplete;
         }
@@ -390,7 +390,16 @@ namespace WebApi.Database
                             error = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
                         }
 
-                        res = !error;
+                        
+                        if (!error)
+                        {
+                            res = true;
+                            tran.Commit();
+                        }
+                        else
+                        {
+                            tran.Rollback();
+                        }
                     }
                     catch (SqlException ex)
                     {
@@ -403,14 +412,7 @@ namespace WebApi.Database
                         throw new DatabaseException(ex, "Could not complete post");
                     }
 
-                    if(res)
-                    {
-                        tran.Commit();
-                    }
-                    else
-                    {
-                        tran.Rollback();
-                    }
+                    
                 } 
             }
             return res;
