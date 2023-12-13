@@ -336,8 +336,6 @@ namespace WebApi.Database
 
         private bool CompleteOffer(Post inOffer, Account buyer)
         {
-            
-
             bool res = false;
             int id = inOffer.Id;
             string updatePosts = "UPDATE Posts SET isComplete = 1 WHERE id = @id";
@@ -355,14 +353,12 @@ namespace WebApi.Database
                         updateCommand.CommandText = updatePosts;
                         updateCommand.Transaction = tran;
                         updateCommand.Parameters.AddWithValue("id", id);
-                        bool error = IsOfferComplete(id,conn,tran);
-                        if (!error)
+                        bool complete = IsOfferComplete(id,conn,tran);
+                        if (!complete)
                         {
                             int changes = updateCommand.ExecuteNonQuery();
-                            error = changes <= 0;
+                            complete = changes <= 0;
                         }
-
-
                         AccountDBAccess accountDBAccess = new(_configuration);
 
                         int postId = 0; //garbage value
@@ -375,23 +371,20 @@ namespace WebApi.Database
 
                         string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id,conn, tran);
 
-                        if (!error)
+                        if (!complete)
                         {
                             int bidId = InsertBidReturnBidId(bid, aspnetUserId, conn, tran);
-                            error = bidId <= 0;
+                            complete = bidId <= 0;
                             bid.Id = bidId;
                         }
-
-                        if (!error)
+                        if (!complete)
                         {
                             //Create and persist transactionLine
                             TransactionLine transactionLine = new TransactionLine(DateTime.Now, inOffer.Amount, bid, inOffer);
                             TransactionDBAccess transactionDBAccess = new(_configuration);
-                            error = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
+                            complete = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
                         }
-
-                        
-                        if (!error)
+                        if (!complete)
                         {
                             res = true;
                             tran.Commit();
@@ -411,8 +404,6 @@ namespace WebApi.Database
                         tran.Rollback();    
                         throw new DatabaseException(ex, "Could not complete post");
                     }
-
-                    
                 } 
             }
             return res;
