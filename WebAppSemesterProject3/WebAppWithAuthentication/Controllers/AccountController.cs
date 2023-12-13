@@ -21,7 +21,6 @@ namespace WebAppWithAuthentication.Controllers
             if (url != null)
             {
                 _connection = new ServiceConnection(url + "api/");
-
             }
             else
             {

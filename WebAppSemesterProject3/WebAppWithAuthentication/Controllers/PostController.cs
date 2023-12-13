@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Models;
 
 using Models;
 using ModelViews;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Security.Claims;
 using System.Text;
 using WebAppWithAuthentication.ModelViews;
@@ -22,18 +20,17 @@ namespace WebAppWithAuthentication.Controllers
         private Uri _url;
         private readonly IConfiguration _configuration;
         private ServiceConnection _connection;
-        public PostController(IConfiguration configuration)
+        private readonly IPostServiceAccess _postServiceAccess;
+        public PostController(IConfiguration configuration, IPostServiceAccess postServiceAccess)
         {
             _configuration = configuration;
+            _postServiceAccess = postServiceAccess;
 
             //Configure the base API url
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
             {
-
                 _connection = new ServiceConnection(url + "Api/");
-                _connection = new ServiceConnection(url + "Api/");
-
             }
             else
             {
@@ -49,52 +46,19 @@ namespace WebAppWithAuthentication.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllPosts()
         {
-            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
-            IEnumerable<Post> bids = null;
-            IEnumerable<Post> offers = null;
+            List<Post> bidRes = new();
+            List<Post> offerRes = new();
+
             try
             {
-                // Get bids:
-                _connection.UseUrl = _connection.BaseUrl + "bid";
-                var response = _connection.CallServiceGet();
-                response.Wait();
-                var result = response.Result;
-                if (result != null)
-                {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                        readTask.Wait();
-                        bids = readTask.Result;
-                        ViewData["bids"] = bids;
-                    }
-                }
-                else
-                {
-                    bids = Enumerable.Empty<Post>();
-                    ModelState.AddModelError(string.Empty, "No bids found");
-                }
-                // Get offers:
-                _connection.UseUrl = _connection.BaseUrl + "offer";
-                response = _connection.CallServiceGet();
-                response.Wait();
+                bidRes = (List<Post>)await _postServiceAccess.GetAllBids();
+                ViewData["bids"] = bidRes;
 
-                result = response.Result;
-                if (result != null)
-                {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var readTask = result.Content.ReadAsAsync<IList<Post>>();
-                        readTask.Wait();
-                        offers = readTask.Result;
-                        ViewData["offers"] = offers;
-                    }
-                }
-                else
-                {
-                    offers = Enumerable.Empty<Post>();
-                    ModelState.AddModelError(string.Empty, "No offers found");
-                }
+                offerRes = (List<Post>)await _postServiceAccess.GetAllOffers();
+                ViewData["offers"] = offerRes;
+
+                //ModelState.AddModelError(string.Empty, "No posts found");
+
                 if (TempData["message"] != null)
                 {
                     ViewData["message"] = TempData["message"];
@@ -115,13 +79,13 @@ namespace WebAppWithAuthentication.Controllers
         [Authorize]
         public IActionResult CreateOffer()
         {
-
             ActionResult result = null;
 
-            System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountViewModel? account = null;
 
+            AccountService accountService = new(_connection);
+            Task<AccountDto?> response = accountService.GetAccountById(userId);
             
             AccountService accountLogic = new(_connection);
             Task<Account?> response = accountLogic.GetAccountById(userId);
@@ -136,9 +100,6 @@ namespace WebAppWithAuthentication.Controllers
                 result = View();
 
             }
-
-
-
 
             if (result == null)
             {
@@ -158,65 +119,17 @@ namespace WebAppWithAuthentication.Controllers
         [HttpPost]
         public IActionResult CreateOffer(Post inPost)
         {
-            //Quick fix, at this point offer dont need to have an exchange or any transaction.
-            //But the API do not comprehend that these values could be null
-            //therefore we create 'Empty' instances of objects.
-            // TODO refractor this in a later sprint.
-            if (inPost.Currency.Exchange == null)
-            {
-                inPost.Currency.Exchange = new Exchange();
-            }
-            if (inPost.Transactions == null)
-            {
-                inPost.Transactions = new List<TransactionLine>();
-            }
-            inPost.Type = "offer";
-
             System.Security.Claims.ClaimsPrincipal loggedInUser = User;
             ActionResult result = StatusCode(500);
+            string aspUserId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Gets the asp user id from the currently logged in user
 
-            //Validate input
-            //TODO: create error handling if the input is not valid.
-            //Either at the browser level or Control
-            bool goOn = true;
-            if (!(inPost.Amount > 0) || !(inPost.Price > 0))
+            // Api Call
+            bool response = _postServiceAccess.CreateOffer(inPost, aspUserId);
+
+            if (response)
             {
-                goOn = false;
-            }
-
-            if (String.IsNullOrEmpty(inPost.Currency.Type))
-            {
-                goOn = false;
-            }
-
-            if (goOn)
-            {
-                //Create the use url to this call.
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                _connection.UseUrl = _connection.BaseUrl + "offer/" + userId;
-
-
-                //Serialize the offer object
-                var json = JsonConvert.SerializeObject(inPost);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var serviceResponse = _connection.CallServicePost(content);
-                serviceResponse.Wait();
-
-                //Check response from API
-                if (serviceResponse == null || !serviceResponse.Result.IsSuccessStatusCode)
-                {
-                    //502 Bad Gateway
-                    result = StatusCode(502);
-                }
-                else
-                {
-                    ViewData["type"] = "offer";
-                    result = View("PostState", inPost);
-                }
-            }
-            else
-            {
-                result = StatusCode(404);
+                ViewData["type"] = "offer";
+                result = View("PostState", inPost);
             }
 
             return result;
@@ -224,7 +137,6 @@ namespace WebAppWithAuthentication.Controllers
 
         [Authorize]
         public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
-
         {
             ViewData["offerAmount"] = offerAmount;
             ViewData["offerPrice"] = offerPrice;
@@ -237,7 +149,7 @@ namespace WebAppWithAuthentication.Controllers
         public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
-           
+
             string userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _connection.UseUrl = _connection.BaseUrl + "offer/" + "buyoffer/" + userID;
             Currency inCurrency = new Currency(offerCurrency);
@@ -253,7 +165,7 @@ namespace WebAppWithAuthentication.Controllers
                 if (isComplete)
                 {
                     TempData["message"] = 1;
-                } 
+                }
                 else
                 {
                     TempData["message"] = 2;
