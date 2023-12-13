@@ -1,5 +1,4 @@
 ﻿using Models;
-using Models.DTO;
 
 namespace WebAppWithAuthentication.Service
 {
@@ -14,9 +13,9 @@ namespace WebAppWithAuthentication.Service
         }
 
 
-        public async Task<AccountDto?> GetAccountById(string aspNetId)
+        public async Task<Account?> GetAccountById(string aspNetId)
         {
-            AccountDto account = null;
+            Account account = null;
 
             if (!string.IsNullOrEmpty(aspNetId))
             {
@@ -24,7 +23,7 @@ namespace WebAppWithAuthentication.Service
                 var httpResponse = await _connection.CallServiceGet();
                 if (httpResponse != null && httpResponse.IsSuccessStatusCode)
                 {
-                    var content = await httpResponse.Content.ReadAsAsync<AccountDto>();
+                    var content = await httpResponse.Content.ReadAsAsync<Account>();
 
                     if (content != null)
                     {

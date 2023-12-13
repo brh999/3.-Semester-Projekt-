@@ -1,4 +1,4 @@
-namespace WebAppWithAuthentication.Models
+namespace WebAppWithAuthentication.ModelViews
 {
     public class ErrorViewModel
     {
