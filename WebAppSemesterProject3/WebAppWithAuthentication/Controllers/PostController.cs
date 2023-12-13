@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.DTO;
+
+using Models;
+using ModelViews;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
-using WebAppWithAuthentication.Models;
+using WebAppWithAuthentication.ModelViews;
 using WebAppWithAuthentication.Service;
 
 namespace WebAppWithAuthentication.Controllers
@@ -80,13 +82,17 @@ namespace WebAppWithAuthentication.Controllers
             ActionResult result = null;
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            AccountDto? account = null;
+            AccountViewModel? account = null;
 
             AccountService accountService = new(_connection);
             Task<AccountDto?> response = accountService.GetAccountById(userId);
+            
+            AccountService accountLogic = new(_connection);
+            Task<Account?> response = accountLogic.GetAccountById(userId);
             response.Wait();
 
-            account = response.Result;
+            account = new AccountViewModel(response.Result);
+
 
             if (account != null)
             {

@@ -1,6 +1,8 @@
 ﻿using APITest;
+using DTO;
 using Microsoft.Extensions.Configuration;
 using Models;
+
 using System;
 using System.Data.SqlClient;
 using WebApi.BuissnessLogiclayer;
@@ -47,7 +49,7 @@ namespace APITest
         public void GetAccountByIdWithValidIdShouldReturnAccountWithThatId()
         {
             //Assign
-            Account? account;
+            AccountDto? account;
             string expectedEmail = "mathias@gmail.com";
             double expectedDiscount = 1;
             int expectedId = 1,
@@ -93,7 +95,7 @@ namespace APITest
         public void GetAccountByIdWithInvalidIdShouldEmptyAccount()
         {
             //Assign
-            Account? account = null;
+            AccountDto? account = null;
             string invalidId = "Invalid-Id-123-123-123";
             //Act
             account = _accountLogic.GetAccountById(invalidId);
@@ -111,7 +113,7 @@ namespace APITest
             //Assign
             int expectedAmountOfAccounts = 0;
             string accountQuery = "SELECT COUNT(*) AS 'RowCount' FROM Accounts";
-            List<Account> accounts = new List<Account>();
+            List<AccountDto> accounts = new List<AccountDto>();
             //Act
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {

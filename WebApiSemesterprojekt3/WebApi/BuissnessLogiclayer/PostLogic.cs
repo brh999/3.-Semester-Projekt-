@@ -104,11 +104,22 @@ namespace WebApi.BuissnessLogiclayer
             return res;
         }
 
-
-        public bool BuyOffer(Post inPost, string aspNetUserId)
+        /// <summary>
+        /// Buy the given inOffer, where aspNetUserId is the account buying.
+        /// delay is only used in test cases.
+        /// </summary>
+        /// <param name="inOffer"></param>
+        /// <param name="aspNetUserId"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public bool BuyOffer(Post inOffer, string aspNetUserId, int delay = 0)
         {
-            return _dataAccess.BuyOffer(inPost, aspNetUserId);
+            if (delay > 0 && delay < 10000)
+            {
+                System.Threading.Thread.Sleep(delay);
+            }
 
+            return _dataAccess.BuyOffer(inOffer, aspNetUserId);
         }
 
         public ActionResult<List<Post>>? GetAllOffersById(string aspNetUser)
@@ -145,8 +156,8 @@ namespace WebApi.BuissnessLogiclayer
                 }
 
 
-                //This should also verify that the more complex properties valid.
-                //But for know this is sufficient
+                //This should also verify that the more complex properties are valid.
+                //But for now this is sufficient.
             }
 
             return isValid;

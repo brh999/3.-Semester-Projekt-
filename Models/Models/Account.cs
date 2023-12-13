@@ -1,4 +1,5 @@
 ﻿
+
 using System.Reflection.Metadata.Ecma335;
 
 namespace Models
@@ -33,6 +34,7 @@ namespace Models
             _wallet = new List<CurrencyLine>();
             _posts = new List<Post>();
         }
+
 
         public void AddCurrencyLine(CurrencyLine line)
         {

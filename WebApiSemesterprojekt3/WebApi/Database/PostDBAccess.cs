@@ -318,13 +318,14 @@ namespace WebApi.Database
 
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
+           
             AccountDBAccess accDB = new(_configuration);
             Account seller = accDB.GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
             bool isComplete = CompleteOffer(inPost, buyer);
             if (seller != null && buyer != null)
             {
-
+                //TODO update wallet for seller & buyer
             }
             return isComplete;
         }
@@ -335,7 +336,6 @@ namespace WebApi.Database
 
         private bool CompleteOffer(Post inOffer, Account buyer)
         {
-
             bool res = false;
             int id = inOffer.Id;
             string updatePosts = "UPDATE Posts SET isComplete = 1 WHERE id = @id";
@@ -345,22 +345,20 @@ namespace WebApi.Database
                 conn.Open();
                 
                 using(SqlTransaction tran = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
-                using (SqlCommand insertCommand = conn.CreateCommand())
+                using (SqlCommand updateCommand = conn.CreateCommand())
                 {
                     try
                     {
                         
-                        insertCommand.CommandText = updatePosts;
-                        insertCommand.Transaction = tran;
-                        insertCommand.Parameters.AddWithValue("id", id);
-                        bool error = IsOfferComplete(id,conn,tran);
-                        if (!error)
+                        updateCommand.CommandText = updatePosts;
+                        updateCommand.Transaction = tran;
+                        updateCommand.Parameters.AddWithValue("id", id);
+                        bool complete = IsOfferComplete(id,conn,tran);
+                        if (!complete)
                         {
-                            int changes = insertCommand.ExecuteNonQuery();
-                            error = changes <= 0;
+                            int changes = updateCommand.ExecuteNonQuery();
+                            complete = changes <= 0;
                         }
-
-
                         AccountDBAccess accountDBAccess = new(_configuration);
 
                         int postId = 0; //garbage value
@@ -373,22 +371,28 @@ namespace WebApi.Database
 
                         string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id,conn, tran);
 
-                        if (!error)
+                        if (!complete)
                         {
                             int bidId = InsertBidReturnBidId(bid, aspnetUserId, conn, tran);
-                            error = bidId <= 0;
+                            complete = bidId <= 0;
                             bid.Id = bidId;
                         }
-
-                        if (!error)
+                        if (!complete)
                         {
                             //Create and persist transactionLine
                             TransactionLine transactionLine = new TransactionLine(DateTime.Now, inOffer.Amount, bid, inOffer);
                             TransactionDBAccess transactionDBAccess = new(_configuration);
-                            error = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
+                            complete = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
                         }
-
-                        res = !error;
+                        if (!complete)
+                        {
+                            res = true;
+                            tran.Commit();
+                        }
+                        else
+                        {
+                            tran.Rollback();
+                        }
                     }
                     catch (SqlException ex)
                     {
@@ -400,15 +404,7 @@ namespace WebApi.Database
                         tran.Rollback();    
                         throw new DatabaseException(ex, "Could not complete post");
                     }
-                    
-                    
-
-                    if(res)
-                    {
-                        tran.Commit();
-                    }
-                }
-                
+                } 
             }
             return res;
         }
@@ -468,6 +464,7 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
+                        
                         amount = (double)reader["amount"];
                         price = (double)reader["price"];
                         isComplete = (bool)reader["isComplete"];

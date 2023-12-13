@@ -3,8 +3,8 @@
 
 
 @{
-    ViewData["Title"] = "CreateOffer";
-    Models.DTO.AccountDto? account = ViewData["account"] as Models.DTO.AccountDto;
+    ViewData["Title"] = "New Post";
+    ModelViews.AccountViewModel? account = ViewData["account"] as ModelViews.AccountViewModel;
     List<SelectListItem> listItems = new List<SelectListItem>();
 
     if(account != null && account.Wallet != null)
@@ -63,7 +63,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="GetAllPosts">Back to List</a>
 </div>
 
 @section Scripts {
