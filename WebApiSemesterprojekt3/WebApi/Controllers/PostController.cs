@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using WebApi.BuissnessLogiclayer;
 
@@ -6,6 +7,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PostController : ControllerBase
     {
         private readonly IPostLogic _postLogic;
@@ -14,7 +16,6 @@ namespace WebApi.Controllers
         {
             _postLogic = postLogic;
         }
-
 
         // GET: api/<PostController>
         [HttpGet]

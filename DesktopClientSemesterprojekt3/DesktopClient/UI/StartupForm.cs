@@ -137,13 +137,11 @@ namespace DesktopClient.UI
                 return;
             }
 
-            // Check if the key pressed is a digit or a dot
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != ',')
             {
                 e.Handled = true; // Block non-digit and dot characters
             }
 
-            // Check if '.' is already present in the textbox
             TextBox textBox = sender as TextBox;
             if (e.KeyChar == ',' && textBox.Text.Contains(","))
             {
