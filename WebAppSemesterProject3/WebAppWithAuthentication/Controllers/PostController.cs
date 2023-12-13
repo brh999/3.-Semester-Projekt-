@@ -85,10 +85,7 @@ namespace WebAppWithAuthentication.Controllers
             AccountViewModel? account = null;
 
             AccountService accountService = new(_connection);
-            Task<AccountDto?> response = accountService.GetAccountById(userId);
-            
-            AccountService accountLogic = new(_connection);
-            Task<Account?> response = accountLogic.GetAccountById(userId);
+            Task<Account?> response = accountService.GetAccountById(userId);
             response.Wait();
 
             account = new AccountViewModel(response.Result);
