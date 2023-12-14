@@ -57,7 +57,11 @@ namespace WebApi.BuissnessLogiclayer
             {
                 res = _dataAccess.UpdateCurrencyLine(aspDotNetId, currencyLine);
             }
-            res = _dataAccess.InsertCurrencyLine(aspDotNetId, currencyLine);
+            else
+            {
+                res = _dataAccess.InsertCurrencyLine(aspDotNetId, currencyLine);
+            }
+            
             return res;
         }
     }
