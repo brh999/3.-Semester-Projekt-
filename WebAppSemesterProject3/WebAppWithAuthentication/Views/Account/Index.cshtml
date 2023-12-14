@@ -7,11 +7,7 @@
 
     <h1>- My Page -</h1>
 
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-
-    <h2>Posts</h2>
+    <h2>Your Offers</h2>
     <table class="table">
         <thead>
             <tr>
@@ -29,20 +25,23 @@
         <tbody>
             @foreach (var post in Model.Posts)
             {
-                <tr>
-                    <td>
-                        @post.Currency.Type
-                    </td>
-                    <td>
-                        @post.Price
-                    </td>
-                    <td>
-                        @post.Amount
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { id = post.Id })
-                    </td>
-                </tr>
+                @if (post.Type.Equals("Offer") && post.IsComplete == false)
+            {
+                    <tr>
+                        <td>
+                            @post.Currency.Type
+                        </td>
+                        <td>
+                            @post.Price
+                        </td>
+                        <td>
+                            @post.Amount
+                        </td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = post.Id })
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -68,7 +67,7 @@
                     </td>
                     <td>
                         @currencyLine.Amount
-                    </td> 
+                    </td>
                 </tr>
             }
         </tbody>

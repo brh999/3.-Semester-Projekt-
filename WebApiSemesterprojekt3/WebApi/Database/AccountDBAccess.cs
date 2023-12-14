@@ -163,7 +163,7 @@ namespace WebApi.Database
             string aspnetUserId = "";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                using(SqlCommand cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
                     aspnetUserId = GetAspnetUserIdAux(id, cmd);
                 }
@@ -172,13 +172,13 @@ namespace WebApi.Database
             return aspnetUserId;
         }
 
-        internal string GetAspnetUserId(int id,SqlConnection conn,SqlTransaction tran)
+        internal string GetAspnetUserId(int id, SqlConnection conn, SqlTransaction tran)
         {
             string aspNetUserId = "";
-            using(SqlCommand cmd = conn.CreateCommand())
+            using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.Transaction = tran;
-                aspNetUserId = GetAspnetUserIdAux(id,cmd);
+                aspNetUserId = GetAspnetUserIdAux(id, cmd);
             }
 
             return aspNetUserId;
@@ -201,7 +201,8 @@ namespace WebApi.Database
                         aspnetUserId = (string)reader["AspNetUsers_id_fk"];
                     }
                 }
-            }catch (SqlException)
+            }
+            catch (SqlException)
             {
                 throw new DatabaseException("Could not find aspnetuser id with the given input");
             }
@@ -209,7 +210,7 @@ namespace WebApi.Database
             return aspnetUserId;
         }
 
-    
+
 
         public Account GetAssociatedAccount(int postId)
         {
@@ -240,15 +241,16 @@ namespace WebApi.Database
         public bool UpdateCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
         {
             bool res = false;
-            string queryString = "UPDATE CurrencyLines SET amount = @amount WHERE account_id_fk = (SELECT Accounts.id FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.id WHERE AspNetUsers.Id = @id";
+            string queryString = "UPDATE CurrencyLines SET amount = amount + @insertedAmount WHERE account_id_fk = " +
+                "(SELECT Accounts.id FROM Accounts JOIN AspNetUsers ON Accounts.AspNetUsers_id_fk = AspNetUsers.id WHERE AspNetUsers.Id = @aspNetId)";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand updateCommand = new(queryString, conn))
             {
 
                 conn.Open();
                 double amount = currencyLine.Amount;
-                updateCommand.Parameters.AddWithValue("amount" ,amount);
-                updateCommand.Parameters.AddWithValue("id", aspDotNetId);
+                updateCommand.Parameters.AddWithValue("insertedAmount", amount);
+                updateCommand.Parameters.AddWithValue("aspNetId", aspDotNetId);
                 int affected = updateCommand.ExecuteNonQuery();
                 if (affected > 0)
                 {
@@ -271,12 +273,15 @@ namespace WebApi.Database
                 conn.Open();
                 checkCommand.Parameters.AddWithValue("id", aspDotNetId);
                 checkCommand.Parameters.AddWithValue("type", checkCurrency);
-                int affected = (int)checkCommand.ExecuteScalar();
-
-                if (affected > 0)
+                string currencyLineAlreadyInWallet = (string)checkCommand.ExecuteScalar();
+                if(currencyLineAlreadyInWallet != null)
                 {
-                    res = true;
+                    if (currencyLineAlreadyInWallet.Equals(checkCurrency))
+                    {
+                        res = true;
+                    }
                 }
+                
             }
             return res;
         }
@@ -287,7 +292,7 @@ namespace WebApi.Database
             ICurrencyDBAccess c = new CurrencyDBAccess(_configuration);
             Currency currentCurrency = currencyLine.Currency;
             string queryString = "INSERT INTO currencyLines(currency_id_fk,amount,account_id_fk)" +
-                "SELECT @currency_id,@amount, Id AS account_id_fk FROM Accounts WHERE AspNetUsers_id_fk =@aspDotNetId";
+                "SELECT @currency_id,@amount, Id AS account_id_fk FROM Accounts WHERE AspNetUsers_id_fk = @aspDotNetId";
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand insertCommand = new(queryString, conn))
             {
@@ -295,7 +300,7 @@ namespace WebApi.Database
                 int currencyId = c.GetCurrencyID(currentCurrency);
                 insertCommand.Parameters.AddWithValue("currency_id", currencyId);
                 insertCommand.Parameters.AddWithValue("amount", currencyLine.Amount);
-                insertCommand.Parameters.AddWithValue("account_id", aspDotNetId);
+                insertCommand.Parameters.AddWithValue("@aspDotNetId", aspDotNetId);
                 int affected = insertCommand.ExecuteNonQuery();
                 if (affected > 0)
                 {

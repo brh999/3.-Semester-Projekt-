@@ -99,12 +99,12 @@ namespace WebApi.Database
         public bool InsertBid(Post bid, string aspNetUserId)
         {
             bool result = false;
-            using(SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                using(SqlCommand insertCommand = conn.CreateCommand())
+                using (SqlCommand insertCommand = conn.CreateCommand())
                 {
-                    result =  0 < InsertBidAux(insertCommand, bid, aspNetUserId);
+                    result = 0 < InsertBidAux(insertCommand, bid, aspNetUserId);
                 }
             }
             return result;
@@ -121,11 +121,11 @@ namespace WebApi.Database
         public int InsertBidReturnBidId(Post post, string aspNetUserId, SqlConnection conn, SqlTransaction tran)
         {
             int result = 0;
-            using(SqlCommand insertCommand = conn.CreateCommand())
+            using (SqlCommand insertCommand = conn.CreateCommand())
             {
 
                 insertCommand.Transaction = tran;
-                result = InsertBidAux(insertCommand,post, aspNetUserId);
+                result = InsertBidAux(insertCommand, post, aspNetUserId);
             }
             return result;
         }
@@ -159,9 +159,10 @@ namespace WebApi.Database
             catch (SqlException)
             {
                 throw new DatabaseException("Could not insert bid");
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                throw new DatabaseException(ex,"Could not convert id");
+                throw new DatabaseException(ex, "Could not convert id");
             }
 
             return result;
@@ -318,7 +319,7 @@ namespace WebApi.Database
 
         public bool BuyOffer(Post inPost, string aspNetUserId)
         {
-           
+
             AccountDBAccess accDB = new(_configuration);
             Account seller = accDB.GetAssociatedAccount(inPost.Id);
             Account buyer = accDB.GetAccountById(aspNetUserId);
@@ -339,21 +340,21 @@ namespace WebApi.Database
             bool res = false;
             int id = inOffer.Id;
             string updatePosts = "UPDATE Posts SET isComplete = 1 WHERE id = @id";
-            
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                
-                using(SqlTransaction tran = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
+
+                using (SqlTransaction tran = conn.BeginTransaction(System.Data.IsolationLevel.RepeatableRead))
                 using (SqlCommand updateCommand = conn.CreateCommand())
                 {
                     try
                     {
-                        
+
                         updateCommand.CommandText = updatePosts;
                         updateCommand.Transaction = tran;
                         updateCommand.Parameters.AddWithValue("id", id);
-                        bool complete = IsOfferComplete(id,conn,tran);
+                        bool complete = IsOfferComplete(id, conn, tran);
                         if (!complete)
                         {
                             int changes = updateCommand.ExecuteNonQuery();
@@ -366,10 +367,10 @@ namespace WebApi.Database
                                 price = inOffer.Price;
                         Currency currency = inOffer.Currency;
 
-                        Post bid = new Post(amount,price,currency,postId,"Bid");
+                        Post bid = new Post(amount, price, currency, postId, "Bid");
                         bid.IsComplete = true;
 
-                        string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id,conn, tran);
+                        string aspnetUserId = accountDBAccess.GetAspnetUserId(buyer.Id, conn, tran);
 
                         if (!complete)
                         {
@@ -383,6 +384,30 @@ namespace WebApi.Database
                             TransactionLine transactionLine = new TransactionLine(DateTime.Now, inOffer.Amount, bid, inOffer);
                             TransactionDBAccess transactionDBAccess = new(_configuration);
                             complete = !transactionDBAccess.InsertTransactionLine(transactionLine, conn, tran);
+                        }
+
+                        if (!complete)
+                        {
+                            //Very ugly, but working is better than perfect in this instance. This part of the transaction only
+                            //updates the buyer wallet. A better solution would be sending a delegate event to another method that
+                            //updates the seller wallet.
+                            CurrencyLine lineToSave = new CurrencyLine
+                            {
+                                Amount = inOffer.Amount,
+                                Currency = inOffer.Currency,
+
+                            };
+                            bool exists = false;
+                            exists = accountDBAccess.CheckCurrencyLine(aspnetUserId, lineToSave);
+                            if (exists)
+                            {
+                                complete = !accountDBAccess.UpdateCurrencyLine(aspnetUserId, lineToSave);
+                            }
+                            else
+                            {
+                                complete = !accountDBAccess.InsertCurrencyLine(aspnetUserId, lineToSave);
+
+                            }
                         }
                         if (!complete)
                         {
@@ -401,10 +426,10 @@ namespace WebApi.Database
                     }
                     catch (DatabaseException ex)
                     {
-                        tran.Rollback();    
+                        tran.Rollback();
                         throw new DatabaseException(ex, "Could not complete post");
                     }
-                } 
+                }
             }
             return res;
         }
@@ -413,7 +438,7 @@ namespace WebApi.Database
         {
             bool res = false;
             string query = "select isComplete from Posts where id = @id";
-            
+
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.Transaction = tran;
@@ -452,7 +477,7 @@ namespace WebApi.Database
             string type = null;
             int postId = 0;
 
-            string queryString = "select * from posts where account_id_fk = (select Accounts.id from Accounts where Accounts.AspNetUsers_id_fk = @aspNetUser)";
+            string queryString = "SELECT * FROM posts WHERE account_id_fk = (SELECT Accounts.id FROM Accounts WHERE Accounts.AspNetUsers_id_fk = @aspNetUser) AND type ='Offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -464,14 +489,14 @@ namespace WebApi.Database
                 {
                     while (reader.Read())
                     {
-                        
+
                         amount = (double)reader["amount"];
                         price = (double)reader["price"];
                         isComplete = (bool)reader["isComplete"];
                         type = (string)reader["type"];
                         currencyType = cu.GetCurrencyById((int)reader["currencies_id_fk"]);
 
-                        post = new Post(amount, price, currencyType, postId, type);
+                        post = new Post(amount, price, currencyType, postId, type, isComplete);
                         foundPosts.Add(post);
                     }
                 }
