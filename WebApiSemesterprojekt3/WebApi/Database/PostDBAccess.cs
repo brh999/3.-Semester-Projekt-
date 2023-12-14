@@ -388,7 +388,9 @@ namespace WebApi.Database
 
                         if (!complete)
                         {
-                            //Very ugly, but working is better than perfect in this instance
+                            //Very ugly, but working is better than perfect in this instance. This part of the transaction only
+                            //updates the buyer wallet. A better solution would be sending a delegate event to another method that
+                            //updates the seller wallet.
                             CurrencyLine lineToSave = new CurrencyLine
                             {
                                 Amount = inOffer.Amount,
@@ -475,7 +477,7 @@ namespace WebApi.Database
             string type = null;
             int postId = 0;
 
-            string queryString = "SELECT * FROM posts WHERE account_id_fk = (SELECT Accounts.id FROM Accounts WHERE Accounts.AspNetUsers_id_fk = @aspNetUser)";
+            string queryString = "SELECT * FROM posts WHERE account_id_fk = (SELECT Accounts.id FROM Accounts WHERE Accounts.AspNetUsers_id_fk = @aspNetUser) AND type ='Offer'";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, conn))
@@ -494,7 +496,7 @@ namespace WebApi.Database
                         type = (string)reader["type"];
                         currencyType = cu.GetCurrencyById((int)reader["currencies_id_fk"]);
 
-                        post = new Post(amount, price, currencyType, postId, type);
+                        post = new Post(amount, price, currencyType, postId, type, isComplete);
                         foundPosts.Add(post);
                     }
                 }

@@ -23,6 +23,7 @@ namespace WebAppWithAuthentication.Controllers
         {
             try
             {
+                //Retrieves all posts linked to the account.
                 //gets the currently logged in users AspNetUser.id (string)
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

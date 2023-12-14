@@ -15,12 +15,12 @@
         }
 
 
-        public Post(double amount, double price, Currency currency, int id, string type)
+        public Post(double amount, double price, Currency currency, int id, string type, bool isComplete = false)
         {
             _id = id;
             _amount = amount;
             _price = price;
-            _isComplete = false;
+            _isComplete = isComplete;
             _transactions = new List<TransactionLine>();
             _type = type;
             _currency = currency;
