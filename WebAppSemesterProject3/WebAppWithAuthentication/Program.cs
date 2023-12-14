@@ -21,6 +21,8 @@ builder.Services.AddControllersWithViews();
 
 // Setting up dependency injection
 builder.Services.AddSingleton<IPostServiceAccess, PostServiceAccess>();
+builder.Services.AddSingleton<IAccountService, AccountService>();
+builder.Services.AddSingleton<ICurrencyService, CurrencyService>();
 
 var app = builder.Build();
 

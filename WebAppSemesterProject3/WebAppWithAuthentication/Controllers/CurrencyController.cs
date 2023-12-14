@@ -8,53 +8,28 @@ namespace WebAppSemesterProject.Controllers
 
 
     {
-        private Uri _url;
-        IConfiguration _configuration;
 
 
-        public CurrencyController(IConfiguration configuration)
+        private ICurrencyService _currencyService;
+        public CurrencyController(ICurrencyService currencyService)
         {
-            _configuration = configuration;
-            string? url = _configuration.GetConnectionString("BaseUrl");
-            if (url != null)
-            {
-                _url = new Uri(url);
-            }
-            else
-            {
-                throw new Exception("Could not find");
-            }
+            _currencyService = currencyService;
         }
 
         //[Route,("{controller}/getallcurrencies")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ActionResult res = View();
             List<Currency> currencies = null;
 
-            ServiceConnection sc = new(_url.ToString());
+            currencies = (List<Currency>)await _currencyService.GetAllCurrencies();
 
-            sc.UseUrl = sc.BaseUrl + "api/currency/";
-
-            var responseTask = sc.CallServiceGet();
-            responseTask.Wait();
-
-            var result = responseTask.Result;
-
-            if (result.IsSuccessStatusCode)
+            if (currencies != null)
             {
-                var readTask = result.Content.ReadAsAsync<List<Currency>>();
-                readTask.Wait();
-
-                currencies = readTask.Result;
+                res = View(currencies);
             }
-            else
-            {
-                // Handle the error if needed
-                currencies = new List<Currency>();
-            }
+            return res;
 
-            //ViewData["currencies"] = currencies;
-            return View(currencies);
         }
 
         // GET: CurrencyController1/Details/5
