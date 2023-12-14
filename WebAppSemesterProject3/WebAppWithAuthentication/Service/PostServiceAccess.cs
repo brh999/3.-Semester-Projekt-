@@ -16,7 +16,7 @@ namespace WebAppWithAuthentication.Service
             //Configure the base API url
             string? url = _configuration.GetConnectionString("BaseUrl");
             if (url != null)
-                _connection = new ServiceConnection(url + "Api/");
+                _connection = new ServiceConnection(url + "api/");
         }
 
         public async Task<IEnumerable<Post>> GetAllOffers()
@@ -118,5 +118,38 @@ namespace WebAppWithAuthentication.Service
             }
             return isSuccessful;
         }
+
+
+
+        public async Task<bool> ConfirmBuyOffer(string AspUserId, double offerAmount, double offerPrice, string offerCurrency, int offerID)
+        {
+
+            bool isSuccessful = false;
+
+            _connection.UseUrl = _connection.BaseUrl + "offer/" + "buyoffer/" + AspUserId;
+
+            Currency inCurrency = new Currency(offerCurrency);
+            Post inPost = new Post(offerAmount, offerPrice, inCurrency, offerID, "offer");
+
+            var json = JsonConvert.SerializeObject(inPost);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var serviceResponse = await _connection.CallServicePost(content);
+
+            //serviceResponse.Wait();
+
+            if (serviceResponse.IsSuccessStatusCode)
+            {
+                var apiResponse = serviceResponse.Content.ReadAsAsync<dynamic>().Result;
+                bool isComplete = (bool)apiResponse.successful;
+
+                if (isComplete)
+                {
+                    isSuccessful = true;
+                }
+
+            }
+            return isSuccessful;
+        }
     }
 }
+

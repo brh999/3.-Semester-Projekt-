@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-
-using Models;
 using ModelViews;
-using Newtonsoft.Json;
 using System.Security.Claims;
-using System.Text;
 using WebAppWithAuthentication.ModelViews;
 using WebAppWithAuthentication.Service;
 
@@ -19,23 +15,13 @@ namespace WebAppWithAuthentication.Controllers
 
         private Uri _url;
         private readonly IConfiguration _configuration;
-        private ServiceConnection _connection;
         private readonly IPostServiceAccess _postServiceAccess;
+
         public PostController(IConfiguration configuration, IPostServiceAccess postServiceAccess)
         {
             _configuration = configuration;
             _postServiceAccess = postServiceAccess;
 
-            //Configure the base API url
-            string? url = _configuration.GetConnectionString("BaseUrl");
-            if (url != null)
-            {
-                _connection = new ServiceConnection(url + "Api/");
-            }
-            else
-            {
-                throw new Exception("Could not find");
-            }
         }
 
 
@@ -146,31 +132,26 @@ namespace WebAppWithAuthentication.Controllers
         public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
+            bool res = false;
 
-            string userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _connection.UseUrl = _connection.BaseUrl + "offer/" + "buyoffer/" + userID;
-            Currency inCurrency = new Currency(offerCurrency);
-            Post inPost = new Post(offerAmount, offerPrice, inCurrency, offerID, "offer");
-            var json = JsonConvert.SerializeObject(inPost);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var serviceResponse = _connection.CallServicePost(content);
-            serviceResponse.Wait();
-            if (serviceResponse.Result.IsSuccessStatusCode)
+            var serviceResult = _postServiceAccess.ConfirmBuyOffer(User.FindFirstValue(ClaimTypes.NameIdentifier), offerAmount, offerPrice, offerCurrency, offerID);
+
+            serviceResult.Wait();
+
+            res = serviceResult.Result;
+
+            if (res)
             {
-                var apiResponse = serviceResponse.Result.Content.ReadAsAsync<dynamic>().Result;
-                bool isComplete = (bool)apiResponse.successful;
-                if (isComplete)
-                {
-                    TempData["message"] = 1;
-                }
-                else
-                {
-                    TempData["message"] = 2;
-                }
-
+                TempData["message"] = 1;
+            }
+            else
+            {
+                TempData["message"] = 2;
             }
             return RedirectToAction("GetAllPosts");
+
         }
+
 
         [Authorize]
         public IActionResult EditOffer(int id)
@@ -222,6 +203,7 @@ namespace WebAppWithAuthentication.Controllers
         {
             return Ok();
         }
+
 
     }
 }

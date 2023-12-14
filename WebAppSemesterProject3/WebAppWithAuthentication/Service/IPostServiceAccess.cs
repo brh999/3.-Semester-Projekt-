@@ -9,5 +9,7 @@ namespace WebAppWithAuthentication.Service
         public Task<IEnumerable<Post>> GetAllBids();
 
         public bool CreateOffer(Post inPost, string aspNetId);
+
+        public Task<bool> ConfirmBuyOffer(string AspUserId, double offerAmount, double offerPrice, string offerCurrency, int offerID);
     }
 }
