@@ -14,23 +14,17 @@ namespace WebAppWithAuthentication.Controllers
         // It's important to note, that 'Post' in this controller
         // - does not refer HTML post action, but Post of bid & offers in our system.
 
-        private Uri _url;
-        private readonly IConfiguration _configuration;
         private readonly IPostServiceAccess _postServiceAccess;
 
-        public PostController(IConfiguration configuration, IPostServiceAccess postServiceAccess)
+        public PostController(IPostServiceAccess postServiceAccess)
         {
-            _configuration = configuration;
             _postServiceAccess = postServiceAccess;
-
         }
-
 
         /// <summary>
         /// Get homepage view
         /// </summary>
         /// <returns></returns>
-        
         public async Task<IActionResult> GetAllPosts()
         {
             List<Post> bidRes = new();
@@ -63,7 +57,7 @@ namespace WebAppWithAuthentication.Controllers
         /// Create and return offer View
         /// </summary>
         /// <returns></returns>
-        
+
         public IActionResult CreateOffer()
         {
             ActionResult result = null;
@@ -99,7 +93,7 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <param name="inPost"></param>
         /// <returns></returns>
-        
+
         [HttpPost]
         public IActionResult CreateOffer(Post inPost)
         {
@@ -119,7 +113,7 @@ namespace WebAppWithAuthentication.Controllers
             return result;
         }
 
-        
+
         public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             ViewData["offerAmount"] = offerAmount;
@@ -129,7 +123,7 @@ namespace WebAppWithAuthentication.Controllers
             return View();
         }
 
-        
+
         public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
@@ -153,13 +147,13 @@ namespace WebAppWithAuthentication.Controllers
 
         }
 
-        
+
         public IActionResult EditOffer(int id)
         {
             return View();
         }
 
-        
+
         [HttpPut]
         public IActionResult EditOffer([FromBody] Post inBid)
         {
@@ -172,26 +166,26 @@ namespace WebAppWithAuthentication.Controllers
         }
 
 
-        
+
         public IActionResult CreateBid()
         {
             return View();
         }
 
-        
+
         [HttpPost]
         public IActionResult CreateBid([FromBody] Post inPost)
         {
             return Ok();
         }
 
-        
+
         public IActionResult EditBid(int id)
         {
             return View();
         }
 
-        
+
         [HttpPut]
         public IActionResult EditBid([FromBody] Post inBid)
         {
