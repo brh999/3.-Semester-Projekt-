@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Security.Claims;
 using WebAppWithAuthentication.DTO;
@@ -9,23 +10,14 @@ using WebAppWithAuthentication.Service;
 
 namespace WebAppWithAuthentication.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
-
-        private ServiceConnection _connection;
-        IConfiguration _configuration;
-        public AccountController(IConfiguration configuration)
+        
+        private IAccountService _accountService;
+        public AccountController(IAccountService accountService)
         {
-            _configuration = configuration;
-            string? url = _configuration.GetConnectionString("BaseUrl");
-            if (url != null)
-            {
-                _connection = new ServiceConnection(url + "api/");
-            }
-            else
-            {
-                throw new Exception("Could not find");
-            }
+            _accountService = accountService;
         }
         public async Task<IActionResult> Index()
         {
@@ -33,9 +25,8 @@ namespace WebAppWithAuthentication.Controllers
             {
                 //gets the currently logged in users AspNetUser.id (string)
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                IAccountService al = new AccountService(_connection);
 
-                var accountDto = await al.GetAccountById(userId);
+                var accountDto = await _accountService.GetAccountById(userId);
 
                 if (accountDto == null)
                 {

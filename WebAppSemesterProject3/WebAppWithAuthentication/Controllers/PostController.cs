@@ -8,6 +8,7 @@ using WebAppWithAuthentication.Service;
 
 namespace WebAppWithAuthentication.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
         // It's important to note, that 'Post' in this controller
@@ -29,7 +30,7 @@ namespace WebAppWithAuthentication.Controllers
         /// Get homepage view
         /// </summary>
         /// <returns></returns>
-        [Authorize]
+        
         public async Task<IActionResult> GetAllPosts()
         {
             List<Post> bidRes = new();
@@ -62,7 +63,7 @@ namespace WebAppWithAuthentication.Controllers
         /// Create and return offer View
         /// </summary>
         /// <returns></returns>
-        [Authorize]
+        
         public IActionResult CreateOffer()
         {
             ActionResult result = null;
@@ -70,7 +71,7 @@ namespace WebAppWithAuthentication.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AccountViewModel? account = null;
 
-            AccountService accountService = new(_connection);
+            AccountService accountService = new();
             Task<Account?> response = accountService.GetAccountById(userId);
             response.Wait();
 
@@ -98,7 +99,7 @@ namespace WebAppWithAuthentication.Controllers
         /// </summary>
         /// <param name="inPost"></param>
         /// <returns></returns>
-        [Authorize]
+        
         [HttpPost]
         public IActionResult CreateOffer(Post inPost)
         {
@@ -118,7 +119,7 @@ namespace WebAppWithAuthentication.Controllers
             return result;
         }
 
-        [Authorize]
+        
         public IActionResult BuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             ViewData["offerAmount"] = offerAmount;
@@ -128,7 +129,7 @@ namespace WebAppWithAuthentication.Controllers
             return View();
         }
 
-        [Authorize]
+        
         public IActionResult ConfirmBuyOffer(double offerAmount, double offerPrice, string offerCurrency, int offerID)
         {
             //TODO Temporary solution with new Currency & Post object. Need to refactor to get the actual objects through view to here..
@@ -152,14 +153,13 @@ namespace WebAppWithAuthentication.Controllers
 
         }
 
-
-        [Authorize]
+        
         public IActionResult EditOffer(int id)
         {
             return View();
         }
 
-        [Authorize]
+        
         [HttpPut]
         public IActionResult EditOffer([FromBody] Post inBid)
         {
@@ -172,26 +172,26 @@ namespace WebAppWithAuthentication.Controllers
         }
 
 
-        [Authorize]
+        
         public IActionResult CreateBid()
         {
             return View();
         }
 
-        [Authorize]
+        
         [HttpPost]
         public IActionResult CreateBid([FromBody] Post inPost)
         {
             return Ok();
         }
 
-        [Authorize]
+        
         public IActionResult EditBid(int id)
         {
             return View();
         }
 
-        [Authorize]
+        
         [HttpPut]
         public IActionResult EditBid([FromBody] Post inBid)
         {
