@@ -63,7 +63,7 @@
             btnCreateCurrency.TabIndex = 0;
             btnCreateCurrency.Text = "Create currency";
             btnCreateCurrency.UseVisualStyleBackColor = true;
-            btnCreateCurrency.Click += button1_Click;
+            btnCreateCurrency.Click += btnCreateCurrency_Click;
             // 
             // ListBoxCurrencies
             // 

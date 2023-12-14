@@ -20,7 +20,7 @@ namespace DesktopClient.UI
 
 
 
-        private async void button1_Click(object sender, EventArgs e)
+        private async void btnCreateCurrency_Click(object sender, EventArgs e)
         {
             string name = txtCurrencyName.Text;
             double value = Double.Parse(txtCurrencyValue.Text);
