@@ -4,7 +4,7 @@ using DTO;
 
 namespace WebApi.BuissnessLogiclayer
 {
-    public class AccountLogic  : IAccountLogic
+    public class AccountLogic : IAccountLogic
     {
         private readonly IAccountDBAccess _dataAccess;
         public AccountLogic(IAccountDBAccess inDataAccess)
@@ -17,7 +17,7 @@ namespace WebApi.BuissnessLogiclayer
             Account? account = null;
             AccountDto? result = null;
             account = _dataAccess.GetAccountById(id);
-            if(account != null)
+            if (account != null)
             {
                 result = new AccountDto(account);
             }
@@ -31,7 +31,8 @@ namespace WebApi.BuissnessLogiclayer
             foundAccounts = _dataAccess.GetAllAccounts();
             foreach (Account a in foundAccounts)
             {
-                if (a != null) {
+                if (a != null)
+                {
                     AccountDto aD = new AccountDto(a);
                     accounts.Add(aD);
                 }
@@ -50,20 +51,26 @@ namespace WebApi.BuissnessLogiclayer
 
         public bool InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
         {
-            bool res = false;
-            bool exists = false;
-            exists = _dataAccess.CheckCurrencyLine(aspDotNetId, currencyLine);
-            if (exists)
-            {
-                
-                res = _dataAccess.UpdateCurrencyLine(aspDotNetId, currencyLine);
-            }
-            else
-            {
-                res = _dataAccess.InsertCurrencyLine(aspDotNetId, currencyLine);
-            }
-            
-            return res;
+            throw new NotImplementedException();
         }
+
+        //Not usable in the current context, but not needed either.
+        //public bool InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine)
+        //{
+        //    bool res = false;
+        //    bool exists = false;
+        //    exists = _dataAccess.CheckCurrencyLine(aspDotNetId, currencyLine);
+        //    if (exists)
+        //    {
+
+        //        res = _dataAccess.UpdateCurrencyLine(aspDotNetId, currencyLine);
+        //    }
+        //    else
+        //    {
+        //        res = _dataAccess.InsertCurrencyLine(aspDotNetId, currencyLine);
+        //    }
+
+        //    return res;
+        //}
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Models;
+using System.Data.SqlClient;
 
 namespace WebApi.Database
 {
@@ -14,8 +15,8 @@ namespace WebApi.Database
 
         IEnumerable<CurrencyLine> GetCurrencyLines(int id);
 
-        bool CheckCurrencyLine(string aspDotNetId, CurrencyLine currencyLine);
-        bool UpdateCurrencyLine(string aspDotNetId, CurrencyLine currencyLine);
-        bool InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine);
+        bool CheckCurrencyLine(string aspDotNetId, CurrencyLine currencyLine, SqlConnection conn, SqlTransaction tran);
+        bool UpdateCurrencyLine(string aspDotNetId, CurrencyLine currencyLine, SqlConnection conn, SqlTransaction tran);
+        bool InsertCurrencyLine(string aspDotNetId, CurrencyLine currencyLine, SqlConnection conn, SqlTransaction tran);
     }
 }

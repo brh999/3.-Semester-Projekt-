@@ -398,14 +398,14 @@ namespace WebApi.Database
 
                             };
                             bool exists = false;
-                            exists = accountDBAccess.CheckCurrencyLine(aspnetUserId, lineToSave);
+                            exists = accountDBAccess.CheckCurrencyLine(aspnetUserId, lineToSave, conn, tran);
                             if (exists)
                             {
-                                complete = !accountDBAccess.UpdateCurrencyLine(aspnetUserId, lineToSave);
+                                complete = !accountDBAccess.UpdateCurrencyLine(aspnetUserId, lineToSave, conn, tran);
                             }
                             else
                             {
-                                complete = !accountDBAccess.InsertCurrencyLine(aspnetUserId, lineToSave);
+                                complete = !accountDBAccess.InsertCurrencyLine(aspnetUserId, lineToSave, conn, tran);
 
                             }
                         }
